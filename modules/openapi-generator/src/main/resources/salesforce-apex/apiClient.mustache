@@ -1,7 +1,7 @@
 {{accessModifier}} virtual class {{{clientClassName}}} {
-  private String baseUrl;
-  private String version;
-  private Map<String, String> headers = new Map<String, String>();
+  private final String baseUrl;
+  private final String version;
+  private final Map<String, String> headers = new Map<String, String>();
 
   {{accessModifier}} {{{clientClassName}}}(final String baseUrl, final String version) {
     this.baseUrl = baseUrl;

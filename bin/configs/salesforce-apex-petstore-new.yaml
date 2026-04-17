@@ -1,5 +1,5 @@
 generatorName: salesforce-apex
-outputDir: samples/client/petstore/salesforce-apex
+outputDir: target/generated-sources/openapi/classes
 inputSpec: modules/openapi-generator/src/test/resources/3_0/petstore.yaml
 templateDir: modules/openapi-generator/src/main/resources/salesforce-apex
 additionalProperties:

@@ -7,29 +7,40 @@
   }
 {{#operations}}{{#operation}}
 
+  {{accessModifier}} class {{vendorExtensions.x-apex-dto-class}} {
+{{#allParams}}
+    {{accessModifier}} {{{dataType}}} {{paramName}};
+
+    {{accessModifier}} {{vendorExtensions.x-apex-dto-class}} {{vendorExtensions.x-apex-setter}}(final {{{dataType}}} {{paramName}}) {
+      this.{{paramName}} = {{paramName}};
+      return this;
+    }
+
+{{/allParams}}  }
+
   /**
 {{#summary}}   * {{summary}}
 {{/summary}}{{#allParams}}   * @param {{paramName}} {{description}}{{#required}} (required){{/required}}{{^required}} (optional){{/required}}
 {{/allParams}}   * @return {{{returnType}}}
    */
   {{accessModifier}} virtual {{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}void{{/returnType}} {{operationId}}(
-{{#allParams}}    final {{{dataType}}} {{paramName}}{{^-last}},{{/-last}}
-{{/allParams}}  ) {
+    final {{vendorExtensions.x-apex-dto-class}} request
+  ) {
     final {{{builderClassName}}} builder = new {{{builderClassName}}}()
-      .setEndpoint({{{vendorExtensions.x-apex-path}}})
+      .setEndpoint({{{vendorExtensions.x-apex-path-request}}})
       .setMethod({{{builderClassName}}}.HttpMethod.{{vendorExtensions.x-apex-http-method}});
 {{#bodyParam}}
-    builder.setBody(JSON.serialize({{paramName}}));
+    builder.setBody(JSON.serialize(request.{{paramName}}));
 {{/bodyParam}}
 {{#queryParams}}
-    {{#isArray}}if ({{paramName}} != null && !{{paramName}}.isEmpty()) {
+    {{#isArray}}if (request.{{paramName}} != null && !request.{{paramName}}.isEmpty()) {
       final List<String> {{paramName}}Strs = new List<String>();
-      for ({{{items.dataType}}} item : {{paramName}}) {
+      for ({{{items.dataType}}} item : request.{{paramName}}) {
         {{paramName}}Strs.add(String.valueOf(item));
       }
       builder.addQueryParameter('{{baseName}}', String.join({{paramName}}Strs, ','));
-    }{{/isArray}}{{^isArray}}if ({{paramName}} != null{{#isString}} && !String.isBlank({{paramName}}){{/isString}}) {
-      builder.addQueryParameter('{{baseName}}', String.valueOf({{paramName}}));
+    }{{/isArray}}{{^isArray}}if (request.{{paramName}} != null{{#isString}} && !String.isBlank(request.{{paramName}}){{/isString}}) {
+      builder.addQueryParameter('{{baseName}}', String.valueOf(request.{{paramName}}));
     }{{/isArray}}
 {{/queryParams}}
     {{#returnType}}return ({{{returnType}}}) JSON.deserialize(

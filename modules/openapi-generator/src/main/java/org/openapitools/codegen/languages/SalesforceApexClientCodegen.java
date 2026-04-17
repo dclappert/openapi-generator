@@ -332,28 +332,42 @@ public class SalesforceApexClientCodegen extends DefaultCodegen {
 
         List<CodegenOperation> ops = objs.getOperations().getOperation();
         for (CodegenOperation op : ops) {
-            // Map DELETE to HTTP_DELETE to avoid Apex reserved keyword conflict
+            // Map DELETE to DEL to avoid Apex reserved keyword conflict
             String apexHttpMethod = "DELETE".equalsIgnoreCase(op.httpMethod)
-                    ? "HTTP_DELETE"
+                    ? "DEL"
                     : op.httpMethod.toUpperCase(Locale.ROOT);
             op.vendorExtensions.put("x-apex-http-method", apexHttpMethod);
 
-            // Convert OAS path template {param} to Apex string concatenation
-            op.vendorExtensions.put("x-apex-path", toApexPath(op.path));
+            // Convert OAS path template {param} to Apex string concatenation with request. prefix
+            op.vendorExtensions.put("x-apex-path-request", toApexPathWithPrefix(op.path, "request."));
+
+            // DTO inner class name: getPetById → GetPetByIdRequest
+            String dtoClassName = Character.toUpperCase(op.operationId.charAt(0))
+                    + op.operationId.substring(1) + "Request";
+            op.vendorExtensions.put("x-apex-dto-class", dtoClassName);
+
+            // Duplicate dtoClassName and setter name onto each param — inside {{#allParams}},
+            // Mustache resolves vendorExtensions against the param's map, shadowing the operation's.
+            for (CodegenParameter param : op.allParams) {
+                String setter = "set" + Character.toUpperCase(param.paramName.charAt(0))
+                        + param.paramName.substring(1);
+                param.vendorExtensions.put("x-apex-setter", setter);
+                param.vendorExtensions.put("x-apex-dto-class", dtoClassName);
+            }
         }
 
         return super.postProcessOperationsWithModels(objs, allModels);
     }
 
-    // Converts an OAS path like /pet/{petId}/friends to 'pet/' + petId + '/friends'
-    private String toApexPath(String path) {
+    // Converts an OAS path like /pet/{petId}/friends to 'pet/' + {prefix}petId + '/friends'
+    private String toApexPathWithPrefix(String path, String prefix) {
         if (path == null) return "''";
         path = path.replaceFirst("^/", "");
         Matcher m = Pattern.compile("\\{([^}]+)\\}").matcher(path);
         StringBuffer sb = new StringBuffer();
         while (m.find()) {
             String paramName = toParamName(m.group(1));
-            m.appendReplacement(sb, "' + " + paramName + " + '");
+            m.appendReplacement(sb, Matcher.quoteReplacement("' + " + prefix + paramName + " + '"));
         }
         m.appendTail(sb);
         path = "'" + sb + "'";
