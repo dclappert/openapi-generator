@@ -1,0 +1,26 @@
+{{accessModifier}} virtual class {{{clientClassName}}} {
+  private String baseUrl;
+  private String version;
+  private Map<String, String> headers = new Map<String, String>();
+
+  {{accessModifier}} {{{clientClassName}}}(final String baseUrl, final String version) {
+    this.baseUrl = baseUrl;
+    this.version = version;
+  }
+
+  {{accessModifier}} {{{clientClassName}}} addHeader(final String name, final String value) {
+    this.headers.put(name, value);
+    return this;
+  }
+
+  {{accessModifier}} virtual String sendRequest(final {{{builderClassName}}} builder) {
+    final HttpRequest req = builder.build(this.baseUrl, this.version, this.headers);
+    final HttpResponse res = new Http().send(req);
+    if (res.getStatusCode() / 100 != 2) {
+      throw new {{{clientClassName}}}Exception(res.getStatusCode() + ': ' + res.getBody());
+    }
+    return res.getBody();
+  }
+
+  {{accessModifier}} class {{{clientClassName}}}Exception extends Exception {}
+}

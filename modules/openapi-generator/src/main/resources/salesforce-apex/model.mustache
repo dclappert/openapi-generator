@@ -1,0 +1,31 @@
+{{#models}}
+{{#model}}
+{{#isEnum}}
+{{#hasSuppressWarnings}}@SuppressWarnings('{{suppressWarnings}}')
+{{/hasSuppressWarnings}}{{accessModifier}} enum {{classname}} {
+{{#allowableValues}}{{#values}}  {{.}}{{^-last}},{{/-last}}
+{{/values}}{{/allowableValues}}}
+{{/isEnum}}
+{{^isEnum}}
+{{#hasSuppressWarnings}}@SuppressWarnings('{{suppressWarnings}}')
+{{/hasSuppressWarnings}}{{#jsonAccess}}@JsonAccess(serializable='always' deserializable='always')
+{{/jsonAccess}}{{accessModifier}} class {{classname}} {
+{{#vars}}
+  {{#auraEnabled}}@AuraEnabled
+  {{/auraEnabled}}{{accessModifier}} {{{dataType}}} {{baseName}};
+{{/vars}}
+{{#vars}}
+  {{accessModifier}} {{{dataType}}} {{getter}}() {
+    return this.{{baseName}};
+  }
+
+  {{accessModifier}} {{#fluentSetters}}{{classname}} {{/fluentSetters}}{{^fluentSetters}}void {{/fluentSetters}}{{setter}}(final {{{dataType}}} {{name}}) {
+    this.{{baseName}} = {{name}};{{#fluentSetters}}
+    return this;{{/fluentSetters}}
+  }
+
+{{/vars}}
+}
+{{/isEnum}}
+{{/model}}
+{{/models}}

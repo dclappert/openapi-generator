@@ -1,0 +1,17 @@
+generatorName: salesforce-apex
+outputDir: samples/client/petstore/salesforce-apex
+inputSpec: modules/openapi-generator/src/test/resources/3_0/petstore.yaml
+templateDir: modules/openapi-generator/src/main/resources/salesforce-apex
+additionalProperties:
+  hideGenerationTimestamp: "true"
+  classPrefix: "PetstoreApi"
+  apiVersionDirectory: "latest.v1"
+  accessModifier: "global"
+  jsonAccess: "true"
+  auraEnabled: "false"
+  suppressWarnings: "PMD.AvoidGlobalModifier, PMD.FieldNamingConventions"
+  salesforceApiVersion: "62.0"
+  fluentSetters: "true"
+  generateModels: "true"
+  generateApis: "true"
+  generateClient: "true"

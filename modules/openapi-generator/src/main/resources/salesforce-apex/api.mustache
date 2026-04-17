@@ -1,0 +1,41 @@
+{{#hasSuppressWarnings}}@SuppressWarnings('{{suppressWarnings}}')
+{{/hasSuppressWarnings}}{{accessModifier}} virtual class {{classname}} {
+  private {{{clientClassName}}} client;
+
+  {{accessModifier}} {{classname}}(final {{{clientClassName}}} client) {
+    this.client = client;
+  }
+{{#operations}}{{#operation}}
+
+  /**
+{{#summary}}   * {{summary}}
+{{/summary}}{{#allParams}}   * @param {{paramName}} {{description}}{{#required}} (required){{/required}}{{^required}} (optional){{/required}}
+{{/allParams}}   * @return {{{returnType}}}
+   */
+  {{accessModifier}} virtual {{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}void{{/returnType}} {{operationId}}(
+{{#allParams}}    final {{{dataType}}} {{paramName}}{{^-last}},{{/-last}}
+{{/allParams}}  ) {
+    final {{{builderClassName}}} builder = new {{{builderClassName}}}()
+      .setEndpoint({{{vendorExtensions.x-apex-path}}})
+      .setMethod({{{builderClassName}}}.HttpMethod.{{vendorExtensions.x-apex-http-method}});
+{{#bodyParam}}
+    builder.setBody(JSON.serialize({{paramName}}));
+{{/bodyParam}}
+{{#queryParams}}
+    {{#isArray}}if ({{paramName}} != null && !{{paramName}}.isEmpty()) {
+      final List<String> {{paramName}}Strs = new List<String>();
+      for ({{{items.dataType}}} item : {{paramName}}) {
+        {{paramName}}Strs.add(String.valueOf(item));
+      }
+      builder.addQueryParameter('{{baseName}}', String.join({{paramName}}Strs, ','));
+    }{{/isArray}}{{^isArray}}if ({{paramName}} != null{{#isString}} && !String.isBlank({{paramName}}){{/isString}}) {
+      builder.addQueryParameter('{{baseName}}', String.valueOf({{paramName}}));
+    }{{/isArray}}
+{{/queryParams}}
+    {{#returnType}}return ({{{returnType}}}) JSON.deserialize(
+      this.client.sendRequest(builder),
+      {{{returnType}}}.class
+    );{{/returnType}}{{^returnType}}this.client.sendRequest(builder);{{/returnType}}
+  }
+{{/operation}}{{/operations}}
+}
