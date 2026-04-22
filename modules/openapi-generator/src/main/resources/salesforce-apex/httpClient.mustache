@@ -1,0 +1,14 @@
+{{accessModifier}} virtual class {{{httpClientClassName}}} {
+  {{accessModifier}} virtual HttpResult send(final HttpRequest req) {
+    final HttpResponse res = new Http().send(req);
+    final HttpResult result = new HttpResult();
+    result.request = req;
+    result.response = res;
+    return result;
+  }
+
+  {{accessModifier}} class HttpResult {
+    {{accessModifier}} HttpRequest request;
+    {{accessModifier}} HttpResponse response;
+  }
+}

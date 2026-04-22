@@ -5,6 +5,14 @@
   {{accessModifier}} {{classname}}(final {{{clientClassName}}} client) {
     this.client = client;
   }
+
+  private {{{apiExceptionClassName}}} buildApiException(final String operationId, final {{{httpClientClassName}}}.HttpResult httpResult) {
+    final {{{apiExceptionClassName}}} ex = new {{{apiExceptionClassName}}}(
+      operationId + ' failed: ' + httpResult.response.getStatusCode() + ' - ' + httpResult.response.getBody()
+    );
+    ex.httpResult = httpResult;
+    return ex;
+  }
 {{#operations}}{{#operation}}
 
   {{accessModifier}} class {{vendorExtensions.x-apex-dto-class}} {
@@ -18,12 +26,28 @@
 
 {{/allParams}}  }
 
+  {{accessModifier}} class {{vendorExtensions.x-apex-response-class}} {
+    {{accessModifier}} {{{httpClientClassName}}}.HttpResult httpResult;
+{{#returnType}}    {{accessModifier}} {{{returnType}}} data;
+{{/returnType}}  }
+
   /**
 {{#summary}}   * {{summary}}
 {{/summary}}{{#allParams}}   * @param {{paramName}} {{description}}{{#required}} (required){{/required}}{{^required}} (optional){{/required}}
-{{/allParams}}   * @return {{{returnType}}}
+{{/allParams}}   * @return {{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}void{{/returnType}}
    */
   {{accessModifier}} virtual {{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}void{{/returnType}} {{operationId}}(
+    final {{vendorExtensions.x-apex-dto-class}} request
+  ) {
+    {{#returnType}}return {{operationId}}WithHttpInfo(request).data;{{/returnType}}{{^returnType}}{{operationId}}WithHttpInfo(request);{{/returnType}}
+  }
+
+  /**
+{{#summary}}   * {{summary}}
+{{/summary}}{{#allParams}}   * @param {{paramName}} {{description}}{{#required}} (required){{/required}}{{^required}} (optional){{/required}}
+{{/allParams}}   * @return {{vendorExtensions.x-apex-response-class}}
+   */
+  {{accessModifier}} virtual {{vendorExtensions.x-apex-response-class}} {{operationId}}WithHttpInfo(
     final {{vendorExtensions.x-apex-dto-class}} request
   ) {
     final {{{builderClassName}}} builder = new {{{builderClassName}}}()
@@ -43,10 +67,14 @@
       builder.addQueryParameter('{{baseName}}', String.valueOf(request.{{paramName}}));
     }{{/isArray}}
 {{/queryParams}}
-    {{#returnType}}return ({{{returnType}}}) JSON.deserialize(
-      this.client.sendRequest(builder),
-      {{{returnType}}}.class
-    );{{/returnType}}{{^returnType}}this.client.sendRequest(builder);{{/returnType}}
+    final {{{httpClientClassName}}}.HttpResult httpResult = this.client.send(builder);
+    if (httpResult.response.getStatusCode() / 100 != 2) {
+      throw buildApiException('{{operationId}}', httpResult);
+    }
+    final {{vendorExtensions.x-apex-response-class}} response = new {{vendorExtensions.x-apex-response-class}}();
+    response.httpResult = httpResult;
+{{#returnType}}    response.data = ({{{returnType}}}) JSON.deserialize(httpResult.response.getBody(), {{{returnType}}}.class);
+{{/returnType}}    return response;
   }
 {{/operation}}{{/operations}}
 }

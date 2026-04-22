@@ -219,12 +219,20 @@ public class SalesforceApexClientCodegen extends DefaultCodegen {
 
         String clientClassName = classPrefix + "ApiClient";
         String builderClassName = classPrefix + "ApiHttpRequestBuilder";
+        String httpClientClassName = classPrefix + "HttpClient";
+        String apiExceptionClassName = classPrefix + "ApiException";
         additionalProperties.put("clientClassName", clientClassName);
         additionalProperties.put("builderClassName", builderClassName);
+        additionalProperties.put("httpClientClassName", httpClientClassName);
+        additionalProperties.put("apiExceptionClassName", apiExceptionClassName);
 
         if (generateClient) {
             supportingFiles.add(new SupportingFile("apiClient.mustache", "common", clientClassName + ".cls"));
             supportingFiles.add(new SupportingFile("cls-meta.mustache", "common", clientClassName + ".cls-meta.xml"));
+            supportingFiles.add(new SupportingFile("httpClient.mustache", "common", httpClientClassName + ".cls"));
+            supportingFiles.add(new SupportingFile("cls-meta.mustache", "common", httpClientClassName + ".cls-meta.xml"));
+            supportingFiles.add(new SupportingFile("apiException.mustache", "common", apiExceptionClassName + ".cls"));
+            supportingFiles.add(new SupportingFile("cls-meta.mustache", "common", apiExceptionClassName + ".cls-meta.xml"));
             supportingFiles.add(new SupportingFile("httpRequestBuilder.mustache", "common", builderClassName + ".cls"));
             supportingFiles.add(new SupportingFile("cls-meta.mustache", "common", builderClassName + ".cls-meta.xml"));
         }
@@ -341,10 +349,13 @@ public class SalesforceApexClientCodegen extends DefaultCodegen {
             // Convert OAS path template {param} to Apex string concatenation with request. prefix
             op.vendorExtensions.put("x-apex-path-request", toApexPathWithPrefix(op.path, "request."));
 
-            // DTO inner class name: getPetById → GetPetByIdRequest
-            String dtoClassName = Character.toUpperCase(op.operationId.charAt(0))
-                    + op.operationId.substring(1) + "Request";
+            // DTO inner class names: getPetById → GetPetByIdRequest / GetPetByIdResponse
+            String operationIdPascal = Character.toUpperCase(op.operationId.charAt(0))
+                    + op.operationId.substring(1);
+            String dtoClassName = operationIdPascal + "Request";
+            String responseClassName = operationIdPascal + "Response";
             op.vendorExtensions.put("x-apex-dto-class", dtoClassName);
+            op.vendorExtensions.put("x-apex-response-class", responseClassName);
 
             // Duplicate dtoClassName and setter name onto each param — inside {{#allParams}},
             // Mustache resolves vendorExtensions against the param's map, shadowing the operation's.

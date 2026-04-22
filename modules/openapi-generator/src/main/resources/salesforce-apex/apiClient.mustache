@@ -2,10 +2,16 @@
   private final String baseUrl;
   private final String version;
   private final Map<String, String> headers = new Map<String, String>();
+  private final {{{httpClientClassName}}} httpClient;
 
   {{accessModifier}} {{{clientClassName}}}(final String baseUrl, final String version) {
+    this(baseUrl, version, new {{{httpClientClassName}}}());
+  }
+
+  {{accessModifier}} {{{clientClassName}}}(final String baseUrl, final String version, final {{{httpClientClassName}}} httpClient) {
     this.baseUrl = baseUrl;
     this.version = version;
+    this.httpClient = httpClient;
   }
 
   {{accessModifier}} {{{clientClassName}}} addHeader(final String name, final String value) {
@@ -13,14 +19,8 @@
     return this;
   }
 
-  {{accessModifier}} virtual String sendRequest(final {{{builderClassName}}} builder) {
+  {{accessModifier}} virtual {{{httpClientClassName}}}.HttpResult send(final {{{builderClassName}}} builder) {
     final HttpRequest req = builder.build(this.baseUrl, this.version, this.headers);
-    final HttpResponse res = new Http().send(req);
-    if (res.getStatusCode() / 100 != 2) {
-      throw new {{{clientClassName}}}Exception(res.getStatusCode() + ': ' + res.getBody());
-    }
-    return res.getBody();
+    return this.httpClient.send(req);
   }
-
-  {{accessModifier}} class {{{clientClassName}}}Exception extends Exception {}
 }
