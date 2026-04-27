@@ -1,0 +1,43 @@
+@IsTest
+private class {{classname}}Test {
+  private static {{classname}} buildApi(final HttpResponse res) {
+    final {{{httpClientMockClassName}}} mock = new {{{httpClientMockClassName}}}();
+    mock.nextResponse = res;
+    final {{{clientClassName}}} client = new {{{clientClassName}}}('https://test', 'v1', mock);
+    return new {{classname}}(client);
+  }
+
+  private static HttpResponse makeResponse(final Integer status, final String body) {
+    final HttpResponse res = new HttpResponse();
+    res.setStatusCode(status);
+    res.setBody(body);
+    return res;
+  }
+{{#operations}}{{#operation}}
+
+  @IsTest
+  static void test{{vendorExtensions.x-apex-operation-pascal}}Success() {
+    {{#returnType}}final String body = JSON.serialize(new {{{returnType}}}());{{/returnType}}{{^returnType}}final String body = '';{{/returnType}}
+    final {{classname}} api = buildApi(makeResponse(200, body));
+    final {{classname}}.{{vendorExtensions.x-apex-dto-class}} request = new {{classname}}.{{vendorExtensions.x-apex-dto-class}}(){{#allParams}}
+      .{{vendorExtensions.x-apex-setter}}({{{vendorExtensions.x-apex-dummy-value}}}){{/allParams}};
+    final {{classname}}.{{vendorExtensions.x-apex-response-class}} response = api.{{operationId}}WithHttpInfo(request);
+    System.assertEquals(200, response.httpResult.response.getStatusCode());
+{{#returnType}}    System.assertNotEquals(null, response.data);
+{{/returnType}}  }
+{{/operation}}{{/operations}}
+
+  @IsTest
+  static void testThrowsApiExceptionOnNon2xx() {
+    final {{classname}} api = buildApi(makeResponse(500, '{"error":"boom"}'));
+{{#operations}}{{#operation}}{{#-first}}
+    final {{classname}}.{{vendorExtensions.x-apex-dto-class}} request = new {{classname}}.{{vendorExtensions.x-apex-dto-class}}();
+    try {
+      api.{{operationId}}WithHttpInfo(request);
+      System.assert(false, 'expected {{{apiExceptionClassName}}}');
+    } catch ({{{apiExceptionClassName}}} e) {
+      System.assertEquals(500, e.httpResult.response.getStatusCode());
+    }
+{{/-first}}{{/operation}}{{/operations}}
+  }
+}

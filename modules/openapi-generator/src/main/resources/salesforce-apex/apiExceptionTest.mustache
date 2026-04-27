@@ -1,0 +1,11 @@
+@IsTest
+private class {{{apiExceptionClassName}}}Test {
+  @IsTest
+  static void testConstructionAndHttpResultField() {
+    final {{{apiExceptionClassName}}} ex = new {{{apiExceptionClassName}}}('boom');
+    final {{{httpClientClassName}}}.HttpResult r = new {{{httpClientClassName}}}.HttpResult();
+    ex.httpResult = r;
+    System.assertEquals('boom', ex.getMessage());
+    System.assertEquals(r, ex.httpResult);
+  }
+}

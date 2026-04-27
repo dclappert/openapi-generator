@@ -1,0 +1,11 @@
+@IsTest
+public class {{{httpClientMockClassName}}} extends {{{httpClientClassName}}} {
+  public HttpResponse nextResponse;
+
+  public override {{{httpClientClassName}}}.HttpResult send(final HttpRequest req) {
+    final {{{httpClientClassName}}}.HttpResult r = new {{{httpClientClassName}}}.HttpResult();
+    r.request = req;
+    r.response = this.nextResponse;
+    return r;
+  }
+}

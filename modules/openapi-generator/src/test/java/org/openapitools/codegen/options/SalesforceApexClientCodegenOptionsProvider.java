@@ -20,6 +20,7 @@ public class SalesforceApexClientCodegenOptionsProvider implements OptionsProvid
     public static final String GENERATE_MODELS_VALUE = "true";
     public static final String GENERATE_APIS_VALUE = "true";
     public static final String GENERATE_CLIENT_VALUE = "true";
+    public static final String GENERATE_TESTS_VALUE = "true";
 
     @Override
     public String getLanguage() {
@@ -40,6 +41,7 @@ public class SalesforceApexClientCodegenOptionsProvider implements OptionsProvid
                 .put(SalesforceApexClientCodegen.GENERATE_MODELS, GENERATE_MODELS_VALUE)
                 .put(SalesforceApexClientCodegen.GENERATE_APIS, GENERATE_APIS_VALUE)
                 .put(SalesforceApexClientCodegen.GENERATE_CLIENT, GENERATE_CLIENT_VALUE)
+                .put(SalesforceApexClientCodegen.GENERATE_TESTS, GENERATE_TESTS_VALUE)
                 // DefaultCodegen base options required by AbstractOptionsTest
                 .put(CodegenConstants.SORT_PARAMS_BY_REQUIRED_FLAG, "true")
                 .put(CodegenConstants.SORT_MODEL_PROPERTIES_BY_REQUIRED_FLAG, "true")

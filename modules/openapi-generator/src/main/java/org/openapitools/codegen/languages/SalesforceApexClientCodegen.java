@@ -31,6 +31,7 @@ public class SalesforceApexClientCodegen extends DefaultCodegen {
     public static final String GENERATE_MODELS = "generateModels";
     public static final String GENERATE_APIS = "generateApis";
     public static final String GENERATE_CLIENT = "generateClient";
+    public static final String GENERATE_TESTS = "generateTests";
 
     protected String classPrefix = "Api";
     protected String apiVersionDirectory = "v1";
@@ -44,6 +45,7 @@ public class SalesforceApexClientCodegen extends DefaultCodegen {
     protected boolean generateModels = true;
     protected boolean generateApis = true;
     protected boolean generateClient = true;
+    protected boolean generateTests = true;
 
     private final Logger LOGGER = LoggerFactory.getLogger(SalesforceApexClientCodegen.class);
 
@@ -149,6 +151,7 @@ public class SalesforceApexClientCodegen extends DefaultCodegen {
         cliOptions.add(CliOption.newBoolean(GENERATE_MODELS, "Generate model classes.").defaultValue("true"));
         cliOptions.add(CliOption.newBoolean(GENERATE_APIS, "Generate API classes.").defaultValue("true"));
         cliOptions.add(CliOption.newBoolean(GENERATE_CLIENT, "Generate ApiClient and ApiHttpRequestBuilder supporting files.").defaultValue("true"));
+        cliOptions.add(CliOption.newBoolean(GENERATE_TESTS, "Generate Apex test classes alongside each source class.").defaultValue("true"));
     }
 
     @Override
@@ -217,14 +220,20 @@ public class SalesforceApexClientCodegen extends DefaultCodegen {
             generateClient = Boolean.parseBoolean(additionalProperties.get(GENERATE_CLIENT).toString());
         }
 
+        if (additionalProperties.containsKey(GENERATE_TESTS)) {
+            generateTests = Boolean.parseBoolean(additionalProperties.get(GENERATE_TESTS).toString());
+        }
+
         String clientClassName = classPrefix + "ApiClient";
         String builderClassName = classPrefix + "ApiHttpRequestBuilder";
         String httpClientClassName = classPrefix + "HttpClient";
         String apiExceptionClassName = classPrefix + "ApiException";
+        String httpClientMockClassName = classPrefix + "HttpClientMock";
         additionalProperties.put("clientClassName", clientClassName);
         additionalProperties.put("builderClassName", builderClassName);
         additionalProperties.put("httpClientClassName", httpClientClassName);
         additionalProperties.put("apiExceptionClassName", apiExceptionClassName);
+        additionalProperties.put("httpClientMockClassName", httpClientMockClassName);
 
         if (generateClient) {
             supportingFiles.add(new SupportingFile("apiClient.mustache", "common", clientClassName + ".cls"));
@@ -235,6 +244,31 @@ public class SalesforceApexClientCodegen extends DefaultCodegen {
             supportingFiles.add(new SupportingFile("cls-meta.mustache", "common", apiExceptionClassName + ".cls-meta.xml"));
             supportingFiles.add(new SupportingFile("httpRequestBuilder.mustache", "common", builderClassName + ".cls"));
             supportingFiles.add(new SupportingFile("cls-meta.mustache", "common", builderClassName + ".cls-meta.xml"));
+        }
+
+        if (generateTests) {
+            // Per-model and per-API test templates (generated flat, next to source)
+            if (generateModels) {
+                modelTemplateFiles.put("modelTest.mustache", "Test.cls");
+                modelTemplateFiles.put("clsMetaTest.mustache", "Test.cls-meta.xml");
+            }
+            if (generateApis) {
+                apiTemplateFiles.put("apiTest.mustache", "Test.cls");
+                apiTemplateFiles.put("clsMetaTest.mustache", "Test.cls-meta.xml");
+            }
+            // Shared test helpers + test classes for common/ infrastructure
+            if (generateClient) {
+                supportingFiles.add(new SupportingFile("httpClientMock.mustache", "common", httpClientMockClassName + ".cls"));
+                supportingFiles.add(new SupportingFile("cls-meta.mustache", "common", httpClientMockClassName + ".cls-meta.xml"));
+                supportingFiles.add(new SupportingFile("apiClientTest.mustache", "common", clientClassName + "Test.cls"));
+                supportingFiles.add(new SupportingFile("cls-meta.mustache", "common", clientClassName + "Test.cls-meta.xml"));
+                supportingFiles.add(new SupportingFile("httpClientTest.mustache", "common", httpClientClassName + "Test.cls"));
+                supportingFiles.add(new SupportingFile("cls-meta.mustache", "common", httpClientClassName + "Test.cls-meta.xml"));
+                supportingFiles.add(new SupportingFile("apiExceptionTest.mustache", "common", apiExceptionClassName + "Test.cls"));
+                supportingFiles.add(new SupportingFile("cls-meta.mustache", "common", apiExceptionClassName + "Test.cls-meta.xml"));
+                supportingFiles.add(new SupportingFile("httpRequestBuilderTest.mustache", "common", builderClassName + "Test.cls"));
+                supportingFiles.add(new SupportingFile("cls-meta.mustache", "common", builderClassName + "Test.cls-meta.xml"));
+            }
         }
     }
 
@@ -290,6 +324,17 @@ public class SalesforceApexClientCodegen extends DefaultCodegen {
         return outputFolder + File.separator + "model" + File.separator + apiVersionDirectory;
     }
 
+    // Emit test classes flat, next to their source. Default puts them under a separate test package.
+    @Override
+    public String apiTestFileFolder() {
+        return apiFileFolder();
+    }
+
+    @Override
+    public String modelTestFileFolder() {
+        return modelFileFolder();
+    }
+
     @Override
     public String escapeReservedWord(String name) {
         if (this.reservedWordsMappings().containsKey(name)) {
@@ -328,7 +373,33 @@ public class SalesforceApexClientCodegen extends DefaultCodegen {
 
     @Override
     public ModelsMap postProcessModels(ModelsMap objs) {
+        for (ModelMap modelMap : objs.getModels()) {
+            CodegenModel model = modelMap.getModel();
+            for (CodegenProperty var : model.vars) {
+                var.vendorExtensions.put("x-apex-dummy-value", toApexDummyValue(var));
+            }
+        }
         return super.postProcessModels(objs);
+    }
+
+    // Emits an Apex expression that produces a non-null dummy value of the property/parameter's type.
+    // Used by *Test.mustache templates to populate Request DTO setters and model fixtures.
+    private String toApexDummyValue(IJsonSchemaValidationProperties p) {
+        // Arrays/maps first: an array of enum values carries both isArray=true AND isEnum=true.
+        // Check container-ness before enum so we emit the collection constructor, not the
+        // inner enum's .values()[0] (which wouldn't match the outer List/Map type).
+        if (p.getIsArray() || p.getIsMap()) return "new " + p.getDataType() + "()";
+        if (p.getIsString()) return "'x'";
+        if (p.getIsInteger()) return "1";
+        if (p.getIsLong()) return "1L";
+        if (p.getIsNumber() || p.getIsFloat() || p.getIsDouble() || p.getIsDecimal()) return "1.0";
+        if (p.getIsBoolean()) return "true";
+        if (p.getIsDate()) return "Date.today()";
+        if (p.getIsDateTime()) return "Datetime.now()";
+        if (p.getIsByteArray() || p.getIsBinary()) return "Blob.valueOf('x')";
+        if (p.getIsEnum()) return p.getDataType() + ".values()[0]";
+        // Custom models support no-arg construction in Apex.
+        return "new " + p.getDataType() + "()";
     }
 
     @Override
@@ -356,6 +427,7 @@ public class SalesforceApexClientCodegen extends DefaultCodegen {
             String responseClassName = operationIdPascal + "Response";
             op.vendorExtensions.put("x-apex-dto-class", dtoClassName);
             op.vendorExtensions.put("x-apex-response-class", responseClassName);
+            op.vendorExtensions.put("x-apex-operation-pascal", operationIdPascal);
 
             // Duplicate dtoClassName and setter name onto each param — inside {{#allParams}},
             // Mustache resolves vendorExtensions against the param's map, shadowing the operation's.
@@ -364,6 +436,7 @@ public class SalesforceApexClientCodegen extends DefaultCodegen {
                         + param.paramName.substring(1);
                 param.vendorExtensions.put("x-apex-setter", setter);
                 param.vendorExtensions.put("x-apex-dto-class", dtoClassName);
+                param.vendorExtensions.put("x-apex-dummy-value", toApexDummyValue(param));
             }
         }
 
