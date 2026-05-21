@@ -20,32 +20,35 @@ import static org.openapitools.codegen.utils.StringUtils.camelize;
 
 public class SalesforceApexClientCodegen extends DefaultCodegen {
 
-    public static final String CLASS_PREFIX = "classPrefix";
-    public static final String API_VERSION_DIRECTORY = "apiVersionDirectory";
+    // Additional properties keys
     public static final String ACCESS_MODIFIER = "accessModifier";
-    public static final String SALESFORCE_API_VERSION = "salesforceApiVersion";
-    public static final String FLUENT_SETTERS = "fluentSetters";
-    public static final String JSON_ACCESS = "jsonAccess";
+    public static final String API_VERSION = "apiVersion";
     public static final String AURA_ENABLED = "auraEnabled";
-    public static final String SUPPRESS_WARNINGS = "suppressWarnings";
-    public static final String GENERATE_MODELS = "generateModels";
+    public static final String CLASS_PREFIX = "classPrefix";
+    public static final String FLUENT_SETTERS = "fluentSetters";
     public static final String GENERATE_APIS = "generateApis";
     public static final String GENERATE_CLIENT = "generateClient";
+    public static final String GENERATE_MODELS = "generateModels";
     public static final String GENERATE_TESTS = "generateTests";
+    public static final String JSON_ACCESS = "jsonAccess";
+    public static final String OUTPUT_DIRECTORY_NAME = "outputDirectoryName";
+    public static final String SALESFORCE_API_VERSION = "salesforceApiVersion";
+    public static final String SUPPRESS_WARNINGS = "suppressWarnings";
 
-    protected String classPrefix = "Api";
-    protected String apiVersionDirectory = "v1";
-    protected String versionSuffix = "V1";
-    protected String accessModifier = "global";
-    protected String salesforceApiVersion = "62.0";
-    protected boolean fluentSetters = true;
-    protected boolean jsonAccess = true;
-    protected boolean auraEnabled = false;
-    protected String suppressWarnings = "";
-    protected boolean generateModels = true;
-    protected boolean generateApis = true;
-    protected boolean generateClient = true;
-    protected boolean generateTests = true;
+    // Default values for additional properties
+    private boolean auraEnabled = false;
+    private boolean fluentSetters = true;
+    private boolean generateApis = true;
+    private boolean generateClient = true;
+    private boolean generateModels = true;
+    private boolean generateTests = true;
+    private boolean jsonAccess = true;
+    private String accessModifier = "global";
+    private String apiVersion = "";
+    private String classPrefix = "";
+    private String outputDirectoryName = "";
+    private String salesforceApiVersion = "67.0";
+    private String suppressWarnings = true;
 
     private final Logger LOGGER = LoggerFactory.getLogger(SalesforceApexClientCodegen.class);
 
@@ -72,86 +75,99 @@ public class SalesforceApexClientCodegen extends DefaultCodegen {
 
         modelTemplateFiles.put("model.mustache", ".cls");
         modelTemplateFiles.put("cls-meta.mustache", ".cls-meta.xml");
+
         apiTemplateFiles.put("api.mustache", ".cls");
         apiTemplateFiles.put("cls-meta.mustache", ".cls-meta.xml");
 
         // OAS → Apex type mappings
         typeMapping.clear();
-        typeMapping.put("integer", "Integer");
-        typeMapping.put("long", "Long");
-        typeMapping.put("float", "Decimal");
-        typeMapping.put("double", "Decimal");
-        typeMapping.put("number", "Decimal");
-        typeMapping.put("decimal", "Decimal");
+        typeMapping.put("any", "Object");
+        typeMapping.put("AnyType", "Object");
+        typeMapping.put("array", "List");
+        typeMapping.put("binary", "Blob");
         typeMapping.put("boolean", "Boolean");
-        typeMapping.put("string", "String");
-        typeMapping.put("UUID", "String");
-        typeMapping.put("URI", "String");
+        typeMapping.put("ByteArray", "Blob");
+        typeMapping.put("date-time", "Datetime");
         typeMapping.put("date", "Date");
         typeMapping.put("DateTime", "Datetime");
-        typeMapping.put("date-time", "Datetime");
-        typeMapping.put("object", "Map<String, Object>");
-        typeMapping.put("map", "Map");
-        typeMapping.put("array", "List");
-        typeMapping.put("List", "List");
-        typeMapping.put("set", "List");
-        typeMapping.put("binary", "Blob");
-        typeMapping.put("ByteArray", "Blob");
+        typeMapping.put("decimal", "Decimal");
+        typeMapping.put("double", "Decimal");
         typeMapping.put("file", "Blob");
-        typeMapping.put("AnyType", "Object");
-        typeMapping.put("any", "Object");
+        typeMapping.put("float", "Decimal");
+        typeMapping.put("integer", "Integer");
+        typeMapping.put("List", "List");
+        typeMapping.put("long", "Long");
+        typeMapping.put("map", "Map");
+        typeMapping.put("number", "Decimal");
+        typeMapping.put("object", "Map<String, Object>");
+        typeMapping.put("set", "List");
+        typeMapping.put("string", "String");
+        typeMapping.put("URI", "String");
+        typeMapping.put("UUID", "UUID");
 
         instantiationTypes.put("array", "List");
         instantiationTypes.put("map", "Map");
 
         languageSpecificPrimitives.clear();
+        languageSpecificPrimitives.add("Blob");
         languageSpecificPrimitives.add("Boolean");
-        languageSpecificPrimitives.add("Integer");
-        languageSpecificPrimitives.add("Long");
-        languageSpecificPrimitives.add("Decimal");
-        languageSpecificPrimitives.add("Double");
-        languageSpecificPrimitives.add("String");
         languageSpecificPrimitives.add("Date");
         languageSpecificPrimitives.add("Datetime");
-        languageSpecificPrimitives.add("Blob");
-        languageSpecificPrimitives.add("Object");
+        languageSpecificPrimitives.add("Decimal");
+        languageSpecificPrimitives.add("Double");
         languageSpecificPrimitives.add("Id");
+        languageSpecificPrimitives.add("Integer");
+        languageSpecificPrimitives.add("Long");
+        languageSpecificPrimitives.add("Object");
+        languageSpecificPrimitives.add("String");
 
+        // Derived from:
+        // https://developer.salesforce.com/docs/atlas.en-us.apexref.meta/apexref/apex_reserved_words.htm
         setReservedWordsLowerCase(Arrays.asList(
-                "abstract", "activate", "and", "any", "array", "as", "asc", "autonomous",
-                "begin", "bigdecimal", "blob", "boolean", "break", "bulk", "by",
-                "case", "cast", "catch", "char", "class", "collect", "commit", "const",
-                "continue", "convertcurrency", "date", "datetime", "decimal", "default",
-                "delete", "desc", "do", "else", "end", "enum", "exception", "exit",
-                "export", "extends", "false", "final", "finally", "float", "for",
-                "from", "future", "global", "goto", "group", "having", "hint",
-                "if", "implements", "import", "inner", "insert", "instanceof", "int",
-                "integer", "interface", "into", "join",
-                "like", "limit", "list", "long", "loop",
-                "map", "merge", "new",
-                "not", "null", "nulls", "number", "object", "of", "on",
-                "or", "outer", "override", "package", "parallel", "pragma", "private",
-                "protected", "public", "retrieve", "return", "rollback", "runas",
-                "savepoint", "search", "select", "set", "short", "sort", "stat",
-                "static", "string", "super", "switch", "synchronized", "system",
-                "testmethod", "then", "this", "throw", "time", "today", "tomorrow",
-                "transaction", "trigger", "true", "try", "type", "undelete", "update",
-                "upsert", "using", "virtual", "void", "webservice", "when", "where",
-                "while", "yesterday"
-        ));
+                "abstract", "activate", "and", "any", "array", "as", "asc", "autonomous", "begin", "bigdecimal", "blob",
+                "boolean", "break", "bulk", "by", "byte", "case", "cast", "catch", "char", "class", "collect", "commit",
+                "const", "continue", "currency", "date", "datetime", "decimal", "default", "delete", "desc", "do",
+                "double", "else", "end", "enum", "exception", "exit", "export", "extends", "false", "final", "finally",
+                "float", "for", "from", "global", "goto", "group", "having", "hint", "if", "implements", "import", "in",
+                "inner", "insert", "instanceof", "int", "integer", "interface", "into", "join", "like", "limit", "list",
+                "long", "loop", "map", "merge", "new", "not", "null", "nulls", "number", "object", "of", "on", "or",
+                "outer", "override", "package", "parallel", "pragma", "private", "protected", "public", "retrieve",
+                "return", "rollback", "select", "set", "short", "sObject", "sort", "static", "string", "super",
+                "switch", "synchronized", "system", "testmethod", "then", "this", "throw", "time", "transaction",
+                "trigger", "true", "try", "undelete", "update", "upsert", "using", "virtual", "void", "webservice",
+                "when", "where", "while"));
 
-        cliOptions.add(new CliOption(CLASS_PREFIX, "Prefix for all generated class names.").defaultValue("Api"));
-        cliOptions.add(new CliOption(API_VERSION_DIRECTORY, "Version directory name (e.g. latest.v3).").defaultValue("v1"));
-        cliOptions.add(new CliOption(ACCESS_MODIFIER, "Access modifier for generated classes and fields (global or public).").defaultValue("global"));
-        cliOptions.add(new CliOption(SALESFORCE_API_VERSION, "Salesforce API version for cls-meta.xml.").defaultValue("62.0"));
-        cliOptions.add(CliOption.newBoolean(FLUENT_SETTERS, "Generate fluent setters returning this (builder pattern).").defaultValue("true"));
-        cliOptions.add(CliOption.newBoolean(JSON_ACCESS, "Add @JsonAccess(serializable='always' deserializable='always') to model classes.").defaultValue("true"));
-        cliOptions.add(CliOption.newBoolean(AURA_ENABLED, "Add @AuraEnabled to each model field.").defaultValue("false"));
-        cliOptions.add(new CliOption(SUPPRESS_WARNINGS, "PMD suppression string for @SuppressWarnings (empty = omit).").defaultValue(""));
-        cliOptions.add(CliOption.newBoolean(GENERATE_MODELS, "Generate model classes.").defaultValue("true"));
-        cliOptions.add(CliOption.newBoolean(GENERATE_APIS, "Generate API classes.").defaultValue("true"));
-        cliOptions.add(CliOption.newBoolean(GENERATE_CLIENT, "Generate ApiClient and ApiHttpRequestBuilder supporting files.").defaultValue("true"));
-        cliOptions.add(CliOption.newBoolean(GENERATE_TESTS, "Generate Apex test classes alongside each source class.").defaultValue("true"));
+        cliOptions.add(CliOption.newBoolean(AURA_ENABLED, "Add @AuraEnabled to each model field.")
+                .defaultValue(Boolean.toString(auraEnabled)));
+        cliOptions.add(CliOption.newBoolean(FLUENT_SETTERS, "Generate fluent setters returning this (builder pattern).")
+                .defaultValue(Boolean.toString(fluentSetters)));
+        cliOptions.add(CliOption.newBoolean(GENERATE_APIS, "Generate API classes.")
+                .defaultValue(Boolean.toString(generateApis)));
+        cliOptions.add(
+                CliOption.newBoolean(GENERATE_CLIENT, "Generate ApiClient and ApiHttpRequestBuilder supporting files.")
+                        .defaultValue(Boolean.toString(generateClient)));
+        cliOptions.add(CliOption.newBoolean(GENERATE_MODELS, "Generate model classes.")
+                .defaultValue(Boolean.toString(generateModels)));
+        cliOptions.add(CliOption.newBoolean(GENERATE_TESTS, "Generate Apex test classes alongside each source class.")
+                .defaultValue(Boolean.toString(generateTests)));
+        cliOptions.add(CliOption
+                .newBoolean(JSON_ACCESS,
+                        "Add @JsonAccess(serializable='always' deserializable='always') to model classes.")
+                .defaultValue(Boolean.toString(jsonAccess)));
+        cliOptions.add(CliOption
+                .newString(ACCESS_MODIFIER, "Access modifier for generated classes and fields (global or public).")
+                .defaultValue(accessModifier));
+        cliOptions.add(CliOption.newString(API_VERSION, "API version subdirectory for generated sources (e.g. v1).")
+                .defaultValue(apiVersion));
+        cliOptions.add(
+                CliOption.newString(CLASS_PREFIX, "Prefix for all generated class names.").defaultValue(classPrefix));
+        cliOptions.add(CliOption.newString(OUTPUT_DIRECTORY_NAME, "Output directory name (e.g. latest).")
+                .defaultValue(outputDirectoryName));
+        cliOptions.add(CliOption.newString(SALESFORCE_API_VERSION, "Salesforce API version for cls-meta.xml.")
+                .defaultValue(salesforceApiVersion));
+        cliOptions.add(
+                CliOption.newString(SUPPRESS_WARNINGS, "PMD suppression string for @SuppressWarnings (empty = omit).")
+                        .defaultValue(suppressWarnings));
     }
 
     @Override
@@ -163,12 +179,15 @@ public class SalesforceApexClientCodegen extends DefaultCodegen {
         }
         additionalProperties.put(CLASS_PREFIX, classPrefix);
 
-        if (additionalProperties.containsKey(API_VERSION_DIRECTORY)) {
-            apiVersionDirectory = (String) additionalProperties.get(API_VERSION_DIRECTORY);
+        if (additionalProperties.containsKey(API_VERSION)) {
+            apiVersion = (String) additionalProperties.get(API_VERSION);
         }
-        versionSuffix = deriveVersionSuffix(apiVersionDirectory);
-        additionalProperties.put(API_VERSION_DIRECTORY, apiVersionDirectory);
-        additionalProperties.put("versionSuffix", versionSuffix);
+        additionalProperties.put(API_VERSION, apiVersion);
+
+        if (additionalProperties.containsKey(OUTPUT_DIRECTORY_NAME)) {
+            outputDirectoryName = (String) additionalProperties.get(OUTPUT_DIRECTORY_NAME);
+        }
+        additionalProperties.put(OUTPUT_DIRECTORY_NAME, outputDirectoryName);
 
         if (additionalProperties.containsKey(ACCESS_MODIFIER)) {
             accessModifier = (String) additionalProperties.get(ACCESS_MODIFIER);
@@ -199,7 +218,6 @@ public class SalesforceApexClientCodegen extends DefaultCodegen {
             suppressWarnings = (String) additionalProperties.get(SUPPRESS_WARNINGS);
         }
         additionalProperties.put(SUPPRESS_WARNINGS, suppressWarnings);
-        // Mustache treats empty string as truthy, so use a dedicated boolean flag
         additionalProperties.put("hasSuppressWarnings", !suppressWarnings.isEmpty());
 
         if (additionalProperties.containsKey(GENERATE_MODELS)) {
@@ -224,13 +242,13 @@ public class SalesforceApexClientCodegen extends DefaultCodegen {
             generateTests = Boolean.parseBoolean(additionalProperties.get(GENERATE_TESTS).toString());
         }
 
-        String clientClassName = classPrefix + "ApiClient";
-        String builderClassName = classPrefix + "ApiHttpRequestBuilder";
-        String httpClientClassName = classPrefix + "HttpClient";
-        String apiExceptionClassName = classPrefix + "ApiException";
-        String httpClientMockClassName = classPrefix + "HttpClientMock";
+        final String clientClassName = classPrefix + "ApiClient";
+        final String httpRequestBuilderClassName = classPrefix + "HttpRequestBuilder";
+        final String httpClientClassName = classPrefix + "HttpClient";
+        final String apiExceptionClassName = classPrefix + "ApiException";
+        final String httpClientMockClassName = classPrefix + "HttpClientMock";
         additionalProperties.put("clientClassName", clientClassName);
-        additionalProperties.put("builderClassName", builderClassName);
+        additionalProperties.put("httpRequestBuilderClassName", httpRequestBuilderClassName);
         additionalProperties.put("httpClientClassName", httpClientClassName);
         additionalProperties.put("apiExceptionClassName", apiExceptionClassName);
         additionalProperties.put("httpClientMockClassName", httpClientMockClassName);
@@ -239,15 +257,18 @@ public class SalesforceApexClientCodegen extends DefaultCodegen {
             supportingFiles.add(new SupportingFile("apiClient.mustache", "common", clientClassName + ".cls"));
             supportingFiles.add(new SupportingFile("cls-meta.mustache", "common", clientClassName + ".cls-meta.xml"));
             supportingFiles.add(new SupportingFile("httpClient.mustache", "common", httpClientClassName + ".cls"));
-            supportingFiles.add(new SupportingFile("cls-meta.mustache", "common", httpClientClassName + ".cls-meta.xml"));
+            supportingFiles
+                    .add(new SupportingFile("cls-meta.mustache", "common", httpClientClassName + ".cls-meta.xml"));
             supportingFiles.add(new SupportingFile("apiException.mustache", "common", apiExceptionClassName + ".cls"));
-            supportingFiles.add(new SupportingFile("cls-meta.mustache", "common", apiExceptionClassName + ".cls-meta.xml"));
-            supportingFiles.add(new SupportingFile("httpRequestBuilder.mustache", "common", builderClassName + ".cls"));
-            supportingFiles.add(new SupportingFile("cls-meta.mustache", "common", builderClassName + ".cls-meta.xml"));
+            supportingFiles
+                    .add(new SupportingFile("cls-meta.mustache", "common", apiExceptionClassName + ".cls-meta.xml"));
+            supportingFiles.add(
+                    new SupportingFile("httpRequestBuilder.mustache", "common", httpRequestBuilderClassName + ".cls"));
+            supportingFiles.add(
+                    new SupportingFile("cls-meta.mustache", "common", httpRequestBuilderClassName + ".cls-meta.xml"));
         }
 
         if (generateTests) {
-            // Per-model and per-API test templates (generated flat, next to source)
             if (generateModels) {
                 modelTemplateFiles.put("modelTest.mustache", "Test.cls");
                 modelTemplateFiles.put("clsMetaTest.mustache", "Test.cls-meta.xml");
@@ -256,30 +277,35 @@ public class SalesforceApexClientCodegen extends DefaultCodegen {
                 apiTemplateFiles.put("apiTest.mustache", "Test.cls");
                 apiTemplateFiles.put("clsMetaTest.mustache", "Test.cls-meta.xml");
             }
-            // Shared test helpers + test classes for common/ infrastructure
             if (generateClient) {
-                supportingFiles.add(new SupportingFile("httpClientMock.mustache", "common", httpClientMockClassName + ".cls"));
-                supportingFiles.add(new SupportingFile("cls-meta.mustache", "common", httpClientMockClassName + ".cls-meta.xml"));
-                supportingFiles.add(new SupportingFile("apiClientTest.mustache", "common", clientClassName + "Test.cls"));
-                supportingFiles.add(new SupportingFile("cls-meta.mustache", "common", clientClassName + "Test.cls-meta.xml"));
-                supportingFiles.add(new SupportingFile("httpClientTest.mustache", "common", httpClientClassName + "Test.cls"));
-                supportingFiles.add(new SupportingFile("cls-meta.mustache", "common", httpClientClassName + "Test.cls-meta.xml"));
-                supportingFiles.add(new SupportingFile("apiExceptionTest.mustache", "common", apiExceptionClassName + "Test.cls"));
-                supportingFiles.add(new SupportingFile("cls-meta.mustache", "common", apiExceptionClassName + "Test.cls-meta.xml"));
-                supportingFiles.add(new SupportingFile("httpRequestBuilderTest.mustache", "common", builderClassName + "Test.cls"));
-                supportingFiles.add(new SupportingFile("cls-meta.mustache", "common", builderClassName + "Test.cls-meta.xml"));
+                supportingFiles
+                        .add(new SupportingFile("httpClientMock.mustache", "common", httpClientMockClassName + ".cls"));
+                supportingFiles.add(
+                        new SupportingFile("cls-meta.mustache", "common", httpClientMockClassName + ".cls-meta.xml"));
+
+                supportingFiles
+                        .add(new SupportingFile("apiClientTest.mustache", "common", clientClassName + "Test.cls"));
+                supportingFiles
+                        .add(new SupportingFile("cls-meta.mustache", "common", clientClassName + "Test.cls-meta.xml"));
+
+                supportingFiles
+                        .add(new SupportingFile("httpClientTest.mustache", "common", httpClientClassName + "Test.cls"));
+                supportingFiles.add(
+                        new SupportingFile("cls-meta.mustache", "common", httpClientClassName + "Test.cls-meta.xml"));
+
+                supportingFiles.add(
+                        new SupportingFile("apiExceptionTest.mustache", "common", apiExceptionClassName + "Test.cls"));
+                supportingFiles.add(
+                        new SupportingFile("cls-meta.mustache", "common", apiExceptionClassName + "Test.cls-meta.xml"));
+
+                supportingFiles.add(
+                        new SupportingFile("httpRequestBuilderTest.mustache", "common",
+                                httpRequestBuilderClassName + "Test.cls"));
+                supportingFiles
+                        .add(new SupportingFile("cls-meta.mustache", "common",
+                                httpRequestBuilderClassName + "Test.cls-meta.xml"));
             }
         }
-    }
-
-    // Derives the class-name version suffix from the directory version string.
-    // E.g. "latest.v3" → "V3", "v2" → "V2"
-    private String deriveVersionSuffix(String versionDirectory) {
-        if (StringUtils.isBlank(versionDirectory)) return "";
-        String[] parts = versionDirectory.split("\\.");
-        String last = parts[parts.length - 1];
-        if (StringUtils.isBlank(last)) return "";
-        return last.substring(0, 1).toUpperCase(Locale.ROOT) + last.substring(1);
     }
 
     @Override
@@ -292,7 +318,7 @@ public class SalesforceApexClientCodegen extends DefaultCodegen {
         if (camelized.matches("^\\d.*")) {
             camelized = "Model" + camelized;
         }
-        return classPrefix + versionSuffix + camelized;
+        return classPrefix + apiVersion + camelized;
     }
 
     @Override
@@ -303,10 +329,10 @@ public class SalesforceApexClientCodegen extends DefaultCodegen {
     @Override
     public String toApiName(String name) {
         if (StringUtils.isBlank(name)) {
-            return classPrefix + versionSuffix + "DefaultApi";
+            return classPrefix + apiVersion + "DefaultApi";
         }
         String camelized = camelize(sanitizeName(name));
-        return classPrefix + versionSuffix + camelized + "Api";
+        return classPrefix + apiVersion + camelized + "Api";
     }
 
     @Override
@@ -316,23 +342,26 @@ public class SalesforceApexClientCodegen extends DefaultCodegen {
 
     @Override
     public String apiFileFolder() {
-        return outputFolder + File.separator + "api" + File.separator + apiVersionDirectory;
+        return outputFolder + File.separator + "api" + File.separator + outputDirectoryName
+                + (apiVersion.isEmpty() ? "" : "." + apiVersion);
     }
 
     @Override
     public String modelFileFolder() {
-        return outputFolder + File.separator + "model" + File.separator + apiVersionDirectory;
+        return outputFolder + File.separator + "model" + File.separator + outputDirectoryName
+                + (apiVersion.isEmpty() ? "" : "." + apiVersion);
     }
 
-    // Emit test classes flat, next to their source. Default puts them under a separate test package.
     @Override
     public String apiTestFileFolder() {
-        return apiFileFolder();
+        return outputFolder + File.separator + "api" + File.separator + outputDirectoryName
+                + (apiVersion.isEmpty() ? "" : "." + apiVersion);
     }
 
     @Override
     public String modelTestFileFolder() {
-        return modelFileFolder();
+        return outputFolder + File.separator + "model" + File.separator + outputDirectoryName
+                + (apiVersion.isEmpty() ? "" : "." + apiVersion);
     }
 
     @Override
@@ -340,18 +369,22 @@ public class SalesforceApexClientCodegen extends DefaultCodegen {
         if (this.reservedWordsMappings().containsKey(name)) {
             return this.reservedWordsMappings().get(name);
         }
-        return "_" + name;
+        return "x_" + name;
     }
 
     @Override
     public String getTypeDeclaration(Schema p) {
         if (ModelUtils.isArraySchema(p)) {
             Schema inner = ModelUtils.getSchemaItems(p);
-            if (inner == null) return "List<Object>";
+            if (inner == null) {
+                return "List<Object>";
+            }
             return "List<" + getTypeDeclaration(inner) + ">";
         } else if (ModelUtils.isMapSchema(p)) {
             Schema inner = ModelUtils.getAdditionalProperties(p);
-            if (inner == null) return "Map<String, Object>";
+            if (inner == null) {
+                return "Map<String, Object>";
+            }
             return "Map<String, " + getTypeDeclaration(inner) + ">";
         }
         return super.getTypeDeclaration(p);
@@ -382,22 +415,38 @@ public class SalesforceApexClientCodegen extends DefaultCodegen {
         return super.postProcessModels(objs);
     }
 
-    // Emits an Apex expression that produces a non-null dummy value of the property/parameter's type.
-    // Used by *Test.mustache templates to populate Request DTO setters and model fixtures.
     private String toApexDummyValue(IJsonSchemaValidationProperties p) {
-        // Arrays/maps first: an array of enum values carries both isArray=true AND isEnum=true.
-        // Check container-ness before enum so we emit the collection constructor, not the
-        // inner enum's .values()[0] (which wouldn't match the outer List/Map type).
-        if (p.getIsArray() || p.getIsMap()) return "new " + p.getDataType() + "()";
-        if (p.getIsString()) return "'x'";
-        if (p.getIsInteger()) return "1";
-        if (p.getIsLong()) return "1L";
-        if (p.getIsNumber() || p.getIsFloat() || p.getIsDouble() || p.getIsDecimal()) return "1.0";
-        if (p.getIsBoolean()) return "true";
-        if (p.getIsDate()) return "Date.today()";
-        if (p.getIsDateTime()) return "Datetime.now()";
-        if (p.getIsByteArray() || p.getIsBinary()) return "Blob.valueOf('x')";
-        if (p.getIsEnum()) return p.getDataType() + ".values()[0]";
+        if (p.getIsArray() || p.getIsMap()) {
+            return "new " + p.getDataType() + "()";
+        }
+        if (p.getIsString()) {
+            return "'x'";
+        }
+        if (p.getIsInteger()) {
+            return "1";
+        }
+        if (p.getIsLong()) {
+            return "1L";
+        }
+        if (p.getIsNumber() || p.getIsFloat() || p.getIsDouble() || p.getIsDecimal()) {
+            return "1.0";
+        }
+        if (p.getIsBoolean()) {
+            return "true";
+        }
+        if (p.getIsDate()) {
+            return "Date.today()";
+        }
+        if (p.getIsDateTime()) {
+            return "Datetime.now()";
+        }
+        if (p.getIsByteArray() || p.getIsBinary()) {
+            return "Blob.valueOf('x')";
+        }
+        if (p.getIsEnum()) {
+            return p.getDataType() + ".values()[0]";
+        }
+
         // Custom models support no-arg construction in Apex.
         return "new " + p.getDataType() + "()";
     }
@@ -405,9 +454,9 @@ public class SalesforceApexClientCodegen extends DefaultCodegen {
     @Override
     public OperationsMap postProcessOperationsWithModels(OperationsMap objs, List<ModelMap> allModels) {
         String clientClassName = classPrefix + "ApiClient";
-        String builderClassName = classPrefix + "ApiHttpRequestBuilder";
+        String httpRequestBuilderClassName = classPrefix + "ApiHttpRequestBuilder";
         objs.put("clientClassName", clientClassName);
-        objs.put("builderClassName", builderClassName);
+        objs.put("httpRequestBuilderClassName", httpRequestBuilderClassName);
 
         List<CodegenOperation> ops = objs.getOperations().getOperation();
         for (CodegenOperation op : ops) {
@@ -417,10 +466,11 @@ public class SalesforceApexClientCodegen extends DefaultCodegen {
                     : op.httpMethod.toUpperCase(Locale.ROOT);
             op.vendorExtensions.put("x-apex-http-method", apexHttpMethod);
 
-            // Convert OAS path template {param} to Apex string concatenation with request. prefix
+            // Convert OAS path template {param} to Apex string concatenation with request.
+            // prefix
             op.vendorExtensions.put("x-apex-path-request", toApexPathWithPrefix(op.path, "request."));
 
-            // DTO inner class names: getPetById → GetPetByIdRequest / GetPetByIdResponse
+            // DTO inner class names: getPetById → [GetPetByIdRequest / GetPetByIdResponse]
             String operationIdPascal = Character.toUpperCase(op.operationId.charAt(0))
                     + op.operationId.substring(1);
             String dtoClassName = operationIdPascal + "Request";
@@ -429,8 +479,10 @@ public class SalesforceApexClientCodegen extends DefaultCodegen {
             op.vendorExtensions.put("x-apex-response-class", responseClassName);
             op.vendorExtensions.put("x-apex-operation-pascal", operationIdPascal);
 
-            // Duplicate dtoClassName and setter name onto each param — inside {{#allParams}},
-            // Mustache resolves vendorExtensions against the param's map, shadowing the operation's.
+            // Duplicate dtoClassName and setter name onto each param — inside
+            // {{#allParams}},
+            // Mustache resolves vendorExtensions against the param's map, shadowing the
+            // operation's.
             for (CodegenParameter param : op.allParams) {
                 String setter = "set" + Character.toUpperCase(param.paramName.charAt(0))
                         + param.paramName.substring(1);
@@ -443,21 +495,12 @@ public class SalesforceApexClientCodegen extends DefaultCodegen {
         return super.postProcessOperationsWithModels(objs, allModels);
     }
 
-    // Converts an OAS path like /pet/{petId}/friends to 'pet/' + {prefix}petId + '/friends'
+    // Converts an OAS path like /pet/{petId}/friends to 'pet/' + {prefix}petId +
+    // '/friends'
     private String toApexPathWithPrefix(String path, String prefix) {
-        if (path == null) return "''";
-        path = path.replaceFirst("^/", "");
-        Matcher m = Pattern.compile("\\{([^}]+)\\}").matcher(path);
-        StringBuffer sb = new StringBuffer();
-        while (m.find()) {
-            String paramName = toParamName(m.group(1));
-            m.appendReplacement(sb, Matcher.quoteReplacement("' + " + prefix + paramName + " + '"));
+        if (path == null) {
+            return "''";
         }
-        m.appendTail(sb);
-        path = "'" + sb + "'";
-        // Clean up trailing + '' and leading '' +
-        path = path.replaceAll(" \\+ ''$", "");
-        path = path.replaceAll("^'' \\+ ", "");
         return path;
     }
 
@@ -499,7 +542,9 @@ public class SalesforceApexClientCodegen extends DefaultCodegen {
 
     @Override
     public String toParamName(String name) {
-        if ("callback".equals(name)) return "paramCallback";
+        if ("callback".equals(name)) {
+            return "paramCallback";
+        }
         return toVarName(name);
     }
 }

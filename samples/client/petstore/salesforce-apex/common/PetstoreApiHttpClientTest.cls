@@ -18,7 +18,7 @@ private class PetstoreApiHttpClientTest {
     Test.startTest();
     final PetstoreApiHttpClient.HttpResult result = new PetstoreApiHttpClient().send(req);
     Test.stopTest();
-    System.assertEquals(200, result.response.getStatusCode());
-    System.assertEquals(req, result.request);
+    Assert.areEqual(200, result.response.getStatusCode());
+    Assert.areEqual(req, result.request);
   }
 }

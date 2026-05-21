@@ -3,21 +3,21 @@ private class PetstoreApiApiClientTest {
   @IsTest
   static void testDefaultConstructor() {
     final PetstoreApiApiClient client = new PetstoreApiApiClient('https://test', 'v1');
-    System.assertNotEquals(null, client);
+    Assert.areNotEqual(null, client);
   }
 
   @IsTest
   static void testInjectedHttpClient() {
     final PetstoreApiHttpClientMock mock = new PetstoreApiHttpClientMock();
     final PetstoreApiApiClient client = new PetstoreApiApiClient('https://test', 'v1', mock);
-    System.assertNotEquals(null, client);
+    Assert.areNotEqual(null, client);
   }
 
   @IsTest
   static void testAddHeaderReturnsSelf() {
     final PetstoreApiApiClient client = new PetstoreApiApiClient('https://test', 'v1');
     final PetstoreApiApiClient returned = client.addHeader('X-Test', 'value');
-    System.assertEquals(client, returned);
+    Assert.areEqual(client, returned);
   }
 
   @IsTest
@@ -28,10 +28,10 @@ private class PetstoreApiApiClientTest {
     res.setBody('{}');
     mock.nextResponse = res;
     final PetstoreApiApiClient client = new PetstoreApiApiClient('https://test', 'v1', mock);
-    final PetstoreApiApiHttpRequestBuilder builder = new PetstoreApiApiHttpRequestBuilder()
+    final PetstoreApiHttpRequestBuilder builder = new PetstoreApiHttpRequestBuilder()
       .setEndpoint('x')
-      .setMethod(PetstoreApiApiHttpRequestBuilder.HttpMethod.GET);
+      .setMethod(PetstoreApiHttpRequestBuilder.HttpMethod.GET);
     final PetstoreApiHttpClient.HttpResult result = client.send(builder);
-    System.assertEquals(200, result.response.getStatusCode());
+    Assert.areEqual(200, result.response.getStatusCode());
   }
 }

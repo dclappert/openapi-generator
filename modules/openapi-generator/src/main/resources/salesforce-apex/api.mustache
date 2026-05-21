@@ -50,9 +50,9 @@
   {{accessModifier}} virtual {{vendorExtensions.x-apex-response-class}} {{operationId}}WithHttpInfo(
     final {{vendorExtensions.x-apex-dto-class}} request
   ) {
-    final {{{builderClassName}}} builder = new {{{builderClassName}}}()
-      .setEndpoint({{{vendorExtensions.x-apex-path-request}}})
-      .setMethod({{{builderClassName}}}.HttpMethod.{{vendorExtensions.x-apex-http-method}});
+    final {{{httpRequestBuilderClassName}}} builder = new {{{httpRequestBuilderClassName}}}()
+      .setEndpoint('{{{vendorExtensions.x-apex-path-request}}}')
+      .setMethod({{{httpRequestBuilderClassName}}}.HttpMethod.{{vendorExtensions.x-apex-http-method}});
 {{#bodyParam}}
     builder.setBody(JSON.serialize(request.{{paramName}}));
 {{/bodyParam}}
@@ -63,7 +63,7 @@
         {{paramName}}Strs.add(String.valueOf(item));
       }
       builder.addQueryParameter('{{baseName}}', String.join({{paramName}}Strs, ','));
-    }{{/isArray}}{{^isArray}}if (request.{{paramName}} != null{{#isString}} && !String.isBlank(request.{{paramName}}){{/isString}}) {
+    }{{/isArray}}{{^isArray}}if (request.{{paramName}} != null{{#isString}} && String.isNotBlank(request.{{paramName}}){{/isString}}) {
       builder.addQueryParameter('{{baseName}}', String.valueOf(request.{{paramName}}));
     }{{/isArray}}
 {{/queryParams}}

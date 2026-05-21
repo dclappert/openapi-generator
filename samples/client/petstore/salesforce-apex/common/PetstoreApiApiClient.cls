@@ -19,7 +19,7 @@ global virtual class PetstoreApiApiClient {
     return this;
   }
 
-  global virtual PetstoreApiHttpClient.HttpResult send(final PetstoreApiApiHttpRequestBuilder builder) {
+  global virtual PetstoreApiHttpClient.HttpResult send(final PetstoreApiHttpRequestBuilder builder) {
     final HttpRequest req = builder.build(this.baseUrl, this.version, this.headers);
     return this.httpClient.send(req);
   }

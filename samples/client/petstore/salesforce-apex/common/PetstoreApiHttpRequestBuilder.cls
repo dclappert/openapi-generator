@@ -1,4 +1,4 @@
-public class {{{httpRequestBuilderClassName}}} {
+public class PetstoreApiHttpRequestBuilder {
   // DELETE is a reserved keyword in Apex — use DEL and map to 'DELETE' in build()
   public enum HttpMethod { GET, POST, PUT, PATCH, DEL }
 
@@ -7,22 +7,22 @@ public class {{{httpRequestBuilderClassName}}} {
   private HttpMethod method;
   private Map<String, String> queryParams = new Map<String, String>();
 
-  public {{{httpRequestBuilderClassName}}} setEndpoint(final String endpoint) {
+  public PetstoreApiHttpRequestBuilder setEndpoint(final String endpoint) {
     this.endpoint = endpoint;
     return this;
   }
 
-  public {{{httpRequestBuilderClassName}}} setMethod(final HttpMethod method) {
+  public PetstoreApiHttpRequestBuilder setMethod(final HttpMethod method) {
     this.method = method;
     return this;
   }
 
-  public {{{httpRequestBuilderClassName}}} setBody(final String body) {
+  public PetstoreApiHttpRequestBuilder setBody(final String body) {
     this.body = body;
     return this;
   }
 
-  public {{{httpRequestBuilderClassName}}} addQueryParameter(final String key, final String value) {
+  public PetstoreApiHttpRequestBuilder addQueryParameter(final String key, final String value) {
     this.queryParams.put(key, value);
     return this;
   }

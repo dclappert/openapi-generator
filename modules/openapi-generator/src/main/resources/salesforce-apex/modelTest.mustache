@@ -5,7 +5,7 @@ private class {{classname}}Test {
 {{#isEnum}}
   @IsTest
   static void testValues() {
-    System.assert({{classname}}.values().size() > 0);
+    Assert.isTrue({{classname}}.values().size() > 0);
   }
 {{/isEnum}}
 {{^isEnum}}
@@ -14,7 +14,7 @@ private class {{classname}}Test {
     {{classname}} m = new {{classname}}(){{#vars}}
       .{{setter}}({{{vendorExtensions.x-apex-dummy-value}}}){{/vars}};
 {{#vars}}
-    System.assertNotEquals(null, m.{{getter}}());
+    Assert.areNotEqual(null, m.{{getter}}());
 {{/vars}}
   }
 
@@ -24,7 +24,7 @@ private class {{classname}}Test {
       .{{setter}}({{{vendorExtensions.x-apex-dummy-value}}}){{/vars}};
     final String json = JSON.serialize(original);
     {{classname}} restored = ({{classname}}) JSON.deserialize(json, {{classname}}.class);
-    System.assertNotEquals(null, restored);
+    Assert.areNotEqual(null, restored);
   }
 {{/isEnum}}
 }

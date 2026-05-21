@@ -19,7 +19,7 @@
     return this;
   }
 
-  {{accessModifier}} virtual {{{httpClientClassName}}}.HttpResult send(final {{{builderClassName}}} builder) {
+  {{accessModifier}} virtual {{{httpClientClassName}}}.HttpResult send(final {{{httpRequestBuilderClassName}}} builder) {
     final HttpRequest req = builder.build(this.baseUrl, this.version, this.headers);
     return this.httpClient.send(req);
   }

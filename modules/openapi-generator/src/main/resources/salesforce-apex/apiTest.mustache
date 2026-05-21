@@ -22,8 +22,8 @@ private class {{classname}}Test {
     final {{classname}}.{{vendorExtensions.x-apex-dto-class}} request = new {{classname}}.{{vendorExtensions.x-apex-dto-class}}(){{#allParams}}
       .{{vendorExtensions.x-apex-setter}}({{{vendorExtensions.x-apex-dummy-value}}}){{/allParams}};
     final {{classname}}.{{vendorExtensions.x-apex-response-class}} response = api.{{operationId}}WithHttpInfo(request);
-    System.assertEquals(200, response.httpResult.response.getStatusCode());
-{{#returnType}}    System.assertNotEquals(null, response.data);
+    Assert.areEqual(200, response.httpResult.response.getStatusCode());
+{{#returnType}}    Assert.areNotEqual(null, response.data);
 {{/returnType}}  }
 {{/operation}}{{/operations}}
 
@@ -34,9 +34,9 @@ private class {{classname}}Test {
     final {{classname}}.{{vendorExtensions.x-apex-dto-class}} request = new {{classname}}.{{vendorExtensions.x-apex-dto-class}}();
     try {
       api.{{operationId}}WithHttpInfo(request);
-      System.assert(false, 'expected {{{apiExceptionClassName}}}');
+      Assert.fail('expected {{{apiExceptionClassName}}}');
     } catch ({{{apiExceptionClassName}}} e) {
-      System.assertEquals(500, e.httpResult.response.getStatusCode());
+      Assert.areEqual(500, e.httpResult.response.getStatusCode());
     }
 {{/-first}}{{/operation}}{{/operations}}
   }
