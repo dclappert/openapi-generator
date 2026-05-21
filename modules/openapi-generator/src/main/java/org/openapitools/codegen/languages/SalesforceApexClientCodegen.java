@@ -48,7 +48,7 @@ public class SalesforceApexClientCodegen extends DefaultCodegen {
     private String classPrefix = "";
     private String outputDirectoryName = "";
     private String salesforceApiVersion = "67.0";
-    private String suppressWarnings = true;
+    private String suppressWarnings = "";
 
     private final Logger LOGGER = LoggerFactory.getLogger(SalesforceApexClientCodegen.class);
 
