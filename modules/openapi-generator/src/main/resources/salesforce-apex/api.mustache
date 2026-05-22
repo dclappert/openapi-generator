@@ -51,7 +51,7 @@
     final {{vendorExtensions.x-apex-dto-class}} request
   ) {
     final {{{httpRequestBuilderClassName}}} builder = new {{{httpRequestBuilderClassName}}}()
-      .setEndpoint('{{{vendorExtensions.x-apex-path-request}}}')
+      .setEndpoint({{{vendorExtensions.x-apex-http-request-endpoint}}})
       .setMethod({{{httpRequestBuilderClassName}}}.HttpMethod.{{vendorExtensions.x-apex-http-method}});
 {{#bodyParam}}
     builder.setBody(JSON.serialize(request.{{paramName}}));

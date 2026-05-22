@@ -190,7 +190,7 @@ global virtual class PetstoreApiV1UserApi {
     final DeleteUserRequest request
   ) {
     final PetstoreApiHttpRequestBuilder builder = new PetstoreApiHttpRequestBuilder()
-      .setEndpoint('/user/{username}')
+      .setEndpoint('/user/' + request.username)
       .setMethod(PetstoreApiHttpRequestBuilder.HttpMethod.DEL);
     final PetstoreApiHttpClient.HttpResult httpResult = this.client.send(builder);
     if (httpResult.response.getStatusCode() / 100 != 2) {
@@ -237,7 +237,7 @@ global virtual class PetstoreApiV1UserApi {
     final GetUserByNameRequest request
   ) {
     final PetstoreApiHttpRequestBuilder builder = new PetstoreApiHttpRequestBuilder()
-      .setEndpoint('/user/{username}')
+      .setEndpoint('/user/' + request.username)
       .setMethod(PetstoreApiHttpRequestBuilder.HttpMethod.GET);
     final PetstoreApiHttpClient.HttpResult httpResult = this.client.send(builder);
     if (httpResult.response.getStatusCode() / 100 != 2) {
@@ -393,7 +393,7 @@ global virtual class PetstoreApiV1UserApi {
     final UpdateUserRequest request
   ) {
     final PetstoreApiHttpRequestBuilder builder = new PetstoreApiHttpRequestBuilder()
-      .setEndpoint('/user/{username}')
+      .setEndpoint('/user/' + request.username)
       .setMethod(PetstoreApiHttpRequestBuilder.HttpMethod.PUT);
     builder.setBody(JSON.serialize(request.petstoreApiV1User));
     final PetstoreApiHttpClient.HttpResult httpResult = this.client.send(builder);

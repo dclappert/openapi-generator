@@ -49,7 +49,7 @@ global virtual class PetstoreApiV1StoreApi {
     final DeleteOrderRequest request
   ) {
     final PetstoreApiHttpRequestBuilder builder = new PetstoreApiHttpRequestBuilder()
-      .setEndpoint('/store/order/{orderId}')
+      .setEndpoint('/store/order/' + request.orderId)
       .setMethod(PetstoreApiHttpRequestBuilder.HttpMethod.DEL);
     final PetstoreApiHttpClient.HttpResult httpResult = this.client.send(builder);
     if (httpResult.response.getStatusCode() / 100 != 2) {
@@ -135,7 +135,7 @@ global virtual class PetstoreApiV1StoreApi {
     final GetOrderByIdRequest request
   ) {
     final PetstoreApiHttpRequestBuilder builder = new PetstoreApiHttpRequestBuilder()
-      .setEndpoint('/store/order/{orderId}')
+      .setEndpoint('/store/order/' + request.orderId)
       .setMethod(PetstoreApiHttpRequestBuilder.HttpMethod.GET);
     final PetstoreApiHttpClient.HttpResult httpResult = this.client.send(builder);
     if (httpResult.response.getStatusCode() / 100 != 2) {

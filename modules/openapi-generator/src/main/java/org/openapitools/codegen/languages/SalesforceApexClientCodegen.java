@@ -144,7 +144,7 @@ public class SalesforceApexClientCodegen extends DefaultCodegen {
         cliOptions.add(CliOption.newBoolean(GENERATE_APIS, "Generate API classes.")
                 .defaultValue(Boolean.toString(generateApis)));
         cliOptions.add(
-                CliOption.newBoolean(GENERATE_CLIENT, "Generate ApiClient and ApiHttpRequestBuilder supporting files.")
+                CliOption.newBoolean(GENERATE_CLIENT, "Generate ApiClient and HttpRequestBuilder supporting files.")
                         .defaultValue(Boolean.toString(generateClient)));
         cliOptions.add(CliOption.newBoolean(GENERATE_MODELS, "Generate model classes.")
                 .defaultValue(Boolean.toString(generateModels)));
@@ -157,11 +157,14 @@ public class SalesforceApexClientCodegen extends DefaultCodegen {
         cliOptions.add(CliOption
                 .newString(ACCESS_MODIFIER, "Access modifier for generated classes and fields (global or public).")
                 .defaultValue(accessModifier));
-        cliOptions.add(CliOption.newString(API_VERSION, "API version subdirectory for generated sources (e.g. v1).")
-                .defaultValue(apiVersion));
         cliOptions.add(
-                CliOption.newString(CLASS_PREFIX, "Prefix for all generated class names.").defaultValue(classPrefix));
-        cliOptions.add(CliOption.newString(OUTPUT_DIRECTORY_NAME, "Output directory name (e.g. latest).")
+                CliOption.newString(API_VERSION,
+                        "Optional API version to append to generated class names (e.g. PetshopApiV1) and output directory (e.g. /api/development.v1/).")
+                        .defaultValue(apiVersion));
+        cliOptions.add(
+                CliOption.newString(CLASS_PREFIX, "Prefix for all generated class names (highly recommended).")
+                        .defaultValue(classPrefix));
+        cliOptions.add(CliOption.newString(OUTPUT_DIRECTORY_NAME, "Output directory name (e.g. development).")
                 .defaultValue(outputDirectoryName));
         cliOptions.add(CliOption.newString(SALESFORCE_API_VERSION, "Salesforce API version for cls-meta.xml.")
                 .defaultValue(salesforceApiVersion));
@@ -310,14 +313,8 @@ public class SalesforceApexClientCodegen extends DefaultCodegen {
 
     @Override
     public String toModelName(String name) {
-        String sanitized = sanitizeName(name);
-        String camelized = camelize(sanitized);
-        if (isReservedWord(camelized.toLowerCase(Locale.ROOT))) {
-            camelized = "Model" + camelized;
-        }
-        if (camelized.matches("^\\d.*")) {
-            camelized = "Model" + camelized;
-        }
+        final String sanitized = sanitizeName(name);
+        final String camelized = camelize(sanitized);
         return classPrefix + apiVersion + camelized;
     }
 
@@ -328,10 +325,7 @@ public class SalesforceApexClientCodegen extends DefaultCodegen {
 
     @Override
     public String toApiName(String name) {
-        if (StringUtils.isBlank(name)) {
-            return classPrefix + apiVersion + "DefaultApi";
-        }
-        String camelized = camelize(sanitizeName(name));
+        final String camelized = camelize(sanitizeName(name));
         return classPrefix + apiVersion + camelized + "Api";
     }
 
@@ -468,7 +462,7 @@ public class SalesforceApexClientCodegen extends DefaultCodegen {
 
             // Convert OAS path template {param} to Apex string concatenation with request.
             // prefix
-            op.vendorExtensions.put("x-apex-path-request", toApexPathWithPrefix(op.path, "request."));
+            op.vendorExtensions.put("x-apex-http-request-endpoint", toApexHttpRequestEndpoint(op.path, "request."));
 
             // DTO inner class names: getPetById → [GetPetByIdRequest / GetPetByIdResponse]
             String operationIdPascal = Character.toUpperCase(op.operationId.charAt(0))
@@ -495,13 +489,35 @@ public class SalesforceApexClientCodegen extends DefaultCodegen {
         return super.postProcessOperationsWithModels(objs, allModels);
     }
 
-    // Converts an OAS path like /pet/{petId}/friends to 'pet/' + {prefix}petId +
-    // '/friends'
-    private String toApexPathWithPrefix(String path, String prefix) {
-        if (path == null) {
-            return "''";
+    private String toApexHttpRequestEndpoint(final String path, final String prefix) {
+        final String[] segments = path.split("/");
+
+        final List<String> parts = new ArrayList<>();
+        for (int i = 0; i < segments.length; i++) {
+            final String part = segments[i];
+            final boolean isParam = part.startsWith("{") && part.endsWith("}");
+            final boolean isFirst = i == 0;
+            final boolean isLast = i == segments.length - 1;
+            if (isParam) {
+                final String paramName = part.substring(1, part.length() - 1);
+                if (isFirst) {
+                    parts.add(prefix + paramName + " + '");
+                } else if (isLast) {
+                    parts.add("' + " + prefix + paramName);
+                } else {
+                    parts.add("' + " + prefix + paramName + " + '");
+                }
+            } else {
+                if (isFirst) {
+                    parts.add("'" + part);
+                } else if (isLast) {
+                    parts.add(part + "'");
+                } else {
+                    parts.add(part);
+                }
+            }
         }
-        return path;
+        return String.join("/", parts);
     }
 
     @Override

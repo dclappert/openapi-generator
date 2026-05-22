@@ -107,7 +107,7 @@ global virtual class PetstoreApiV1PetApi {
     final DeletePetRequest request
   ) {
     final PetstoreApiHttpRequestBuilder builder = new PetstoreApiHttpRequestBuilder()
-      .setEndpoint('/pet/{petId}')
+      .setEndpoint('/pet/' + request.petId)
       .setMethod(PetstoreApiHttpRequestBuilder.HttpMethod.DEL);
     final PetstoreApiHttpClient.HttpResult httpResult = this.client.send(builder);
     if (httpResult.response.getStatusCode() / 100 != 2) {
@@ -264,7 +264,7 @@ global virtual class PetstoreApiV1PetApi {
     final GetPetByIdRequest request
   ) {
     final PetstoreApiHttpRequestBuilder builder = new PetstoreApiHttpRequestBuilder()
-      .setEndpoint('/pet/{petId}')
+      .setEndpoint('/pet/' + request.petId)
       .setMethod(PetstoreApiHttpRequestBuilder.HttpMethod.GET);
     final PetstoreApiHttpClient.HttpResult httpResult = this.client.send(builder);
     if (httpResult.response.getStatusCode() / 100 != 2) {
@@ -378,7 +378,7 @@ global virtual class PetstoreApiV1PetApi {
     final UpdatePetWithFormRequest request
   ) {
     final PetstoreApiHttpRequestBuilder builder = new PetstoreApiHttpRequestBuilder()
-      .setEndpoint('/pet/{petId}')
+      .setEndpoint('/pet/' + request.petId)
       .setMethod(PetstoreApiHttpRequestBuilder.HttpMethod.POST);
     final PetstoreApiHttpClient.HttpResult httpResult = this.client.send(builder);
     if (httpResult.response.getStatusCode() / 100 != 2) {
@@ -443,7 +443,7 @@ global virtual class PetstoreApiV1PetApi {
     final UploadFileRequest request
   ) {
     final PetstoreApiHttpRequestBuilder builder = new PetstoreApiHttpRequestBuilder()
-      .setEndpoint('/pet/{petId}/uploadImage')
+      .setEndpoint('/pet/' + request.petId + '/uploadImage')
       .setMethod(PetstoreApiHttpRequestBuilder.HttpMethod.POST);
     final PetstoreApiHttpClient.HttpResult httpResult = this.client.send(builder);
     if (httpResult.response.getStatusCode() / 100 != 2) {
