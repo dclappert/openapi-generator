@@ -9,6 +9,7 @@ global class PetstoreApiV1User {
   global String password;
   global String phone;
   global Integer userStatus;
+
   global Long getId() {
     return this.id;
   }
@@ -80,5 +81,4 @@ global class PetstoreApiV1User {
     this.userStatus = userStatus;
     return this;
   }
-
 }

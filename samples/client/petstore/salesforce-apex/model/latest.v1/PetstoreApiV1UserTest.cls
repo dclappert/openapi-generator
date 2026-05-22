@@ -11,14 +11,14 @@ private class PetstoreApiV1UserTest {
       .setPassword('x')
       .setPhone('x')
       .setUserStatus(1);
-    System.assertNotEquals(null, m.getId());
-    System.assertNotEquals(null, m.getUsername());
-    System.assertNotEquals(null, m.getFirstName());
-    System.assertNotEquals(null, m.getLastName());
-    System.assertNotEquals(null, m.getEmail());
-    System.assertNotEquals(null, m.getPassword());
-    System.assertNotEquals(null, m.getPhone());
-    System.assertNotEquals(null, m.getUserStatus());
+    Assert.areNotEqual(null, m.getId());
+    Assert.areNotEqual(null, m.getUsername());
+    Assert.areNotEqual(null, m.getFirstName());
+    Assert.areNotEqual(null, m.getLastName());
+    Assert.areNotEqual(null, m.getEmail());
+    Assert.areNotEqual(null, m.getPassword());
+    Assert.areNotEqual(null, m.getPhone());
+    Assert.areNotEqual(null, m.getUserStatus());
   }
 
   @IsTest
@@ -34,6 +34,6 @@ private class PetstoreApiV1UserTest {
       .setUserStatus(1);
     final String json = JSON.serialize(original);
     PetstoreApiV1User restored = (PetstoreApiV1User) JSON.deserialize(json, PetstoreApiV1User.class);
-    System.assertNotEquals(null, restored);
+    Assert.areNotEqual(null, restored);
   }
 }

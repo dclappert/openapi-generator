@@ -9,12 +9,12 @@ private class PetstoreApiV1PetTest {
       .setPhotoUrls(new List<String>())
       .setTags(new List<PetstoreApiV1Tag>())
       .setStatus('x');
-    System.assertNotEquals(null, m.getId());
-    System.assertNotEquals(null, m.getCategory());
-    System.assertNotEquals(null, m.getName());
-    System.assertNotEquals(null, m.getPhotoUrls());
-    System.assertNotEquals(null, m.getTags());
-    System.assertNotEquals(null, m.getStatus());
+    Assert.areNotEqual(null, m.getId());
+    Assert.areNotEqual(null, m.getCategory());
+    Assert.areNotEqual(null, m.getName());
+    Assert.areNotEqual(null, m.getPhotoUrls());
+    Assert.areNotEqual(null, m.getTags());
+    Assert.areNotEqual(null, m.getStatus());
   }
 
   @IsTest
@@ -28,6 +28,6 @@ private class PetstoreApiV1PetTest {
       .setStatus('x');
     final String json = JSON.serialize(original);
     PetstoreApiV1Pet restored = (PetstoreApiV1Pet) JSON.deserialize(json, PetstoreApiV1Pet.class);
-    System.assertNotEquals(null, restored);
+    Assert.areNotEqual(null, restored);
   }
 }

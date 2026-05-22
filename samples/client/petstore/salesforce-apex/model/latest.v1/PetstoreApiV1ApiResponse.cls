@@ -4,6 +4,7 @@ global class PetstoreApiV1ApiResponse {
   global Integer code;
   global String type;
   global String message;
+
   global Integer getCode() {
     return this.code;
   }
@@ -17,8 +18,8 @@ global class PetstoreApiV1ApiResponse {
     return this.type;
   }
 
-  global PetstoreApiV1ApiResponse setType(final String _type) {
-    this.type = _type;
+  global PetstoreApiV1ApiResponse setType(final String type) {
+    this.type = type;
     return this;
   }
 
@@ -30,5 +31,4 @@ global class PetstoreApiV1ApiResponse {
     this.message = message;
     return this;
   }
-
 }

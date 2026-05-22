@@ -14,7 +14,6 @@ global virtual class PetstoreApiV1StoreApi {
     return ex;
   }
 
-
   global class DeleteOrderRequest {
     global String orderId;
 
@@ -22,7 +21,6 @@ global virtual class PetstoreApiV1StoreApi {
       this.orderId = orderId;
       return this;
     }
-
   }
 
   global class DeleteOrderResponse {
@@ -48,9 +46,9 @@ global virtual class PetstoreApiV1StoreApi {
   global virtual DeleteOrderResponse deleteOrderWithHttpInfo(
     final DeleteOrderRequest request
   ) {
-    final PetstoreApiApiHttpRequestBuilder builder = new PetstoreApiApiHttpRequestBuilder()
-      .setEndpoint('store/order/' + request.orderId)
-      .setMethod(PetstoreApiApiHttpRequestBuilder.HttpMethod.DEL);
+    final PetstoreApiHttpRequestBuilder builder = new PetstoreApiHttpRequestBuilder()
+      .setEndpoint('/store/order/' + request.orderId)
+      .setMethod(PetstoreApiHttpRequestBuilder.HttpMethod.DEL);
     final PetstoreApiHttpClient.HttpResult httpResult = this.client.send(builder);
     if (httpResult.response.getStatusCode() / 100 != 2) {
       throw buildApiException('deleteOrder', httpResult);
@@ -59,7 +57,6 @@ global virtual class PetstoreApiV1StoreApi {
     response.httpResult = httpResult;
     return response;
   }
-
 
   global class GetInventoryRequest {
   }
@@ -86,9 +83,9 @@ global virtual class PetstoreApiV1StoreApi {
   global virtual GetInventoryResponse getInventoryWithHttpInfo(
     final GetInventoryRequest request
   ) {
-    final PetstoreApiApiHttpRequestBuilder builder = new PetstoreApiApiHttpRequestBuilder()
-      .setEndpoint('store/inventory')
-      .setMethod(PetstoreApiApiHttpRequestBuilder.HttpMethod.GET);
+    final PetstoreApiHttpRequestBuilder builder = new PetstoreApiHttpRequestBuilder()
+      .setEndpoint('/store/inventory')
+      .setMethod(PetstoreApiHttpRequestBuilder.HttpMethod.GET);
     final PetstoreApiHttpClient.HttpResult httpResult = this.client.send(builder);
     if (httpResult.response.getStatusCode() / 100 != 2) {
       throw buildApiException('getInventory', httpResult);
@@ -99,7 +96,6 @@ global virtual class PetstoreApiV1StoreApi {
     return response;
   }
 
-
   global class GetOrderByIdRequest {
     global Long orderId;
 
@@ -107,7 +103,6 @@ global virtual class PetstoreApiV1StoreApi {
       this.orderId = orderId;
       return this;
     }
-
   }
 
   global class GetOrderByIdResponse {
@@ -134,9 +129,9 @@ global virtual class PetstoreApiV1StoreApi {
   global virtual GetOrderByIdResponse getOrderByIdWithHttpInfo(
     final GetOrderByIdRequest request
   ) {
-    final PetstoreApiApiHttpRequestBuilder builder = new PetstoreApiApiHttpRequestBuilder()
-      .setEndpoint('store/order/' + request.orderId)
-      .setMethod(PetstoreApiApiHttpRequestBuilder.HttpMethod.GET);
+    final PetstoreApiHttpRequestBuilder builder = new PetstoreApiHttpRequestBuilder()
+      .setEndpoint('/store/order/' + request.orderId)
+      .setMethod(PetstoreApiHttpRequestBuilder.HttpMethod.GET);
     final PetstoreApiHttpClient.HttpResult httpResult = this.client.send(builder);
     if (httpResult.response.getStatusCode() / 100 != 2) {
       throw buildApiException('getOrderById', httpResult);
@@ -147,7 +142,6 @@ global virtual class PetstoreApiV1StoreApi {
     return response;
   }
 
-
   global class PlaceOrderRequest {
     global PetstoreApiV1Order petstoreApiV1Order;
 
@@ -155,7 +149,6 @@ global virtual class PetstoreApiV1StoreApi {
       this.petstoreApiV1Order = petstoreApiV1Order;
       return this;
     }
-
   }
 
   global class PlaceOrderResponse {
@@ -182,9 +175,9 @@ global virtual class PetstoreApiV1StoreApi {
   global virtual PlaceOrderResponse placeOrderWithHttpInfo(
     final PlaceOrderRequest request
   ) {
-    final PetstoreApiApiHttpRequestBuilder builder = new PetstoreApiApiHttpRequestBuilder()
-      .setEndpoint('store/order')
-      .setMethod(PetstoreApiApiHttpRequestBuilder.HttpMethod.POST);
+    final PetstoreApiHttpRequestBuilder builder = new PetstoreApiHttpRequestBuilder()
+      .setEndpoint('/store/order')
+      .setMethod(PetstoreApiHttpRequestBuilder.HttpMethod.POST);
     builder.setBody(JSON.serialize(request.petstoreApiV1Order));
     final PetstoreApiHttpClient.HttpResult httpResult = this.client.send(builder);
     if (httpResult.response.getStatusCode() / 100 != 2) {

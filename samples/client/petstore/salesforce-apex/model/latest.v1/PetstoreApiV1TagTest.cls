@@ -5,8 +5,8 @@ private class PetstoreApiV1TagTest {
     PetstoreApiV1Tag m = new PetstoreApiV1Tag()
       .setId(1L)
       .setName('x');
-    System.assertNotEquals(null, m.getId());
-    System.assertNotEquals(null, m.getName());
+    Assert.areNotEqual(null, m.getId());
+    Assert.areNotEqual(null, m.getName());
   }
 
   @IsTest
@@ -16,6 +16,6 @@ private class PetstoreApiV1TagTest {
       .setName('x');
     final String json = JSON.serialize(original);
     PetstoreApiV1Tag restored = (PetstoreApiV1Tag) JSON.deserialize(json, PetstoreApiV1Tag.class);
-    System.assertNotEquals(null, restored);
+    Assert.areNotEqual(null, restored);
   }
 }

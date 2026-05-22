@@ -14,7 +14,6 @@ global virtual class PetstoreApiV1PetApi {
     return ex;
   }
 
-
   global class AddPetRequest {
     global PetstoreApiV1Pet petstoreApiV1Pet;
 
@@ -22,7 +21,6 @@ global virtual class PetstoreApiV1PetApi {
       this.petstoreApiV1Pet = petstoreApiV1Pet;
       return this;
     }
-
   }
 
   global class AddPetResponse {
@@ -49,9 +47,9 @@ global virtual class PetstoreApiV1PetApi {
   global virtual AddPetResponse addPetWithHttpInfo(
     final AddPetRequest request
   ) {
-    final PetstoreApiApiHttpRequestBuilder builder = new PetstoreApiApiHttpRequestBuilder()
-      .setEndpoint('pet')
-      .setMethod(PetstoreApiApiHttpRequestBuilder.HttpMethod.POST);
+    final PetstoreApiHttpRequestBuilder builder = new PetstoreApiHttpRequestBuilder()
+      .setEndpoint('/pet')
+      .setMethod(PetstoreApiHttpRequestBuilder.HttpMethod.POST);
     builder.setBody(JSON.serialize(request.petstoreApiV1Pet));
     final PetstoreApiHttpClient.HttpResult httpResult = this.client.send(builder);
     if (httpResult.response.getStatusCode() / 100 != 2) {
@@ -63,22 +61,19 @@ global virtual class PetstoreApiV1PetApi {
     return response;
   }
 
-
   global class DeletePetRequest {
     global Long petId;
+    global String apiKey;
 
     global DeletePetRequest setPetId(final Long petId) {
       this.petId = petId;
       return this;
     }
 
-    global String apiKey;
-
     global DeletePetRequest setApiKey(final String apiKey) {
       this.apiKey = apiKey;
       return this;
     }
-
   }
 
   global class DeletePetResponse {
@@ -106,9 +101,9 @@ global virtual class PetstoreApiV1PetApi {
   global virtual DeletePetResponse deletePetWithHttpInfo(
     final DeletePetRequest request
   ) {
-    final PetstoreApiApiHttpRequestBuilder builder = new PetstoreApiApiHttpRequestBuilder()
-      .setEndpoint('pet/' + request.petId)
-      .setMethod(PetstoreApiApiHttpRequestBuilder.HttpMethod.DEL);
+    final PetstoreApiHttpRequestBuilder builder = new PetstoreApiHttpRequestBuilder()
+      .setEndpoint('/pet/' + request.petId)
+      .setMethod(PetstoreApiHttpRequestBuilder.HttpMethod.DEL);
     final PetstoreApiHttpClient.HttpResult httpResult = this.client.send(builder);
     if (httpResult.response.getStatusCode() / 100 != 2) {
       throw buildApiException('deletePet', httpResult);
@@ -118,7 +113,6 @@ global virtual class PetstoreApiV1PetApi {
     return response;
   }
 
-
   global class FindPetsByStatusRequest {
     global List<String> status;
 
@@ -126,7 +120,6 @@ global virtual class PetstoreApiV1PetApi {
       this.status = status;
       return this;
     }
-
   }
 
   global class FindPetsByStatusResponse {
@@ -153,9 +146,9 @@ global virtual class PetstoreApiV1PetApi {
   global virtual FindPetsByStatusResponse findPetsByStatusWithHttpInfo(
     final FindPetsByStatusRequest request
   ) {
-    final PetstoreApiApiHttpRequestBuilder builder = new PetstoreApiApiHttpRequestBuilder()
-      .setEndpoint('pet/findByStatus')
-      .setMethod(PetstoreApiApiHttpRequestBuilder.HttpMethod.GET);
+    final PetstoreApiHttpRequestBuilder builder = new PetstoreApiHttpRequestBuilder()
+      .setEndpoint('/pet/findByStatus')
+      .setMethod(PetstoreApiHttpRequestBuilder.HttpMethod.GET);
     if (request.status != null && !request.status.isEmpty()) {
       final List<String> statusStrs = new List<String>();
       for (String item : request.status) {
@@ -173,7 +166,6 @@ global virtual class PetstoreApiV1PetApi {
     return response;
   }
 
-
   global class FindPetsByTagsRequest {
     global List<String> tags;
 
@@ -181,7 +173,6 @@ global virtual class PetstoreApiV1PetApi {
       this.tags = tags;
       return this;
     }
-
   }
 
   global class FindPetsByTagsResponse {
@@ -208,9 +199,9 @@ global virtual class PetstoreApiV1PetApi {
   global virtual FindPetsByTagsResponse findPetsByTagsWithHttpInfo(
     final FindPetsByTagsRequest request
   ) {
-    final PetstoreApiApiHttpRequestBuilder builder = new PetstoreApiApiHttpRequestBuilder()
-      .setEndpoint('pet/findByTags')
-      .setMethod(PetstoreApiApiHttpRequestBuilder.HttpMethod.GET);
+    final PetstoreApiHttpRequestBuilder builder = new PetstoreApiHttpRequestBuilder()
+      .setEndpoint('/pet/findByTags')
+      .setMethod(PetstoreApiHttpRequestBuilder.HttpMethod.GET);
     if (request.tags != null && !request.tags.isEmpty()) {
       final List<String> tagsStrs = new List<String>();
       for (String item : request.tags) {
@@ -228,7 +219,6 @@ global virtual class PetstoreApiV1PetApi {
     return response;
   }
 
-
   global class GetPetByIdRequest {
     global Long petId;
 
@@ -236,7 +226,6 @@ global virtual class PetstoreApiV1PetApi {
       this.petId = petId;
       return this;
     }
-
   }
 
   global class GetPetByIdResponse {
@@ -263,9 +252,9 @@ global virtual class PetstoreApiV1PetApi {
   global virtual GetPetByIdResponse getPetByIdWithHttpInfo(
     final GetPetByIdRequest request
   ) {
-    final PetstoreApiApiHttpRequestBuilder builder = new PetstoreApiApiHttpRequestBuilder()
-      .setEndpoint('pet/' + request.petId)
-      .setMethod(PetstoreApiApiHttpRequestBuilder.HttpMethod.GET);
+    final PetstoreApiHttpRequestBuilder builder = new PetstoreApiHttpRequestBuilder()
+      .setEndpoint('/pet/' + request.petId)
+      .setMethod(PetstoreApiHttpRequestBuilder.HttpMethod.GET);
     final PetstoreApiHttpClient.HttpResult httpResult = this.client.send(builder);
     if (httpResult.response.getStatusCode() / 100 != 2) {
       throw buildApiException('getPetById', httpResult);
@@ -276,7 +265,6 @@ global virtual class PetstoreApiV1PetApi {
     return response;
   }
 
-
   global class UpdatePetRequest {
     global PetstoreApiV1Pet petstoreApiV1Pet;
 
@@ -284,7 +272,6 @@ global virtual class PetstoreApiV1PetApi {
       this.petstoreApiV1Pet = petstoreApiV1Pet;
       return this;
     }
-
   }
 
   global class UpdatePetResponse {
@@ -311,9 +298,9 @@ global virtual class PetstoreApiV1PetApi {
   global virtual UpdatePetResponse updatePetWithHttpInfo(
     final UpdatePetRequest request
   ) {
-    final PetstoreApiApiHttpRequestBuilder builder = new PetstoreApiApiHttpRequestBuilder()
-      .setEndpoint('pet')
-      .setMethod(PetstoreApiApiHttpRequestBuilder.HttpMethod.PUT);
+    final PetstoreApiHttpRequestBuilder builder = new PetstoreApiHttpRequestBuilder()
+      .setEndpoint('/pet')
+      .setMethod(PetstoreApiHttpRequestBuilder.HttpMethod.PUT);
     builder.setBody(JSON.serialize(request.petstoreApiV1Pet));
     final PetstoreApiHttpClient.HttpResult httpResult = this.client.send(builder);
     if (httpResult.response.getStatusCode() / 100 != 2) {
@@ -325,29 +312,25 @@ global virtual class PetstoreApiV1PetApi {
     return response;
   }
 
-
   global class UpdatePetWithFormRequest {
     global Long petId;
+    global String name;
+    global String status;
 
     global UpdatePetWithFormRequest setPetId(final Long petId) {
       this.petId = petId;
       return this;
     }
 
-    global String name;
-
     global UpdatePetWithFormRequest setName(final String name) {
       this.name = name;
       return this;
     }
 
-    global String status;
-
     global UpdatePetWithFormRequest setStatus(final String status) {
       this.status = status;
       return this;
     }
-
   }
 
   global class UpdatePetWithFormResponse {
@@ -377,9 +360,9 @@ global virtual class PetstoreApiV1PetApi {
   global virtual UpdatePetWithFormResponse updatePetWithFormWithHttpInfo(
     final UpdatePetWithFormRequest request
   ) {
-    final PetstoreApiApiHttpRequestBuilder builder = new PetstoreApiApiHttpRequestBuilder()
-      .setEndpoint('pet/' + request.petId)
-      .setMethod(PetstoreApiApiHttpRequestBuilder.HttpMethod.POST);
+    final PetstoreApiHttpRequestBuilder builder = new PetstoreApiHttpRequestBuilder()
+      .setEndpoint('/pet/' + request.petId)
+      .setMethod(PetstoreApiHttpRequestBuilder.HttpMethod.POST);
     final PetstoreApiHttpClient.HttpResult httpResult = this.client.send(builder);
     if (httpResult.response.getStatusCode() / 100 != 2) {
       throw buildApiException('updatePetWithForm', httpResult);
@@ -389,29 +372,25 @@ global virtual class PetstoreApiV1PetApi {
     return response;
   }
 
-
   global class UploadFileRequest {
     global Long petId;
+    global String additionalMetadata;
+    global Blob file;
 
     global UploadFileRequest setPetId(final Long petId) {
       this.petId = petId;
       return this;
     }
 
-    global String additionalMetadata;
-
     global UploadFileRequest setAdditionalMetadata(final String additionalMetadata) {
       this.additionalMetadata = additionalMetadata;
       return this;
     }
 
-    global Blob file;
-
     global UploadFileRequest setFile(final Blob file) {
       this.file = file;
       return this;
     }
-
   }
 
   global class UploadFileResponse {
@@ -442,9 +421,9 @@ global virtual class PetstoreApiV1PetApi {
   global virtual UploadFileResponse uploadFileWithHttpInfo(
     final UploadFileRequest request
   ) {
-    final PetstoreApiApiHttpRequestBuilder builder = new PetstoreApiApiHttpRequestBuilder()
-      .setEndpoint('pet/' + request.petId + '/uploadImage')
-      .setMethod(PetstoreApiApiHttpRequestBuilder.HttpMethod.POST);
+    final PetstoreApiHttpRequestBuilder builder = new PetstoreApiHttpRequestBuilder()
+      .setEndpoint('/pet/' + request.petId + '/uploadImage')
+      .setMethod(PetstoreApiHttpRequestBuilder.HttpMethod.POST);
     final PetstoreApiHttpClient.HttpResult httpResult = this.client.send(builder);
     if (httpResult.response.getStatusCode() / 100 != 2) {
       throw buildApiException('uploadFile', httpResult);

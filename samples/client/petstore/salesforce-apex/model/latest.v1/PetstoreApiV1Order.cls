@@ -7,6 +7,7 @@ global class PetstoreApiV1Order {
   global Datetime shipDate;
   global String status;
   global Boolean complete;
+
   global Long getId() {
     return this.id;
   }
@@ -60,5 +61,4 @@ global class PetstoreApiV1Order {
     this.complete = complete;
     return this;
   }
-
 }

@@ -337,25 +337,25 @@ public class SalesforceApexClientCodegen extends DefaultCodegen {
     @Override
     public String apiFileFolder() {
         return outputFolder + File.separator + "api" + File.separator + outputDirectoryName
-                + (apiVersion.isEmpty() ? "" : "." + apiVersion.toLowerCase());
+                + (apiVersion.isEmpty() ? "" : "." + apiVersion.toLowerCase(Locale.ROOT));
     }
 
     @Override
     public String modelFileFolder() {
         return outputFolder + File.separator + "model" + File.separator + outputDirectoryName
-                + (apiVersion.isEmpty() ? "" : "." + apiVersion.toLowerCase());
+                + (apiVersion.isEmpty() ? "" : "." + apiVersion.toLowerCase(Locale.ROOT));
     }
 
     @Override
     public String apiTestFileFolder() {
         return outputFolder + File.separator + "api" + File.separator + outputDirectoryName
-                + (apiVersion.isEmpty() ? "" : "." + apiVersion.toLowerCase());
+                + (apiVersion.isEmpty() ? "" : "." + apiVersion.toLowerCase(Locale.ROOT));
     }
 
     @Override
     public String modelTestFileFolder() {
         return outputFolder + File.separator + "model" + File.separator + outputDirectoryName
-                + (apiVersion.isEmpty() ? "" : "." + apiVersion.toLowerCase());
+                + (apiVersion.isEmpty() ? "" : "." + apiVersion.toLowerCase(Locale.ROOT));
     }
 
     @Override

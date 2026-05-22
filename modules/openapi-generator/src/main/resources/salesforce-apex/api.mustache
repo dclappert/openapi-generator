@@ -14,17 +14,18 @@
     return ex;
   }
 {{#operations}}{{#operation}}
-
   {{accessModifier}} class {{vendorExtensions.x-apex-operation-req-class-name}} {
 {{#allParams}}
     {{accessModifier}} {{{dataType}}} {{paramName}};
+{{/allParams}}
+{{#allParams}}
 
     {{accessModifier}} {{vendorExtensions.x-apex-operation-req-class-name}} {{vendorExtensions.x-apex-operation-req-class-var-setter}}(final {{{dataType}}} {{paramName}}) {
       this.{{paramName}} = {{paramName}};
       return this;
     }
-
-{{/allParams}}  }
+{{/allParams}}    
+  }
 
   {{accessModifier}} class {{vendorExtensions.x-apex-operation-res-class-name}} {
     {{accessModifier}} {{{httpClientClassName}}}.HttpResult httpResult;

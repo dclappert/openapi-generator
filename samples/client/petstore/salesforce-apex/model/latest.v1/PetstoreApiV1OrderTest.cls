@@ -9,12 +9,12 @@ private class PetstoreApiV1OrderTest {
       .setShipDate(Datetime.now())
       .setStatus('x')
       .setComplete(true);
-    System.assertNotEquals(null, m.getId());
-    System.assertNotEquals(null, m.getPetId());
-    System.assertNotEquals(null, m.getQuantity());
-    System.assertNotEquals(null, m.getShipDate());
-    System.assertNotEquals(null, m.getStatus());
-    System.assertNotEquals(null, m.getComplete());
+    Assert.areNotEqual(null, m.getId());
+    Assert.areNotEqual(null, m.getPetId());
+    Assert.areNotEqual(null, m.getQuantity());
+    Assert.areNotEqual(null, m.getShipDate());
+    Assert.areNotEqual(null, m.getStatus());
+    Assert.areNotEqual(null, m.getComplete());
   }
 
   @IsTest
@@ -28,6 +28,6 @@ private class PetstoreApiV1OrderTest {
       .setComplete(true);
     final String json = JSON.serialize(original);
     PetstoreApiV1Order restored = (PetstoreApiV1Order) JSON.deserialize(json, PetstoreApiV1Order.class);
-    System.assertNotEquals(null, restored);
+    Assert.areNotEqual(null, restored);
   }
 }

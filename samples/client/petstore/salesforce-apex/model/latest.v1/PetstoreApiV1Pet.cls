@@ -7,6 +7,7 @@ global class PetstoreApiV1Pet {
   global List<String> photoUrls;
   global List<PetstoreApiV1Tag> tags;
   global String status;
+
   global Long getId() {
     return this.id;
   }
@@ -60,5 +61,4 @@ global class PetstoreApiV1Pet {
     this.status = status;
     return this;
   }
-
 }

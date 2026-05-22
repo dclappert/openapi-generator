@@ -6,9 +6,9 @@ private class PetstoreApiV1ApiResponseTest {
       .setCode(1)
       .setType('x')
       .setMessage('x');
-    System.assertNotEquals(null, m.getCode());
-    System.assertNotEquals(null, m.getType());
-    System.assertNotEquals(null, m.getMessage());
+    Assert.areNotEqual(null, m.getCode());
+    Assert.areNotEqual(null, m.getType());
+    Assert.areNotEqual(null, m.getMessage());
   }
 
   @IsTest
@@ -19,6 +19,6 @@ private class PetstoreApiV1ApiResponseTest {
       .setMessage('x');
     final String json = JSON.serialize(original);
     PetstoreApiV1ApiResponse restored = (PetstoreApiV1ApiResponse) JSON.deserialize(json, PetstoreApiV1ApiResponse.class);
-    System.assertNotEquals(null, restored);
+    Assert.areNotEqual(null, restored);
   }
 }

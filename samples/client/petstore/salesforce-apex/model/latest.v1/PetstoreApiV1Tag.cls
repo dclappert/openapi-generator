@@ -3,6 +3,7 @@
 global class PetstoreApiV1Tag {
   global Long id;
   global String name;
+
   global Long getId() {
     return this.id;
   }
@@ -20,5 +21,4 @@ global class PetstoreApiV1Tag {
     this.name = name;
     return this;
   }
-
 }

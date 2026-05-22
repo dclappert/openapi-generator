@@ -22,7 +22,7 @@ private class PetstoreApiV1UserApiTest {
     final PetstoreApiV1UserApi.CreateUserRequest request = new PetstoreApiV1UserApi.CreateUserRequest()
       .setPetstoreApiV1User(new PetstoreApiV1User());
     final PetstoreApiV1UserApi.CreateUserResponse response = api.createUserWithHttpInfo(request);
-    System.assertEquals(200, response.httpResult.response.getStatusCode());
+    Assert.areEqual(200, response.httpResult.response.getStatusCode());
   }
 
 
@@ -33,7 +33,7 @@ private class PetstoreApiV1UserApiTest {
     final PetstoreApiV1UserApi.CreateUsersWithArrayInputRequest request = new PetstoreApiV1UserApi.CreateUsersWithArrayInputRequest()
       .setPetstoreApiV1User(new List<PetstoreApiV1User>());
     final PetstoreApiV1UserApi.CreateUsersWithArrayInputResponse response = api.createUsersWithArrayInputWithHttpInfo(request);
-    System.assertEquals(200, response.httpResult.response.getStatusCode());
+    Assert.areEqual(200, response.httpResult.response.getStatusCode());
   }
 
 
@@ -44,7 +44,7 @@ private class PetstoreApiV1UserApiTest {
     final PetstoreApiV1UserApi.CreateUsersWithListInputRequest request = new PetstoreApiV1UserApi.CreateUsersWithListInputRequest()
       .setPetstoreApiV1User(new List<PetstoreApiV1User>());
     final PetstoreApiV1UserApi.CreateUsersWithListInputResponse response = api.createUsersWithListInputWithHttpInfo(request);
-    System.assertEquals(200, response.httpResult.response.getStatusCode());
+    Assert.areEqual(200, response.httpResult.response.getStatusCode());
   }
 
 
@@ -55,7 +55,7 @@ private class PetstoreApiV1UserApiTest {
     final PetstoreApiV1UserApi.DeleteUserRequest request = new PetstoreApiV1UserApi.DeleteUserRequest()
       .setUsername('x');
     final PetstoreApiV1UserApi.DeleteUserResponse response = api.deleteUserWithHttpInfo(request);
-    System.assertEquals(200, response.httpResult.response.getStatusCode());
+    Assert.areEqual(200, response.httpResult.response.getStatusCode());
   }
 
 
@@ -66,8 +66,8 @@ private class PetstoreApiV1UserApiTest {
     final PetstoreApiV1UserApi.GetUserByNameRequest request = new PetstoreApiV1UserApi.GetUserByNameRequest()
       .setUsername('x');
     final PetstoreApiV1UserApi.GetUserByNameResponse response = api.getUserByNameWithHttpInfo(request);
-    System.assertEquals(200, response.httpResult.response.getStatusCode());
-    System.assertNotEquals(null, response.data);
+    Assert.areEqual(200, response.httpResult.response.getStatusCode());
+    Assert.areNotEqual(null, response.data);
   }
 
 
@@ -79,8 +79,8 @@ private class PetstoreApiV1UserApiTest {
       .setUsername('x')
       .setPassword('x');
     final PetstoreApiV1UserApi.LoginUserResponse response = api.loginUserWithHttpInfo(request);
-    System.assertEquals(200, response.httpResult.response.getStatusCode());
-    System.assertNotEquals(null, response.data);
+    Assert.areEqual(200, response.httpResult.response.getStatusCode());
+    Assert.areNotEqual(null, response.data);
   }
 
 
@@ -90,7 +90,7 @@ private class PetstoreApiV1UserApiTest {
     final PetstoreApiV1UserApi api = buildApi(makeResponse(200, body));
     final PetstoreApiV1UserApi.LogoutUserRequest request = new PetstoreApiV1UserApi.LogoutUserRequest();
     final PetstoreApiV1UserApi.LogoutUserResponse response = api.logoutUserWithHttpInfo(request);
-    System.assertEquals(200, response.httpResult.response.getStatusCode());
+    Assert.areEqual(200, response.httpResult.response.getStatusCode());
   }
 
 
@@ -102,7 +102,7 @@ private class PetstoreApiV1UserApiTest {
       .setUsername('x')
       .setPetstoreApiV1User(new PetstoreApiV1User());
     final PetstoreApiV1UserApi.UpdateUserResponse response = api.updateUserWithHttpInfo(request);
-    System.assertEquals(200, response.httpResult.response.getStatusCode());
+    Assert.areEqual(200, response.httpResult.response.getStatusCode());
   }
 
 
@@ -113,9 +113,9 @@ private class PetstoreApiV1UserApiTest {
     final PetstoreApiV1UserApi.CreateUserRequest request = new PetstoreApiV1UserApi.CreateUserRequest();
     try {
       api.createUserWithHttpInfo(request);
-      System.assert(false, 'expected PetstoreApiApiException');
+      Assert.fail('expected PetstoreApiApiException');
     } catch (PetstoreApiApiException e) {
-      System.assertEquals(500, e.httpResult.response.getStatusCode());
+      Assert.areEqual(500, e.httpResult.response.getStatusCode());
     }
 
   }
