@@ -337,25 +337,25 @@ public class SalesforceApexClientCodegen extends DefaultCodegen {
     @Override
     public String apiFileFolder() {
         return outputFolder + File.separator + "api" + File.separator + outputDirectoryName
-                + (apiVersion.isEmpty() ? "" : "." + apiVersion);
+                + (apiVersion.isEmpty() ? "" : "." + apiVersion.toLowerCase());
     }
 
     @Override
     public String modelFileFolder() {
         return outputFolder + File.separator + "model" + File.separator + outputDirectoryName
-                + (apiVersion.isEmpty() ? "" : "." + apiVersion);
+                + (apiVersion.isEmpty() ? "" : "." + apiVersion.toLowerCase());
     }
 
     @Override
     public String apiTestFileFolder() {
         return outputFolder + File.separator + "api" + File.separator + outputDirectoryName
-                + (apiVersion.isEmpty() ? "" : "." + apiVersion);
+                + (apiVersion.isEmpty() ? "" : "." + apiVersion.toLowerCase());
     }
 
     @Override
     public String modelTestFileFolder() {
         return outputFolder + File.separator + "model" + File.separator + outputDirectoryName
-                + (apiVersion.isEmpty() ? "" : "." + apiVersion);
+                + (apiVersion.isEmpty() ? "" : "." + apiVersion.toLowerCase());
     }
 
     @Override
@@ -403,13 +403,14 @@ public class SalesforceApexClientCodegen extends DefaultCodegen {
         for (ModelMap modelMap : objs.getModels()) {
             CodegenModel model = modelMap.getModel();
             for (CodegenProperty var : model.vars) {
-                var.vendorExtensions.put("x-apex-dummy-value", toApexDummyValue(var));
+                var.vendorExtensions.put("x-apex-operation-req-class-var-mock-value",
+                        toApexOperationReqClassVarMockValue(var));
             }
         }
         return super.postProcessModels(objs);
     }
 
-    private String toApexDummyValue(IJsonSchemaValidationProperties p) {
+    private static String toApexOperationReqClassVarMockValue(IJsonSchemaValidationProperties p) {
         if (p.getIsArray() || p.getIsMap()) {
             return "new " + p.getDataType() + "()";
         }
@@ -447,77 +448,18 @@ public class SalesforceApexClientCodegen extends DefaultCodegen {
 
     @Override
     public OperationsMap postProcessOperationsWithModels(OperationsMap objs, List<ModelMap> allModels) {
-        String clientClassName = classPrefix + "ApiClient";
-        String httpRequestBuilderClassName = classPrefix + "ApiHttpRequestBuilder";
+        final String clientClassName = classPrefix + "ApiClient";
+        final String httpRequestBuilderClassName = classPrefix + "ApiHttpRequestBuilder";
         objs.put("clientClassName", clientClassName);
         objs.put("httpRequestBuilderClassName", httpRequestBuilderClassName);
 
         List<CodegenOperation> ops = objs.getOperations().getOperation();
         for (CodegenOperation op : ops) {
-            // Map DELETE to DEL to avoid Apex reserved keyword conflict
-            String apexHttpMethod = "DELETE".equalsIgnoreCase(op.httpMethod)
-                    ? "DEL"
-                    : op.httpMethod.toUpperCase(Locale.ROOT);
-            op.vendorExtensions.put("x-apex-http-method", apexHttpMethod);
-
-            // Convert OAS path template {param} to Apex string concatenation with request.
-            // prefix
-            op.vendorExtensions.put("x-apex-http-request-endpoint", toApexHttpRequestEndpoint(op.path, "request."));
-
-            // DTO inner class names: getPetById → [GetPetByIdRequest / GetPetByIdResponse]
-            String operationIdPascal = Character.toUpperCase(op.operationId.charAt(0))
-                    + op.operationId.substring(1);
-            String dtoClassName = operationIdPascal + "Request";
-            String responseClassName = operationIdPascal + "Response";
-            op.vendorExtensions.put("x-apex-dto-class", dtoClassName);
-            op.vendorExtensions.put("x-apex-response-class", responseClassName);
-            op.vendorExtensions.put("x-apex-operation-pascal", operationIdPascal);
-
-            // Duplicate dtoClassName and setter name onto each param — inside
-            // {{#allParams}},
-            // Mustache resolves vendorExtensions against the param's map, shadowing the
-            // operation's.
-            for (CodegenParameter param : op.allParams) {
-                String setter = "set" + Character.toUpperCase(param.paramName.charAt(0))
-                        + param.paramName.substring(1);
-                param.vendorExtensions.put("x-apex-setter", setter);
-                param.vendorExtensions.put("x-apex-dto-class", dtoClassName);
-                param.vendorExtensions.put("x-apex-dummy-value", toApexDummyValue(param));
-            }
+            setApexHttpRequestVendorExtensions(op);
+            setOperationMethodRequestDtoVendorExtensions(op);
         }
 
         return super.postProcessOperationsWithModels(objs, allModels);
-    }
-
-    private String toApexHttpRequestEndpoint(final String path, final String prefix) {
-        final String[] segments = path.split("/");
-
-        final List<String> parts = new ArrayList<>();
-        for (int i = 0; i < segments.length; i++) {
-            final String part = segments[i];
-            final boolean isParam = part.startsWith("{") && part.endsWith("}");
-            final boolean isFirst = i == 0;
-            final boolean isLast = i == segments.length - 1;
-            if (isParam) {
-                final String paramName = part.substring(1, part.length() - 1);
-                if (isFirst) {
-                    parts.add(prefix + paramName + " + '");
-                } else if (isLast) {
-                    parts.add("' + " + prefix + paramName);
-                } else {
-                    parts.add("' + " + prefix + paramName + " + '");
-                }
-            } else {
-                if (isFirst) {
-                    parts.add("'" + part);
-                } else if (isLast) {
-                    parts.add(part + "'");
-                } else {
-                    parts.add(part);
-                }
-            }
-        }
-        return String.join("/", parts);
     }
 
     @Override
@@ -562,5 +504,69 @@ public class SalesforceApexClientCodegen extends DefaultCodegen {
             return "paramCallback";
         }
         return toVarName(name);
+    }
+
+    private static void setApexHttpRequestVendorExtensions(final CodegenOperation op) {
+        // Map DELETE to DEL to avoid Apex reserved keyword conflict
+        final String apexHttpMethod = "DELETE".equalsIgnoreCase(op.httpMethod)
+                ? "DEL"
+                : op.httpMethod.toUpperCase(Locale.ROOT);
+        op.vendorExtensions.put("x-apex-http-request-method", apexHttpMethod);
+        op.vendorExtensions.put("x-apex-http-request-endpoint", toApexHttpRequestEndpoint(op.path, "request."));
+    }
+
+    private static void setOperationMethodRequestDtoVendorExtensions(final CodegenOperation op) {
+        // DTO inner class names: getPetById → [GetPetByIdRequest / GetPetByIdResponse]
+        final String operationIdPascal = Character.toUpperCase(op.operationId.charAt(0))
+                + op.operationId.substring(1);
+        final String dtoClassName = operationIdPascal + "Request";
+        final String responseClassName = operationIdPascal + "Response";
+        op.vendorExtensions.put("x-apex-operation-req-class-name", dtoClassName);
+        op.vendorExtensions.put("x-apex-operation-res-class-name", responseClassName);
+        op.vendorExtensions.put("x-apex-operation-method-name", operationIdPascal);
+
+        // Set vendor extensions for all parameters to generate setters in the request
+        // DTO class.
+        for (CodegenParameter param : op.allParams) {
+            final String setter = "set" + Character.toUpperCase(param.paramName.charAt(0))
+                    + param.paramName.substring(1);
+            param.vendorExtensions.put("x-apex-operation-req-class-var-setter", setter);
+            // The request DTO class name is needed to generate fluent setters returning the
+            // correct type.
+            param.vendorExtensions.put("x-apex-operation-req-class-name", dtoClassName);
+            param.vendorExtensions.put("x-apex-operation-req-class-var-mock-value",
+                    toApexOperationReqClassVarMockValue(param));
+        }
+    }
+
+    private static String toApexHttpRequestEndpoint(final String path, final String prefix) {
+        final String[] segments = path.split("/");
+
+        final List<String> parts = new ArrayList<>();
+        for (int i = 0; i < segments.length; i++) {
+            final String part = segments[i];
+            final boolean isParam = part.startsWith("{") && part.endsWith("}");
+            final boolean isFirst = i == 0;
+            final boolean isLast = i == segments.length - 1;
+            if (isParam) {
+                final String paramName = part.substring(1, part.length() - 1);
+                if (isFirst) {
+                    parts.add(prefix + paramName + " + '");
+                } else if (isLast) {
+                    parts.add("' + " + prefix + paramName);
+                } else {
+                    parts.add("' + " + prefix + paramName + " + '");
+                }
+            } else {
+                if (isFirst) {
+                    parts.add("'" + part);
+                } else if (isLast) {
+                    parts.add(part + "'");
+                } else {
+                    parts.add(part);
+                }
+            }
+        }
+        return String.join("/", parts);
     }
 }

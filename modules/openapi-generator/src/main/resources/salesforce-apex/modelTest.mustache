@@ -12,7 +12,7 @@ private class {{classname}}Test {
   @IsTest
   static void testSettersAndGetters() {
     {{classname}} m = new {{classname}}(){{#vars}}
-      .{{setter}}({{{vendorExtensions.x-apex-dummy-value}}}){{/vars}};
+      .{{setter}}({{{vendorExtensions.x-apex-operation-req-class-var-mock-value}}}){{/vars}};
 {{#vars}}
     Assert.areNotEqual(null, m.{{getter}}());
 {{/vars}}
@@ -21,7 +21,7 @@ private class {{classname}}Test {
   @IsTest
   static void testJsonRoundTrip() {
     {{classname}} original = new {{classname}}(){{#vars}}
-      .{{setter}}({{{vendorExtensions.x-apex-dummy-value}}}){{/vars}};
+      .{{setter}}({{{vendorExtensions.x-apex-operation-req-class-var-mock-value}}}){{/vars}};
     final String json = JSON.serialize(original);
     {{classname}} restored = ({{classname}}) JSON.deserialize(json, {{classname}}.class);
     Assert.areNotEqual(null, restored);

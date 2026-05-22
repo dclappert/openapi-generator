@@ -16,12 +16,12 @@ private class {{classname}}Test {
 {{#operations}}{{#operation}}
 
   @IsTest
-  static void test{{vendorExtensions.x-apex-operation-pascal}}Success() {
+  static void test{{vendorExtensions.x-apex-operation-method-name}}Success() {
     {{#returnType}}final String body = JSON.serialize(new {{{returnType}}}());{{/returnType}}{{^returnType}}final String body = '';{{/returnType}}
     final {{classname}} api = buildApi(makeResponse(200, body));
-    final {{classname}}.{{vendorExtensions.x-apex-dto-class}} request = new {{classname}}.{{vendorExtensions.x-apex-dto-class}}(){{#allParams}}
-      .{{vendorExtensions.x-apex-setter}}({{{vendorExtensions.x-apex-dummy-value}}}){{/allParams}};
-    final {{classname}}.{{vendorExtensions.x-apex-response-class}} response = api.{{operationId}}WithHttpInfo(request);
+    final {{classname}}.{{vendorExtensions.x-apex-operation-req-class-name}} request = new {{classname}}.{{vendorExtensions.x-apex-operation-req-class-name}}(){{#allParams}}
+      .{{vendorExtensions.x-apex-operation-req-class-var-setter}}({{{vendorExtensions.x-apex-operation-req-class-var-mock-value}}}){{/allParams}};
+    final {{classname}}.{{vendorExtensions.x-apex-operation-res-class-name}} response = api.{{operationId}}WithHttpInfo(request);
     Assert.areEqual(200, response.httpResult.response.getStatusCode());
 {{#returnType}}    Assert.areNotEqual(null, response.data);
 {{/returnType}}  }
@@ -31,7 +31,7 @@ private class {{classname}}Test {
   static void testThrowsApiExceptionOnNon2xx() {
     final {{classname}} api = buildApi(makeResponse(500, '{"error":"boom"}'));
 {{#operations}}{{#operation}}{{#-first}}
-    final {{classname}}.{{vendorExtensions.x-apex-dto-class}} request = new {{classname}}.{{vendorExtensions.x-apex-dto-class}}();
+    final {{classname}}.{{vendorExtensions.x-apex-operation-req-class-name}} request = new {{classname}}.{{vendorExtensions.x-apex-operation-req-class-name}}();
     try {
       api.{{operationId}}WithHttpInfo(request);
       Assert.fail('expected {{{apiExceptionClassName}}}');
