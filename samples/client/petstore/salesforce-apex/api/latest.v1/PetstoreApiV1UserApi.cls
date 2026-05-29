@@ -6,7 +6,7 @@ global virtual class PetstoreApiV1UserApi {
     this.client = client;
   }
 
-  private PetstoreApiApiException buildApiException(final String operationId, final PetstoreApiHttpClient.HttpResult httpResult) {
+  private PetstoreApiApiException buildApiException(final String operationId, final PetstoreApiHttpResult httpResult) {
     final PetstoreApiApiException ex = new PetstoreApiApiException(
       operationId + ' failed: ' + httpResult.response.getStatusCode() + ' - ' + httpResult.response.getBody()
     );
@@ -24,7 +24,7 @@ global virtual class PetstoreApiV1UserApi {
   }
 
   global class CreateUserResponse {
-    global PetstoreApiHttpClient.HttpResult httpResult;
+    global PetstoreApiHttpResult httpResult;
   }
 
   /**
@@ -50,7 +50,7 @@ global virtual class PetstoreApiV1UserApi {
       .setEndpoint('/user')
       .setMethod(PetstoreApiHttpRequestBuilder.HttpMethod.POST);
     builder.setBody(JSON.serialize(request.petstoreApiV1User));
-    final PetstoreApiHttpClient.HttpResult httpResult = this.client.send(builder);
+    final PetstoreApiHttpResult httpResult = this.client.send(builder);
     if (httpResult.response.getStatusCode() / 100 != 2) {
       throw buildApiException('createUser', httpResult);
     }
@@ -69,7 +69,7 @@ global virtual class PetstoreApiV1UserApi {
   }
 
   global class CreateUsersWithArrayInputResponse {
-    global PetstoreApiHttpClient.HttpResult httpResult;
+    global PetstoreApiHttpResult httpResult;
   }
 
   /**
@@ -95,7 +95,7 @@ global virtual class PetstoreApiV1UserApi {
       .setEndpoint('/user/createWithArray')
       .setMethod(PetstoreApiHttpRequestBuilder.HttpMethod.POST);
     builder.setBody(JSON.serialize(request.petstoreApiV1User));
-    final PetstoreApiHttpClient.HttpResult httpResult = this.client.send(builder);
+    final PetstoreApiHttpResult httpResult = this.client.send(builder);
     if (httpResult.response.getStatusCode() / 100 != 2) {
       throw buildApiException('createUsersWithArrayInput', httpResult);
     }
@@ -114,7 +114,7 @@ global virtual class PetstoreApiV1UserApi {
   }
 
   global class CreateUsersWithListInputResponse {
-    global PetstoreApiHttpClient.HttpResult httpResult;
+    global PetstoreApiHttpResult httpResult;
   }
 
   /**
@@ -140,7 +140,7 @@ global virtual class PetstoreApiV1UserApi {
       .setEndpoint('/user/createWithList')
       .setMethod(PetstoreApiHttpRequestBuilder.HttpMethod.POST);
     builder.setBody(JSON.serialize(request.petstoreApiV1User));
-    final PetstoreApiHttpClient.HttpResult httpResult = this.client.send(builder);
+    final PetstoreApiHttpResult httpResult = this.client.send(builder);
     if (httpResult.response.getStatusCode() / 100 != 2) {
       throw buildApiException('createUsersWithListInput', httpResult);
     }
@@ -159,7 +159,7 @@ global virtual class PetstoreApiV1UserApi {
   }
 
   global class DeleteUserResponse {
-    global PetstoreApiHttpClient.HttpResult httpResult;
+    global PetstoreApiHttpResult httpResult;
   }
 
   /**
@@ -184,7 +184,7 @@ global virtual class PetstoreApiV1UserApi {
     final PetstoreApiHttpRequestBuilder builder = new PetstoreApiHttpRequestBuilder()
       .setEndpoint('/user/' + request.username)
       .setMethod(PetstoreApiHttpRequestBuilder.HttpMethod.DEL);
-    final PetstoreApiHttpClient.HttpResult httpResult = this.client.send(builder);
+    final PetstoreApiHttpResult httpResult = this.client.send(builder);
     if (httpResult.response.getStatusCode() / 100 != 2) {
       throw buildApiException('deleteUser', httpResult);
     }
@@ -203,7 +203,7 @@ global virtual class PetstoreApiV1UserApi {
   }
 
   global class GetUserByNameResponse {
-    global PetstoreApiHttpClient.HttpResult httpResult;
+    global PetstoreApiHttpResult httpResult;
     global PetstoreApiV1User data;
   }
 
@@ -229,7 +229,7 @@ global virtual class PetstoreApiV1UserApi {
     final PetstoreApiHttpRequestBuilder builder = new PetstoreApiHttpRequestBuilder()
       .setEndpoint('/user/' + request.username)
       .setMethod(PetstoreApiHttpRequestBuilder.HttpMethod.GET);
-    final PetstoreApiHttpClient.HttpResult httpResult = this.client.send(builder);
+    final PetstoreApiHttpResult httpResult = this.client.send(builder);
     if (httpResult.response.getStatusCode() / 100 != 2) {
       throw buildApiException('getUserByName', httpResult);
     }
@@ -255,7 +255,7 @@ global virtual class PetstoreApiV1UserApi {
   }
 
   global class LoginUserResponse {
-    global PetstoreApiHttpClient.HttpResult httpResult;
+    global PetstoreApiHttpResult httpResult;
     global String data;
   }
 
@@ -289,7 +289,7 @@ global virtual class PetstoreApiV1UserApi {
     if (request.password != null && String.isNotBlank(request.password)) {
       builder.addQueryParameter('password', String.valueOf(request.password));
     }
-    final PetstoreApiHttpClient.HttpResult httpResult = this.client.send(builder);
+    final PetstoreApiHttpResult httpResult = this.client.send(builder);
     if (httpResult.response.getStatusCode() / 100 != 2) {
       throw buildApiException('loginUser', httpResult);
     }
@@ -303,7 +303,7 @@ global virtual class PetstoreApiV1UserApi {
   }
 
   global class LogoutUserResponse {
-    global PetstoreApiHttpClient.HttpResult httpResult;
+    global PetstoreApiHttpResult httpResult;
   }
 
   /**
@@ -326,7 +326,7 @@ global virtual class PetstoreApiV1UserApi {
     final PetstoreApiHttpRequestBuilder builder = new PetstoreApiHttpRequestBuilder()
       .setEndpoint('/user/logout')
       .setMethod(PetstoreApiHttpRequestBuilder.HttpMethod.GET);
-    final PetstoreApiHttpClient.HttpResult httpResult = this.client.send(builder);
+    final PetstoreApiHttpResult httpResult = this.client.send(builder);
     if (httpResult.response.getStatusCode() / 100 != 2) {
       throw buildApiException('logoutUser', httpResult);
     }
@@ -351,7 +351,7 @@ global virtual class PetstoreApiV1UserApi {
   }
 
   global class UpdateUserResponse {
-    global PetstoreApiHttpClient.HttpResult httpResult;
+    global PetstoreApiHttpResult httpResult;
   }
 
   /**
@@ -379,7 +379,7 @@ global virtual class PetstoreApiV1UserApi {
       .setEndpoint('/user/' + request.username)
       .setMethod(PetstoreApiHttpRequestBuilder.HttpMethod.PUT);
     builder.setBody(JSON.serialize(request.petstoreApiV1User));
-    final PetstoreApiHttpClient.HttpResult httpResult = this.client.send(builder);
+    final PetstoreApiHttpResult httpResult = this.client.send(builder);
     if (httpResult.response.getStatusCode() / 100 != 2) {
       throw buildApiException('updateUser', httpResult);
     }

@@ -16,7 +16,7 @@ private class PetstoreApiHttpClientTest {
     req.setEndpoint('https://test');
     req.setMethod('GET');
     Test.startTest();
-    final PetstoreApiHttpClient.HttpResult result = new PetstoreApiHttpClient().send(req);
+    final PetstoreApiHttpResult result = new PetstoreApiHttpClient().send(req);
     Test.stopTest();
     Assert.areEqual(200, result.response.getStatusCode());
     Assert.areEqual(req, result.request);

@@ -2,8 +2,8 @@
 public class {{{httpClientMockClassName}}} extends {{{httpClientClassName}}} {
   public HttpResponse nextResponse;
 
-  public override {{{httpClientClassName}}}.HttpResult send(final HttpRequest req) {
-    final {{{httpClientClassName}}}.HttpResult r = new {{{httpClientClassName}}}.HttpResult();
+  public override {{{httpResultClassName}}} send(final HttpRequest req) {
+    final {{{httpResultClassName}}} r = new {{{httpResultClassName}}}();
     r.request = req;
     r.response = this.nextResponse;
     return r;

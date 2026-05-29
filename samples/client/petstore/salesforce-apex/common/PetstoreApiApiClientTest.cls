@@ -31,7 +31,7 @@ private class PetstoreApiApiClientTest {
     final PetstoreApiHttpRequestBuilder builder = new PetstoreApiHttpRequestBuilder()
       .setEndpoint('x')
       .setMethod(PetstoreApiHttpRequestBuilder.HttpMethod.GET);
-    final PetstoreApiHttpClient.HttpResult result = client.send(builder);
+    final PetstoreApiHttpResult result = client.send(builder);
     Assert.areEqual(200, result.response.getStatusCode());
   }
 }

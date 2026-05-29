@@ -31,7 +31,7 @@ private class {{{clientClassName}}}Test {
     final {{{httpRequestBuilderClassName}}} builder = new {{{httpRequestBuilderClassName}}}()
       .setEndpoint('x')
       .setMethod({{{httpRequestBuilderClassName}}}.HttpMethod.GET);
-    final {{{httpClientClassName}}}.HttpResult result = client.send(builder);
+    final {{{httpResultClassName}}} result = client.send(builder);
     Assert.areEqual(200, result.response.getStatusCode());
   }
 }

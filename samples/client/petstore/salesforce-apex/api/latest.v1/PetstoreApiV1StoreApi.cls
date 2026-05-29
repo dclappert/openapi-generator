@@ -6,7 +6,7 @@ global virtual class PetstoreApiV1StoreApi {
     this.client = client;
   }
 
-  private PetstoreApiApiException buildApiException(final String operationId, final PetstoreApiHttpClient.HttpResult httpResult) {
+  private PetstoreApiApiException buildApiException(final String operationId, final PetstoreApiHttpResult httpResult) {
     final PetstoreApiApiException ex = new PetstoreApiApiException(
       operationId + ' failed: ' + httpResult.response.getStatusCode() + ' - ' + httpResult.response.getBody()
     );
@@ -24,7 +24,7 @@ global virtual class PetstoreApiV1StoreApi {
   }
 
   global class DeleteOrderResponse {
-    global PetstoreApiHttpClient.HttpResult httpResult;
+    global PetstoreApiHttpResult httpResult;
   }
 
   /**
@@ -49,7 +49,7 @@ global virtual class PetstoreApiV1StoreApi {
     final PetstoreApiHttpRequestBuilder builder = new PetstoreApiHttpRequestBuilder()
       .setEndpoint('/store/order/' + request.orderId)
       .setMethod(PetstoreApiHttpRequestBuilder.HttpMethod.DEL);
-    final PetstoreApiHttpClient.HttpResult httpResult = this.client.send(builder);
+    final PetstoreApiHttpResult httpResult = this.client.send(builder);
     if (httpResult.response.getStatusCode() / 100 != 2) {
       throw buildApiException('deleteOrder', httpResult);
     }
@@ -62,7 +62,7 @@ global virtual class PetstoreApiV1StoreApi {
   }
 
   global class GetInventoryResponse {
-    global PetstoreApiHttpClient.HttpResult httpResult;
+    global PetstoreApiHttpResult httpResult;
     global Map<String, Integer> data;
   }
 
@@ -86,7 +86,7 @@ global virtual class PetstoreApiV1StoreApi {
     final PetstoreApiHttpRequestBuilder builder = new PetstoreApiHttpRequestBuilder()
       .setEndpoint('/store/inventory')
       .setMethod(PetstoreApiHttpRequestBuilder.HttpMethod.GET);
-    final PetstoreApiHttpClient.HttpResult httpResult = this.client.send(builder);
+    final PetstoreApiHttpResult httpResult = this.client.send(builder);
     if (httpResult.response.getStatusCode() / 100 != 2) {
       throw buildApiException('getInventory', httpResult);
     }
@@ -106,7 +106,7 @@ global virtual class PetstoreApiV1StoreApi {
   }
 
   global class GetOrderByIdResponse {
-    global PetstoreApiHttpClient.HttpResult httpResult;
+    global PetstoreApiHttpResult httpResult;
     global PetstoreApiV1Order data;
   }
 
@@ -132,7 +132,7 @@ global virtual class PetstoreApiV1StoreApi {
     final PetstoreApiHttpRequestBuilder builder = new PetstoreApiHttpRequestBuilder()
       .setEndpoint('/store/order/' + request.orderId)
       .setMethod(PetstoreApiHttpRequestBuilder.HttpMethod.GET);
-    final PetstoreApiHttpClient.HttpResult httpResult = this.client.send(builder);
+    final PetstoreApiHttpResult httpResult = this.client.send(builder);
     if (httpResult.response.getStatusCode() / 100 != 2) {
       throw buildApiException('getOrderById', httpResult);
     }
@@ -152,7 +152,7 @@ global virtual class PetstoreApiV1StoreApi {
   }
 
   global class PlaceOrderResponse {
-    global PetstoreApiHttpClient.HttpResult httpResult;
+    global PetstoreApiHttpResult httpResult;
     global PetstoreApiV1Order data;
   }
 
@@ -179,7 +179,7 @@ global virtual class PetstoreApiV1StoreApi {
       .setEndpoint('/store/order')
       .setMethod(PetstoreApiHttpRequestBuilder.HttpMethod.POST);
     builder.setBody(JSON.serialize(request.petstoreApiV1Order));
-    final PetstoreApiHttpClient.HttpResult httpResult = this.client.send(builder);
+    final PetstoreApiHttpResult httpResult = this.client.send(builder);
     if (httpResult.response.getStatusCode() / 100 != 2) {
       throw buildApiException('placeOrder', httpResult);
     }

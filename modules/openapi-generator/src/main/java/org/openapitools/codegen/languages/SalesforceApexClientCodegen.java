@@ -245,30 +245,59 @@ public class SalesforceApexClientCodegen extends DefaultCodegen {
             generateTests = Boolean.parseBoolean(additionalProperties.get(GENERATE_TESTS).toString());
         }
 
-        final String clientClassName = classPrefix + "ApiClient";
-        final String httpRequestBuilderClassName = classPrefix + "HttpRequestBuilder";
-        final String httpClientClassName = classPrefix + "HttpClient";
         final String apiExceptionClassName = classPrefix + "ApiException";
+        final String authProviderClassName = classPrefix + "AuthProvider";
+        final String clientClassName = classPrefix + "ApiClient";
+        final String httpClientClassName = classPrefix + "HttpClient";
         final String httpClientMockClassName = classPrefix + "HttpClientMock";
-        additionalProperties.put("clientClassName", clientClassName);
-        additionalProperties.put("httpRequestBuilderClassName", httpRequestBuilderClassName);
-        additionalProperties.put("httpClientClassName", httpClientClassName);
+        final String httpRequestBuilderClassName = classPrefix + "HttpRequestBuilder";
+        final String httpResultClassName = classPrefix + "HttpResult";
+        final String requestContextClassName = classPrefix + "RequestContext";
         additionalProperties.put("apiExceptionClassName", apiExceptionClassName);
+        additionalProperties.put("authProviderClassName", authProviderClassName);
+        additionalProperties.put("clientClassName", clientClassName);
+        additionalProperties.put("httpClientClassName", httpClientClassName);
         additionalProperties.put("httpClientMockClassName", httpClientMockClassName);
+        additionalProperties.put("httpRequestBuilderClassName", httpRequestBuilderClassName);
+        additionalProperties.put("httpResultClassName", httpResultClassName);
+        additionalProperties.put("requestContextClassName", requestContextClassName);
 
         if (generateClient) {
-            supportingFiles.add(new SupportingFile("apiClient.mustache", "common", clientClassName + ".cls"));
-            supportingFiles.add(new SupportingFile("cls-meta.mustache", "common", clientClassName + ".cls-meta.xml"));
-            supportingFiles.add(new SupportingFile("httpClient.mustache", "common", httpClientClassName + ".cls"));
-            supportingFiles
-                    .add(new SupportingFile("cls-meta.mustache", "common", httpClientClassName + ".cls-meta.xml"));
+            // ApiException class
             supportingFiles.add(new SupportingFile("apiException.mustache", "common", apiExceptionClassName + ".cls"));
             supportingFiles
                     .add(new SupportingFile("cls-meta.mustache", "common", apiExceptionClassName + ".cls-meta.xml"));
+
+            // AuthProvider interface
+            supportingFiles.add(new SupportingFile("authProvider.mustache", "common", authProviderClassName + ".cls"));
+            supportingFiles
+                    .add(new SupportingFile("cls-meta.mustache", "common", authProviderClassName + ".cls-meta.xml"));
+
+            // ApiClient class
+            supportingFiles.add(new SupportingFile("apiClient.mustache", "common", clientClassName + ".cls"));
+            supportingFiles.add(new SupportingFile("cls-meta.mustache", "common", clientClassName + ".cls-meta.xml"));
+
+            // HTTPClient class
+            supportingFiles.add(new SupportingFile("httpClient.mustache", "common", httpClientClassName + ".cls"));
+            supportingFiles
+                    .add(new SupportingFile("cls-meta.mustache", "common", httpClientClassName + ".cls-meta.xml"));
+
+            // HttpRequestBuilder class
             supportingFiles.add(
                     new SupportingFile("httpRequestBuilder.mustache", "common", httpRequestBuilderClassName + ".cls"));
             supportingFiles.add(
                     new SupportingFile("cls-meta.mustache", "common", httpRequestBuilderClassName + ".cls-meta.xml"));
+
+            // HttpResult class
+            supportingFiles.add(new SupportingFile("httpResult.mustache", "common", httpResultClassName + ".cls"));
+            supportingFiles
+                    .add(new SupportingFile("cls-meta.mustache", "common", httpResultClassName + ".cls-meta.xml"));
+
+            // RequestContext class
+            supportingFiles
+                    .add(new SupportingFile("requestContext.mustache", "common", requestContextClassName + ".cls"));
+            supportingFiles
+                    .add(new SupportingFile("cls-meta.mustache", "common", requestContextClassName + ".cls-meta.xml"));
         }
 
         if (generateTests) {

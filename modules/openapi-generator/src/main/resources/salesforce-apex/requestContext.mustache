@@ -1,0 +1,30 @@
+{{accessModifier}} class {{{requestContextClassName}}} {
+    {{accessModifier}} final String operationId { get; private set; }
+    {{accessModifier}} final String endpoint { get; private set; }
+    {{accessModifier}} final String method { get; private set; }
+    {{accessModifier}} final String body { get; private set; }
+    {{accessModifier}} final Map<String, String> queryParams { get; private set; }
+    {{accessModifier}} final Map<String, String> headerParams { get; private set; }
+
+    public {{{requestContextClassName}}}(
+        final String operationId,
+        final String endpoint,
+        final String method,
+        final String body,
+        final Map<String, String> queryParams,
+        final Map<String, String> headerParams
+    ) {
+        this.operationId = operationId;
+        this.endpoint = endpoint;
+        this.method = method;
+        this.body = body;
+        this.queryParams = (Map<String, String>)JSON.deserialize(
+            JSON.serialize(queryParams), 
+            Map<String, String>.class
+        );
+        this.headerParams = (Map<String, String>)JSON.deserialize(
+            JSON.serialize(headerParams), 
+            Map<String, String>.class
+        );
+    }
+}

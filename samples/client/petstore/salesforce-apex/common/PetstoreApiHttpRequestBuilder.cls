@@ -2,10 +2,19 @@ public class PetstoreApiHttpRequestBuilder {
   // DELETE is a reserved keyword in Apex — use DEL and map to 'DELETE' in build()
   public enum HttpMethod { GET, POST, PUT, PATCH, DEL }
 
-  private String endpoint;
+  private final String operationId;
+  private final Map<String, String> headerParams;
+  private final Map<String, String> queryParams;
+
   private String body;
+  private String endpoint;
   private HttpMethod method;
-  private Map<String, String> queryParams = new Map<String, String>();
+
+  public PetstoreApiHttpRequestBuilder(final String operationId) {
+    this.operationId = operationId;
+    this.headerParams = new Map<String, String>();
+    this.queryParams = new Map<String, String>();
+  }
 
   public PetstoreApiHttpRequestBuilder setEndpoint(final String endpoint) {
     this.endpoint = endpoint;
@@ -27,13 +36,30 @@ public class PetstoreApiHttpRequestBuilder {
     return this;
   }
 
+  public PetstoreApiHttpRequestBuilder addHeader(final String key, final String value) {
+    this.headerParams.put(key, value);
+    return this;
+  }
+
+  public PetstoreApiRequestContext getRequestContext() {
+    final PetstoreApiRequestContext context = new PetstoreApiRequestContext(
+        this.operationId,
+        this.endpoint,
+        this.method == HttpMethod.DEL ? 'DELETE' : this.method.name(),
+        this.body,
+        this.queryParams,
+        this.headerParams
+    );
+    return context;
+  }
+
   // Called by the ApiClient — not intended for direct use
   public HttpRequest build(
     final String baseUrl,
     final String version,
     final Map<String, String> headers
   ) {
-    String url = baseUrl + '/' + version + '/' + this.endpoint;
+    final String url = baseUrl + '/' + version + '/' + this.endpoint;
     if (!this.queryParams.isEmpty()) {
       final List<String> parts = new List<String>();
       for (String key : this.queryParams.keySet()) {

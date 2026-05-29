@@ -6,7 +6,7 @@
     this.client = client;
   }
 
-  private {{{apiExceptionClassName}}} buildApiException(final String operationId, final {{{httpClientClassName}}}.HttpResult httpResult) {
+  private {{{apiExceptionClassName}}} buildApiException(final String operationId, final {{{httpResultClassName}}} httpResult) {
     final {{{apiExceptionClassName}}} ex = new {{{apiExceptionClassName}}}(
       operationId + ' failed: ' + httpResult.response.getStatusCode() + ' - ' + httpResult.response.getBody()
     );
@@ -28,7 +28,7 @@
   }
 
   {{accessModifier}} class {{vendorExtensions.x-apex-operation-res-class-name}} {
-    {{accessModifier}} {{{httpClientClassName}}}.HttpResult httpResult;
+    {{accessModifier}} {{{httpResultClassName}}} httpResult;
 {{#returnType}}    {{accessModifier}} {{{returnType}}} data;
 {{/returnType}}  }
 
@@ -68,7 +68,7 @@
       builder.addQueryParameter('{{baseName}}', String.valueOf(request.{{paramName}}));
     }{{/isArray}}
 {{/queryParams}}
-    final {{{httpClientClassName}}}.HttpResult httpResult = this.client.send(builder);
+    final {{{httpResultClassName}}} httpResult = this.client.send(builder);
     if (httpResult.response.getStatusCode() / 100 != 2) {
       throw buildApiException('{{operationId}}', httpResult);
     }
