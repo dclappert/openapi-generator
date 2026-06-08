@@ -1,33 +1,30 @@
 global virtual class PetstoreApiApiClient {
   private final String baseUrl;
   private final String version;
-  private final Map<String, String> headers = new Map<String, String>();
   private final PetstoreApiHttpClient httpClient;
-  private final PetstoreApiAuthProvider authProvider;
+  private final List<PetstoreApiInterceptor> interceptors;
 
   global PetstoreApiApiClient(
     final String baseUrl, 
     final String version, 
-    final PetstoreApiHttpClient httpClient,
-    final PetstoreApiAuthProvider authProvider
+    final PetstoreApiHttpClient httpClient
   ) {
     this.baseUrl = baseUrl;
     this.version = version;
     this.httpClient = httpClient;
-    this.authProvider = authProvider;
+    this.interceptors = new List<PetstoreApiInterceptor>();
   }
 
-  global PetstoreApiApiClient addHeader(final String name, final String value) {
-    this.headers.put(name, value);
+  global PetstoreApiApiClient addInterceptor(final PetstoreApiInterceptor interceptor) {
+    this.interceptors.add(interceptor);
     return this;
   }
 
-  global PetstoreApiHttpResult send(final PetstoreApiHttpRequestBuilder builder) {
-    final Map<String, String> authHeaders = this.authProvider.getAuthHeaders(builder.getRequestContext());
-    for (String headerName : authHeaders.keySet()) {
-      builder.addHeader(headerName, authHeaders.get(headerName));
+  global virtual PetstoreApiHttpResult send(final PetstoreApiHttpRequestBuilder builder) {
+    for (PetstoreApiInterceptor interceptor : this.interceptors) {
+      interceptor.beforeSend(builder);
     }
-    final HttpRequest req = builder.build(this.baseUrl, this.version, this.headers);
+    final HttpRequest req = builder.build(this.baseUrl, this.version);
     return this.httpClient.send(req);
   }
 }

@@ -1,3 +1,4 @@
+.openapi-generator-ignore
 api/latest.v1/PetstoreApiV1PetApi.cls
 api/latest.v1/PetstoreApiV1PetApi.cls-meta.xml
 api/latest.v1/PetstoreApiV1PetApiTest.cls
@@ -18,8 +19,6 @@ common/PetstoreApiApiException.cls
 common/PetstoreApiApiException.cls-meta.xml
 common/PetstoreApiApiExceptionTest.cls
 common/PetstoreApiApiExceptionTest.cls-meta.xml
-common/PetstoreApiAuthProvider.cls
-common/PetstoreApiAuthProvider.cls-meta.xml
 common/PetstoreApiHttpClient.cls
 common/PetstoreApiHttpClient.cls-meta.xml
 common/PetstoreApiHttpClientMock.cls
@@ -32,8 +31,8 @@ common/PetstoreApiHttpRequestBuilderTest.cls
 common/PetstoreApiHttpRequestBuilderTest.cls-meta.xml
 common/PetstoreApiHttpResult.cls
 common/PetstoreApiHttpResult.cls-meta.xml
-common/PetstoreApiRequestContext.cls
-common/PetstoreApiRequestContext.cls-meta.xml
+common/PetstoreApiInterceptor.cls
+common/PetstoreApiInterceptor.cls-meta.xml
 model/latest.v1/PetstoreApiV1ApiResponse.cls
 model/latest.v1/PetstoreApiV1ApiResponse.cls-meta.xml
 model/latest.v1/PetstoreApiV1ApiResponseTest.cls

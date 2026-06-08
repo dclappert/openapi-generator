@@ -246,21 +246,19 @@ public class SalesforceApexClientCodegen extends DefaultCodegen {
         }
 
         final String apiExceptionClassName = classPrefix + "ApiException";
-        final String authProviderClassName = classPrefix + "AuthProvider";
         final String clientClassName = classPrefix + "ApiClient";
         final String httpClientClassName = classPrefix + "HttpClient";
         final String httpClientMockClassName = classPrefix + "HttpClientMock";
         final String httpRequestBuilderClassName = classPrefix + "HttpRequestBuilder";
         final String httpResultClassName = classPrefix + "HttpResult";
-        final String requestContextClassName = classPrefix + "RequestContext";
+        final String interceptorClassName = classPrefix + "Interceptor";
         additionalProperties.put("apiExceptionClassName", apiExceptionClassName);
-        additionalProperties.put("authProviderClassName", authProviderClassName);
         additionalProperties.put("clientClassName", clientClassName);
         additionalProperties.put("httpClientClassName", httpClientClassName);
         additionalProperties.put("httpClientMockClassName", httpClientMockClassName);
         additionalProperties.put("httpRequestBuilderClassName", httpRequestBuilderClassName);
         additionalProperties.put("httpResultClassName", httpResultClassName);
-        additionalProperties.put("requestContextClassName", requestContextClassName);
+        additionalProperties.put("interceptorClassName", interceptorClassName);
 
         if (generateClient) {
             // ApiException class
@@ -268,16 +266,11 @@ public class SalesforceApexClientCodegen extends DefaultCodegen {
             supportingFiles
                     .add(new SupportingFile("cls-meta.mustache", "common", apiExceptionClassName + ".cls-meta.xml"));
 
-            // AuthProvider interface
-            supportingFiles.add(new SupportingFile("authProvider.mustache", "common", authProviderClassName + ".cls"));
-            supportingFiles
-                    .add(new SupportingFile("cls-meta.mustache", "common", authProviderClassName + ".cls-meta.xml"));
-
             // ApiClient class
             supportingFiles.add(new SupportingFile("apiClient.mustache", "common", clientClassName + ".cls"));
             supportingFiles.add(new SupportingFile("cls-meta.mustache", "common", clientClassName + ".cls-meta.xml"));
 
-            // HTTPClient class
+            // HttpClient class
             supportingFiles.add(new SupportingFile("httpClient.mustache", "common", httpClientClassName + ".cls"));
             supportingFiles
                     .add(new SupportingFile("cls-meta.mustache", "common", httpClientClassName + ".cls-meta.xml"));
@@ -293,11 +286,10 @@ public class SalesforceApexClientCodegen extends DefaultCodegen {
             supportingFiles
                     .add(new SupportingFile("cls-meta.mustache", "common", httpResultClassName + ".cls-meta.xml"));
 
-            // RequestContext class
+            // Interceptor interface
+            supportingFiles.add(new SupportingFile("interceptor.mustache", "common", interceptorClassName + ".cls"));
             supportingFiles
-                    .add(new SupportingFile("requestContext.mustache", "common", requestContextClassName + ".cls"));
-            supportingFiles
-                    .add(new SupportingFile("cls-meta.mustache", "common", requestContextClassName + ".cls-meta.xml"));
+                    .add(new SupportingFile("cls-meta.mustache", "common", interceptorClassName + ".cls-meta.xml"));
         }
 
         if (generateTests) {

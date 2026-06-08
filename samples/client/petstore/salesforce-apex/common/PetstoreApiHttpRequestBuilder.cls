@@ -1,64 +1,57 @@
-public class PetstoreApiHttpRequestBuilder {
+global class PetstoreApiHttpRequestBuilder {
   // DELETE is a reserved keyword in Apex — use DEL and map to 'DELETE' in build()
-  public enum HttpMethod { GET, POST, PUT, PATCH, DEL }
+  global enum HttpMethod { GET, POST, PUT, PATCH, DEL }
 
-  private final String operationId;
-  private final Map<String, String> headerParams;
-  private final Map<String, String> queryParams;
+  global final String operationId { get; private set; }
+  global final Map<String, String> headerParams { 
+    get { 
+      return new Map<String, String>(this.headerParams); 
+    }
+    private set; 
+  }
+  global final Map<String, String> queryParams { 
+    get { 
+      return new Map<String, String>(this.queryParams); 
+    }
+    private set; 
+  }
+  global String body { get; private set; }
+  global String endpoint { get; private set; }
+  global HttpMethod method { get; private set; }
 
-  private String body;
-  private String endpoint;
-  private HttpMethod method;
-
-  public PetstoreApiHttpRequestBuilder(final String operationId) {
+  global PetstoreApiHttpRequestBuilder(final String operationId) {
     this.operationId = operationId;
     this.headerParams = new Map<String, String>();
     this.queryParams = new Map<String, String>();
   }
-
-  public PetstoreApiHttpRequestBuilder setEndpoint(final String endpoint) {
+  
+  global PetstoreApiHttpRequestBuilder setEndpoint(final String endpoint) {
     this.endpoint = endpoint;
     return this;
   }
 
-  public PetstoreApiHttpRequestBuilder setMethod(final HttpMethod method) {
+  global PetstoreApiHttpRequestBuilder setMethod(final HttpMethod method) {
     this.method = method;
     return this;
   }
 
-  public PetstoreApiHttpRequestBuilder setBody(final String body) {
+  global PetstoreApiHttpRequestBuilder setBody(final String body) {
     this.body = body;
     return this;
   }
 
-  public PetstoreApiHttpRequestBuilder addQueryParameter(final String key, final String value) {
+  global PetstoreApiHttpRequestBuilder addQueryParameter(final String key, final String value) {
     this.queryParams.put(key, value);
     return this;
   }
 
-  public PetstoreApiHttpRequestBuilder addHeader(final String key, final String value) {
+  global PetstoreApiHttpRequestBuilder addHeader(final String key, final String value) {
     this.headerParams.put(key, value);
     return this;
   }
-
-  public PetstoreApiRequestContext getRequestContext() {
-    final PetstoreApiRequestContext context = new PetstoreApiRequestContext(
-        this.operationId,
-        this.endpoint,
-        this.method == HttpMethod.DEL ? 'DELETE' : this.method.name(),
-        this.body,
-        this.queryParams,
-        this.headerParams
-    );
-    return context;
-  }
-
-  // Called by the ApiClient — not intended for direct use
-  public HttpRequest build(
-    final String baseUrl,
-    final String version,
-    final Map<String, String> headers
-  ) {
+ 
+  // Intended for internal use by the generated API client, not for direct use by consumers
+  public HttpRequest build(final String baseUrl, final String version) {
     final String url = baseUrl + '/' + version + '/' + this.endpoint;
     if (!this.queryParams.isEmpty()) {
       final List<String> parts = new List<String>();
@@ -67,14 +60,16 @@ public class PetstoreApiHttpRequestBuilder {
       }
       url += '?' + String.join(parts, '&');
     }
+
     final HttpRequest req = new HttpRequest();
     req.setEndpoint(url);
-    req.setMethod(this.method == HttpMethod.HTTP_DELETE ? 'DELETE' : this.method.name());
+    req.setMethod(this.method == HttpMethod.DEL ? 'DELETE' : this.method.name());
     req.setHeader('Content-Type', 'application/json');
     req.setHeader('Accept', 'application/json');
-    for (String headerName : headers.keySet()) {
-      req.setHeader(headerName, headers.get(headerName));
+    for (String headerName : this.headerParams.keySet()) {
+      req.setHeader(headerName, this.headerParams.get(headerName));
     }
+    
     if (this.body != null) {
       req.setBody(this.body);
     }

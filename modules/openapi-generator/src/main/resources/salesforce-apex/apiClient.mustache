@@ -1,33 +1,30 @@
 {{accessModifier}} virtual class {{{clientClassName}}} {
   private final String baseUrl;
   private final String version;
-  private final Map<String, String> headers = new Map<String, String>();
   private final {{{httpClientClassName}}} httpClient;
-  private final {{{authProviderClassName}}} authProvider;
+  private final List<{{{interceptorClassName}}}> interceptors;
 
   {{accessModifier}} {{{clientClassName}}}(
     final String baseUrl, 
     final String version, 
-    final {{{httpClientClassName}}} httpClient,
-    final {{{authProviderClassName}}} authProvider
+    final {{{httpClientClassName}}} httpClient
   ) {
     this.baseUrl = baseUrl;
     this.version = version;
     this.httpClient = httpClient;
-    this.authProvider = authProvider;
+    this.interceptors = new List<{{{interceptorClassName}}}>();
   }
 
-  {{accessModifier}} {{{clientClassName}}} addHeader(final String name, final String value) {
-    this.headers.put(name, value);
+  {{accessModifier}} {{{clientClassName}}} addInterceptor(final {{{interceptorClassName}}} interceptor) {
+    this.interceptors.add(interceptor);
     return this;
   }
 
-  {{accessModifier}} {{{httpResultClassName}}} send(final {{{httpRequestBuilderClassName}}} builder) {
-    final Map<String, String> authHeaders = this.authProvider.getAuthHeaders(builder.getRequestContext());
-    for (String headerName : authHeaders.keySet()) {
-      builder.addHeader(headerName, authHeaders.get(headerName));
+  {{accessModifier}} virtual {{{httpResultClassName}}} send(final {{{httpRequestBuilderClassName}}} builder) {
+    for ({{{interceptorClassName}}} interceptor : this.interceptors) {
+      interceptor.beforeSend(builder);
     }
-    final HttpRequest req = builder.build(this.baseUrl, this.version, this.headers);
+    final HttpRequest req = builder.build(this.baseUrl, this.version);
     return this.httpClient.send(req);
   }
 }

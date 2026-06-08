@@ -1,64 +1,57 @@
-public class {{{httpRequestBuilderClassName}}} {
+{{accessModifier}} class {{{httpRequestBuilderClassName}}} {
   // DELETE is a reserved keyword in Apex — use DEL and map to 'DELETE' in build()
-  public enum HttpMethod { GET, POST, PUT, PATCH, DEL }
+  {{accessModifier}} enum HttpMethod { GET, POST, PUT, PATCH, DEL }
 
-  private final String operationId;
-  private final Map<String, String> headerParams;
-  private final Map<String, String> queryParams;
+  {{accessModifier}} final String operationId { get; private set; }
+  {{accessModifier}} final Map<String, String> headerParams { 
+    get { 
+      return new Map<String, String>(this.headerParams); 
+    }
+    private set; 
+  }
+  {{accessModifier}} final Map<String, String> queryParams { 
+    get { 
+      return new Map<String, String>(this.queryParams); 
+    }
+    private set; 
+  }
+  {{accessModifier}} String body { get; private set; }
+  {{accessModifier}} String endpoint { get; private set; }
+  {{accessModifier}} HttpMethod method { get; private set; }
 
-  private String body;
-  private String endpoint;
-  private HttpMethod method;
-
-  public {{{httpRequestBuilderClassName}}}(final String operationId) {
+  {{accessModifier}} {{{httpRequestBuilderClassName}}}(final String operationId) {
     this.operationId = operationId;
     this.headerParams = new Map<String, String>();
     this.queryParams = new Map<String, String>();
   }
-
-  public {{{httpRequestBuilderClassName}}} setEndpoint(final String endpoint) {
+  
+  {{accessModifier}} {{{httpRequestBuilderClassName}}} setEndpoint(final String endpoint) {
     this.endpoint = endpoint;
     return this;
   }
 
-  public {{{httpRequestBuilderClassName}}} setMethod(final HttpMethod method) {
+  {{accessModifier}} {{{httpRequestBuilderClassName}}} setMethod(final HttpMethod method) {
     this.method = method;
     return this;
   }
 
-  public {{{httpRequestBuilderClassName}}} setBody(final String body) {
+  {{accessModifier}} {{{httpRequestBuilderClassName}}} setBody(final String body) {
     this.body = body;
     return this;
   }
 
-  public {{{httpRequestBuilderClassName}}} addQueryParameter(final String key, final String value) {
+  {{accessModifier}} {{{httpRequestBuilderClassName}}} addQueryParameter(final String key, final String value) {
     this.queryParams.put(key, value);
     return this;
   }
 
-  public {{{httpRequestBuilderClassName}}} addHeader(final String key, final String value) {
+  {{accessModifier}} {{{httpRequestBuilderClassName}}} addHeader(final String key, final String value) {
     this.headerParams.put(key, value);
     return this;
   }
-
-  public {{{requestContextClassName}}} getRequestContext() {
-    final {{{requestContextClassName}}} context = new {{{requestContextClassName}}}(
-        this.operationId,
-        this.endpoint,
-        this.method == HttpMethod.DEL ? 'DELETE' : this.method.name(),
-        this.body,
-        this.queryParams,
-        this.headerParams
-    );
-    return context;
-  }
-
-  // Called by the ApiClient — not intended for direct use
-  public HttpRequest build(
-    final String baseUrl,
-    final String version,
-    final Map<String, String> headers
-  ) {
+ 
+  // Intended for internal use by the generated API client, not for direct use by consumers
+  public HttpRequest build(final String baseUrl, final String version) {
     final String url = baseUrl + '/' + version + '/' + this.endpoint;
     if (!this.queryParams.isEmpty()) {
       final List<String> parts = new List<String>();
@@ -67,14 +60,16 @@ public class {{{httpRequestBuilderClassName}}} {
       }
       url += '?' + String.join(parts, '&');
     }
+
     final HttpRequest req = new HttpRequest();
     req.setEndpoint(url);
-    req.setMethod(this.method == HttpMethod.HTTP_DELETE ? 'DELETE' : this.method.name());
+    req.setMethod(this.method == HttpMethod.DEL ? 'DELETE' : this.method.name());
     req.setHeader('Content-Type', 'application/json');
     req.setHeader('Accept', 'application/json');
-    for (String headerName : headers.keySet()) {
-      req.setHeader(headerName, headers.get(headerName));
+    for (String headerName : this.headerParams.keySet()) {
+      req.setHeader(headerName, this.headerParams.get(headerName));
     }
+    
     if (this.body != null) {
       req.setBody(this.body);
     }
