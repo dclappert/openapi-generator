@@ -16,9 +16,9 @@ private class {{{httpClientClassName}}}Test {
     req.setEndpoint('https://test');
     req.setMethod('GET');
     Test.startTest();
-    final {{{httpClientClassName}}}.HttpResult result = new {{{httpClientClassName}}}().send(req);
+    final {{{httpResultClassName}}} result = new {{{httpClientClassName}}}().send(req);
     Test.stopTest();
-    System.assertEquals(200, result.response.getStatusCode());
-    System.assertEquals(req, result.request);
+    Assert.areEqual(200, result.response.getStatusCode());
+    Assert.areEqual(req, result.request);
   }
 }

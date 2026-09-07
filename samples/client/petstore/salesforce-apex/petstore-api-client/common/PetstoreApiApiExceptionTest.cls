@@ -1,0 +1,11 @@
+@IsTest
+private class PetstoreApiApiExceptionTest {
+  @IsTest
+  static void testConstructionAndHttpResultField() {
+    final PetstoreApiApiException ex = new PetstoreApiApiException('boom');
+    final  r = new ();
+    ex.httpResult = r;
+    Assert.areEqual('boom', ex.getMessage());
+    Assert.areEqual(r, ex.httpResult);
+  }
+}

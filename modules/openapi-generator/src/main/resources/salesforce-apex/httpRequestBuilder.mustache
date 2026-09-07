@@ -1,39 +1,58 @@
-public class {{{builderClassName}}} {
+{{accessModifier}} class {{{httpRequestBuilderClassName}}} {
   // DELETE is a reserved keyword in Apex — use DEL and map to 'DELETE' in build()
-  public enum HttpMethod { GET, POST, PUT, PATCH, DEL }
+  {{accessModifier}} enum HttpMethod { GET, POST, PUT, PATCH, DEL }
 
-  private String endpoint;
-  private String body;
-  private HttpMethod method;
-  private Map<String, String> queryParams = new Map<String, String>();
+  {{accessModifier}} final String operationId { get; private set; }
+  {{accessModifier}} final Map<String, String> headerParams { 
+    get { 
+      return new Map<String, String>(this.headerParams); 
+    }
+    private set; 
+  }
+  {{accessModifier}} final Map<String, String> queryParams { 
+    get { 
+      return new Map<String, String>(this.queryParams); 
+    }
+    private set; 
+  }
+  {{accessModifier}} String body { get; private set; }
+  {{accessModifier}} String endpoint { get; private set; }
+  {{accessModifier}} HttpMethod method { get; private set; }
 
-  public {{{builderClassName}}} setEndpoint(final String endpoint) {
+  {{accessModifier}} {{{httpRequestBuilderClassName}}}(final String operationId) {
+    this.operationId = operationId;
+    this.headerParams = new Map<String, String>();
+    this.queryParams = new Map<String, String>();
+  }
+  
+  {{accessModifier}} {{{httpRequestBuilderClassName}}} setEndpoint(final String endpoint) {
     this.endpoint = endpoint;
     return this;
   }
 
-  public {{{builderClassName}}} setMethod(final HttpMethod method) {
+  {{accessModifier}} {{{httpRequestBuilderClassName}}} setMethod(final HttpMethod method) {
     this.method = method;
     return this;
   }
 
-  public {{{builderClassName}}} setBody(final String body) {
+  {{accessModifier}} {{{httpRequestBuilderClassName}}} setBody(final String body) {
     this.body = body;
     return this;
   }
 
-  public {{{builderClassName}}} addQueryParameter(final String key, final String value) {
+  {{accessModifier}} {{{httpRequestBuilderClassName}}} addQueryParameter(final String key, final String value) {
     this.queryParams.put(key, value);
     return this;
   }
 
-  // Called by the ApiClient — not intended for direct use
-  public HttpRequest build(
-    final String baseUrl,
-    final String version,
-    final Map<String, String> headers
-  ) {
-    String url = baseUrl + '/' + version + '/' + this.endpoint;
+  {{accessModifier}} {{{httpRequestBuilderClassName}}} addHeader(final String key, final String value) {
+    this.headerParams.put(key, value);
+    return this;
+  }
+ 
+  // Intended for internal use by the generated API client, not for direct use by consumers
+  public HttpRequest build(final String baseUrl, final String version) {
+    final String url = baseUrl + '/' + version + '/' + this.endpoint;
     if (!this.queryParams.isEmpty()) {
       final List<String> parts = new List<String>();
       for (String key : this.queryParams.keySet()) {
@@ -41,14 +60,16 @@ public class {{{builderClassName}}} {
       }
       url += '?' + String.join(parts, '&');
     }
+
     final HttpRequest req = new HttpRequest();
     req.setEndpoint(url);
-    req.setMethod(this.method == HttpMethod.HTTP_DELETE ? 'DELETE' : this.method.name());
+    req.setMethod(this.method == HttpMethod.DEL ? 'DELETE' : this.method.name());
     req.setHeader('Content-Type', 'application/json');
     req.setHeader('Accept', 'application/json');
-    for (String headerName : headers.keySet()) {
-      req.setHeader(headerName, headers.get(headerName));
+    for (String headerName : this.headerParams.keySet()) {
+      req.setHeader(headerName, this.headerParams.get(headerName));
     }
+    
     if (this.body != null) {
       req.setBody(this.body);
     }

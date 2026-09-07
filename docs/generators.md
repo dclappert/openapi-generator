@@ -59,6 +59,7 @@ The following generators are available:
 * [r](generators/r.md)  
 * [ruby](generators/ruby.md)  
 * [rust](generators/rust.md)  
+* [salesforce-apex](generators/salesforce-apex.md)
 * [scala-akka](generators/scala-akka.md)  
 * [scala-gatling](generators/scala-gatling.md)  
 * [scala-http4s](generators/scala-http4s.md)  

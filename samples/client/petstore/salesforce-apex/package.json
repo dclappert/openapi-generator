@@ -1,0 +1,14 @@
+{
+  "name": "@openapitools/salesforce-apex-client-petstore",
+  "version": "1.0.0",
+  "description": "Salesforce Apex Client for @openapitools/salesforce-apex-client-petstore",
+  "license": "MIT",
+  "author": "OpenAPI-Generator Contributors",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "auth:dev-hub": "sf org login web --set-default-dev-hub --alias=dev-hub",
+    "create:scratch-org": "sf org create scratch --definition-file=config/project-scratch-def.json --target-dev-hub=dev-hub --set-default --alias=petstore-api --duration-days=7",
+    "delete:scratch-org": "sf org delete scratch --target-org=petstore-api"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "packageDirectories": [
+    {
+      "path": "petstore-api-client",
+      "default": true
+    }
+  ],
+  "name": "petstore-api-client",
+  "namespace": "",
+  "sfdcLoginUrl": "https://login.salesforce.com",
+  "sourceApiVersion": "67.0"
+}
