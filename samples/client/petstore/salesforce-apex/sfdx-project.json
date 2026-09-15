@@ -1,7 +1,7 @@
 {
   "packageDirectories": [
     {
-      "path": "petstore-api-client",
+      "path": "petstore-api-client/generated",
       "default": true
     }
   ],

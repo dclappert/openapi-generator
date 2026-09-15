@@ -9,6 +9,8 @@
   "scripts": {
     "auth:dev-hub": "sf org login web --set-default-dev-hub --alias=dev-hub",
     "create:scratch-org": "sf org create scratch --definition-file=config/project-scratch-def.json --target-dev-hub=dev-hub --set-default --alias=petstore-api --duration-days=7",
-    "delete:scratch-org": "sf org delete scratch --target-org=petstore-api"
+    "delete:scratch-org": "sf org delete scratch --target-org=petstore-api",
+    "deploy": "sf project deploy start --target-org=petstore-api --ignore-conflicts",
+    "generate:api": "ROOT=$(git rev-parse --show-toplevel) && cd \"$ROOT\" && \"bin/generate-samples.sh\" bin/configs/salesforce-apex-petstore.yaml"
   }
 }
