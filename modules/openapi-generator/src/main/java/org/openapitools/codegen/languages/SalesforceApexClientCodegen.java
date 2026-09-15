@@ -484,10 +484,14 @@ public class SalesforceApexClientCodegen extends DefaultCodegen {
         objs.put("clientClassName", clientClassName);
         objs.put("httpRequestBuilderClassName", httpRequestBuilderClassName);
 
-        List<CodegenOperation> ops = objs.getOperations().getOperation();
+        final List<CodegenOperation> ops = objs.getOperations().getOperation();
         for (CodegenOperation op : ops) {
             setApexHttpRequestVendorExtensions(op);
             setOperationMethodRequestDtoVendorExtensions(op);
+            if (op.returnProperty != null) {
+                op.vendorExtensions.put("x-apex-operation-method-return-type",
+                        toApexOperationReqClassVarMockValue(op.returnProperty));
+            }
         }
 
         return super.postProcessOperationsWithModels(objs, allModels);

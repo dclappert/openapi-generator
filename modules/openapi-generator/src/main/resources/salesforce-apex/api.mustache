@@ -24,7 +24,7 @@
       this.{{paramName}} = {{paramName}};
       return this;
     }
-{{/allParams}}    
+{{/allParams}}
   }
 
   {{accessModifier}} class {{vendorExtensions.x-apex-operation-res-class-name}} {
@@ -51,7 +51,7 @@
   {{accessModifier}} virtual {{vendorExtensions.x-apex-operation-res-class-name}} {{operationId}}WithHttpInfo(
     final {{vendorExtensions.x-apex-operation-req-class-name}} request
   ) {
-    final {{{httpRequestBuilderClassName}}} builder = new {{{httpRequestBuilderClassName}}}()
+    final {{{httpRequestBuilderClassName}}} builder = new {{{httpRequestBuilderClassName}}}('{{operationId}}')
       .setEndpoint({{{vendorExtensions.x-apex-http-request-endpoint}}})
       .setMethod({{{httpRequestBuilderClassName}}}.HttpMethod.{{vendorExtensions.x-apex-http-request-method}});
 {{#bodyParam}}

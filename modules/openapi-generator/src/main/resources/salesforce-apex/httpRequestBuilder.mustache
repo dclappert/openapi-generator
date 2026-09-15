@@ -2,29 +2,44 @@
   // DELETE is a reserved keyword in Apex — use DEL and map to 'DELETE' in build()
   {{accessModifier}} enum HttpMethod { GET, POST, PUT, PATCH, DEL }
 
-  {{accessModifier}} final String operationId { get; private set; }
-  {{accessModifier}} final Map<String, String> headerParams { 
-    get { 
-      return new Map<String, String>(this.headerParams); 
-    }
-    private set; 
-  }
-  {{accessModifier}} final Map<String, String> queryParams { 
-    get { 
-      return new Map<String, String>(this.queryParams); 
-    }
-    private set; 
-  }
-  {{accessModifier}} String body { get; private set; }
-  {{accessModifier}} String endpoint { get; private set; }
-  {{accessModifier}} HttpMethod method { get; private set; }
+  private final String operationId;
+  private final Map<String, String> headerParams;
+  private final Map<String, String> queryParams;
+
+  private String body;
+  private String endpoint;
+  private HttpMethod method;
 
   {{accessModifier}} {{{httpRequestBuilderClassName}}}(final String operationId) {
     this.operationId = operationId;
     this.headerParams = new Map<String, String>();
     this.queryParams = new Map<String, String>();
   }
-  
+
+  {{accessModifier}} String getOperationId() {
+    return this.operationId;
+  }
+
+  {{accessModifier}} Map<String, String> getHeaderParams() {
+    return new Map<String, String>(this.headerParams);
+  }
+
+  {{accessModifier}} Map<String, String> getQueryParams() {
+    return new Map<String, String>(this.queryParams);
+  }
+
+  {{accessModifier}} String getBody() {
+    return this.body;
+  }
+
+  {{accessModifier}} String getEndpoint() {
+    return this.endpoint;
+  }
+
+  {{accessModifier}} HttpMethod getMethod() {
+    return this.method;
+  }
+
   {{accessModifier}} {{{httpRequestBuilderClassName}}} setEndpoint(final String endpoint) {
     this.endpoint = endpoint;
     return this;
@@ -49,10 +64,10 @@
     this.headerParams.put(key, value);
     return this;
   }
- 
+
   // Intended for internal use by the generated API client, not for direct use by consumers
   public HttpRequest build(final String baseUrl, final String version) {
-    final String url = baseUrl + '/' + version + '/' + this.endpoint;
+    String url = baseUrl + '/' + version + '/' + this.endpoint;
     if (!this.queryParams.isEmpty()) {
       final List<String> parts = new List<String>();
       for (String key : this.queryParams.keySet()) {
@@ -69,7 +84,7 @@
     for (String headerName : this.headerParams.keySet()) {
       req.setHeader(headerName, this.headerParams.get(headerName));
     }
-    
+
     if (this.body != null) {
       req.setBody(this.body);
     }

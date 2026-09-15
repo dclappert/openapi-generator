@@ -17,7 +17,7 @@ private class {{classname}}Test {
 
   @IsTest
   static void test{{vendorExtensions.x-apex-operation-method-name}}Success() {
-    {{#returnType}}final String body = JSON.serialize(new {{{returnType}}}());{{/returnType}}{{^returnType}}final String body = '';{{/returnType}}
+    {{#returnType}}final String body = JSON.serialize({{{vendorExtensions.x-apex-operation-method-return-type}}});{{/returnType}}{{^returnType}}final String body = '';{{/returnType}}
     final {{classname}} api = buildApi(makeResponse(200, body));
     final {{classname}}.{{vendorExtensions.x-apex-operation-req-class-name}} request = new {{classname}}.{{vendorExtensions.x-apex-operation-req-class-name}}(){{#allParams}}
       .{{vendorExtensions.x-apex-operation-req-class-var-setter}}({{{vendorExtensions.x-apex-operation-req-class-var-mock-value}}}){{/allParams}};

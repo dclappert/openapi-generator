@@ -1,5 +1,5 @@
-public class {{{httpClientClassName}}} {
-  public {{classPrefix}}HttpResult send(final HttpRequest req) {
+global virtual class {{{httpClientClassName}}} {
+  global virtual {{classPrefix}}HttpResult send(final HttpRequest req) {
     final HttpResponse res = new Http().send(req);
     final {{classPrefix}}HttpResult result = new {{classPrefix}}HttpResult();
     result.request = req;

@@ -2,29 +2,44 @@ global class PetstoreApiHttpRequestBuilder {
   // DELETE is a reserved keyword in Apex — use DEL and map to 'DELETE' in build()
   global enum HttpMethod { GET, POST, PUT, PATCH, DEL }
 
-  global final String operationId { get; private set; }
-  global final Map<String, String> headerParams { 
-    get { 
-      return new Map<String, String>(this.headerParams); 
-    }
-    private set; 
-  }
-  global final Map<String, String> queryParams { 
-    get { 
-      return new Map<String, String>(this.queryParams); 
-    }
-    private set; 
-  }
-  global String body { get; private set; }
-  global String endpoint { get; private set; }
-  global HttpMethod method { get; private set; }
+  private final String operationId;
+  private final Map<String, String> headerParams;
+  private final Map<String, String> queryParams;
+
+  private String body;
+  private String endpoint;
+  private HttpMethod method;
 
   global PetstoreApiHttpRequestBuilder(final String operationId) {
     this.operationId = operationId;
     this.headerParams = new Map<String, String>();
     this.queryParams = new Map<String, String>();
   }
-  
+
+  global String getOperationId() {
+    return this.operationId;
+  }
+
+  global Map<String, String> getHeaderParams() {
+    return new Map<String, String>(this.headerParams);
+  }
+
+  global Map<String, String> getQueryParams() {
+    return new Map<String, String>(this.queryParams);
+  }
+
+  global String getBody() {
+    return this.body;
+  }
+
+  global String getEndpoint() {
+    return this.endpoint;
+  }
+
+  global HttpMethod getMethod() {
+    return this.method;
+  }
+
   global PetstoreApiHttpRequestBuilder setEndpoint(final String endpoint) {
     this.endpoint = endpoint;
     return this;
@@ -49,10 +64,10 @@ global class PetstoreApiHttpRequestBuilder {
     this.headerParams.put(key, value);
     return this;
   }
- 
+
   // Intended for internal use by the generated API client, not for direct use by consumers
   public HttpRequest build(final String baseUrl, final String version) {
-    final String url = baseUrl + '/' + version + '/' + this.endpoint;
+    String url = baseUrl + '/' + version + '/' + this.endpoint;
     if (!this.queryParams.isEmpty()) {
       final List<String> parts = new List<String>();
       for (String key : this.queryParams.keySet()) {
@@ -69,7 +84,7 @@ global class PetstoreApiHttpRequestBuilder {
     for (String headerName : this.headerParams.keySet()) {
       req.setHeader(headerName, this.headerParams.get(headerName));
     }
-    
+
     if (this.body != null) {
       req.setBody(this.body);
     }

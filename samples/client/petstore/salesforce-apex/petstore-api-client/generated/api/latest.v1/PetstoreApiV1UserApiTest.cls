@@ -73,7 +73,7 @@ private class PetstoreApiV1UserApiTest {
 
   @IsTest
   static void testLoginUserSuccess() {
-    final String body = JSON.serialize(new String());
+    final String body = JSON.serialize('x');
     final PetstoreApiV1UserApi api = buildApi(makeResponse(200, body));
     final PetstoreApiV1UserApi.LoginUserRequest request = new PetstoreApiV1UserApi.LoginUserRequest()
       .setUsername('x')

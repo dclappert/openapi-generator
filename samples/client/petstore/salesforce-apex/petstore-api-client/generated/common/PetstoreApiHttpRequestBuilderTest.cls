@@ -1,51 +1,76 @@
 @IsTest
 private class PetstoreApiHttpRequestBuilderTest {
   @IsTest
-  static void testFluentSettersReturnSelf() {
-    final PetstoreApiHttpRequestBuilder b = new PetstoreApiHttpRequestBuilder();
-    Assert.areEqual(b, b.setEndpoint('x'));
-    Assert.areEqual(b, b.setMethod(PetstoreApiHttpRequestBuilder.HttpMethod.GET));
-    Assert.areEqual(b, b.setBody('body'));
-    Assert.areEqual(b, b.addQueryParameter('k', 'v'));
+  static void itGetsAndSetsBuilderMembers() {
+    final PetstoreApiHttpRequestBuilder clazz = new PetstoreApiHttpRequestBuilder('testOperation');
+
+    Test.startTest();
+    Assert.areEqual(clazz, clazz.setEndpoint('x'));
+    Assert.areEqual(clazz, clazz.setMethod(PetstoreApiHttpRequestBuilder.HttpMethod.GET));
+    Assert.areEqual(clazz, clazz.setBody('body'));
+    Assert.areEqual(clazz, clazz.addQueryParameter('k', 'v'));
+    Assert.areEqual(clazz, clazz.addHeader('k', 'v'));
+
+    Assert.areEqual('testOperation', clazz.getOperationId());
+    Assert.areEqual('x', clazz.getEndpoint());
+    Assert.areEqual(PetstoreApiHttpRequestBuilder.HttpMethod.GET, clazz.getMethod());
+    Assert.areEqual('body', clazz.getBody());
+    Assert.areEqual(new Map<String, String>{'k' => 'v'}, clazz.getQueryParams());
+    Assert.areEqual(new Map<String, String>{'k' => 'v'}, clazz.getHeaderParams());
+    Test.stopTest();
   }
 
   @IsTest
-  static void testBuildAssemblesUrl() {
-    final PetstoreApiHttpRequestBuilder b = new PetstoreApiHttpRequestBuilder()
+  static void itCreatesHttpRequestWithCorrectUrl() {
+    Test.startTest();
+    final PetstoreApiHttpRequestBuilder b = new PetstoreApiHttpRequestBuilder('testOperation')
       .setEndpoint('pet/1')
       .setMethod(PetstoreApiHttpRequestBuilder.HttpMethod.GET);
-    final HttpRequest req = b.build('https://api.test', 'v1', new Map<String, String>());
+    final HttpRequest req = b.build('https://api.test', 'v1');
+    Test.stopTest();
+
     Assert.areEqual('GET', req.getMethod());
     Assert.areEqual('https://api.test/v1/pet/1', req.getEndpoint());
   }
 
   @IsTest
-  static void testBuildMapsDelEnumToDeleteMethod() {
-    final PetstoreApiHttpRequestBuilder b = new PetstoreApiHttpRequestBuilder()
+  static void itMapsDelEnumToDeleteMethod() {
+    Test.startTest();
+    final PetstoreApiHttpRequestBuilder b = new PetstoreApiHttpRequestBuilder('testOperation')
       .setEndpoint('pet/1')
       .setMethod(PetstoreApiHttpRequestBuilder.HttpMethod.DEL);
-    final HttpRequest req = b.build('https://api.test', 'v1', new Map<String, String>());
+    final HttpRequest req = b.build('https://api.test', 'v1');
+    Test.stopTest();
+
     Assert.areEqual('DELETE', req.getMethod());
   }
 
   @IsTest
-  static void testBuildAppendsQueryParams() {
-    final PetstoreApiHttpRequestBuilder b = new PetstoreApiHttpRequestBuilder()
+  static void itAppendsQueryParamsToUrl() {
+    Test.startTest();
+    final PetstoreApiHttpRequestBuilder b = new PetstoreApiHttpRequestBuilder('testOperation')
       .setEndpoint('pet')
       .setMethod(PetstoreApiHttpRequestBuilder.HttpMethod.GET)
-      .addQueryParameter('status', 'available');
-    final HttpRequest req = b.build('https://api.test', 'v1', new Map<String, String>());
-    Assert.isTrue(req.getEndpoint().contains('status=available'));
+      .addQueryParameter('status', 'available')
+      .addQueryParameter('type', 'dog');
+    Test.stopTest();
+
+    final HttpRequest req = b.build('https://api.test', 'v1');
+    Assert.areEqual('https://api.test/v1/pet?status=available&type=dog', req.getEndpoint());
   }
 
   @IsTest
-  static void testBuildSetsBodyAndHeaders() {
+  static void itSetsBodyAndHeadersInHttpRequest() {
+    Test.startTest();
     final Map<String, String> headers = new Map<String, String>{'X-Auth' => 'secret'};
-    final PetstoreApiHttpRequestBuilder b = new PetstoreApiHttpRequestBuilder()
+    final PetstoreApiHttpRequestBuilder b = new PetstoreApiHttpRequestBuilder('testOperation')
       .setEndpoint('pet')
       .setMethod(PetstoreApiHttpRequestBuilder.HttpMethod.POST)
-      .setBody('{"x":1}');
-    final HttpRequest req = b.build('https://api.test', 'v1', headers);
+      .setBody('{"x":1}')
+      .addHeader('X-Auth', 'secret');
+    final HttpRequest req = b.build('https://api.test', 'v1');
+    Test.stopTest();
+
     Assert.areEqual('{"x":1}', req.getBody());
     Assert.areEqual('secret', req.getHeader('X-Auth'));
   }

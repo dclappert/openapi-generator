@@ -1,23 +1,10 @@
 @IsTest
 private class {{{clientClassName}}}Test {
   @IsTest
-  static void testDefaultConstructor() {
-    final {{{clientClassName}}} client = new {{{clientClassName}}}('https://test', 'v1');
-    Assert.areNotEqual(null, client);
-  }
-
-  @IsTest
   static void testInjectedHttpClient() {
     final {{{httpClientMockClassName}}} mock = new {{{httpClientMockClassName}}}();
     final {{{clientClassName}}} client = new {{{clientClassName}}}('https://test', 'v1', mock);
     Assert.areNotEqual(null, client);
-  }
-
-  @IsTest
-  static void testAddHeaderReturnsSelf() {
-    final {{{clientClassName}}} client = new {{{clientClassName}}}('https://test', 'v1');
-    final {{{clientClassName}}} returned = client.addHeader('X-Test', 'value');
-    Assert.areEqual(client, returned);
   }
 
   @IsTest
@@ -28,7 +15,7 @@ private class {{{clientClassName}}}Test {
     res.setBody('{}');
     mock.nextResponse = res;
     final {{{clientClassName}}} client = new {{{clientClassName}}}('https://test', 'v1', mock);
-    final {{{httpRequestBuilderClassName}}} builder = new {{{httpRequestBuilderClassName}}}()
+    final {{{httpRequestBuilderClassName}}} builder = new {{{httpRequestBuilderClassName}}}('testOperation')
       .setEndpoint('x')
       .setMethod({{{httpRequestBuilderClassName}}}.HttpMethod.GET);
     final {{{httpResultClassName}}} result = client.send(builder);

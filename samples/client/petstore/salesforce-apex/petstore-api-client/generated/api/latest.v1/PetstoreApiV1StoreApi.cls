@@ -46,7 +46,7 @@ global virtual class PetstoreApiV1StoreApi {
   global virtual DeleteOrderResponse deleteOrderWithHttpInfo(
     final DeleteOrderRequest request
   ) {
-    final PetstoreApiHttpRequestBuilder builder = new PetstoreApiHttpRequestBuilder()
+    final PetstoreApiHttpRequestBuilder builder = new PetstoreApiHttpRequestBuilder('deleteOrder')
       .setEndpoint('/store/order/' + request.orderId)
       .setMethod(PetstoreApiHttpRequestBuilder.HttpMethod.DEL);
     final PetstoreApiHttpResult httpResult = this.client.send(builder);
@@ -83,7 +83,7 @@ global virtual class PetstoreApiV1StoreApi {
   global virtual GetInventoryResponse getInventoryWithHttpInfo(
     final GetInventoryRequest request
   ) {
-    final PetstoreApiHttpRequestBuilder builder = new PetstoreApiHttpRequestBuilder()
+    final PetstoreApiHttpRequestBuilder builder = new PetstoreApiHttpRequestBuilder('getInventory')
       .setEndpoint('/store/inventory')
       .setMethod(PetstoreApiHttpRequestBuilder.HttpMethod.GET);
     final PetstoreApiHttpResult httpResult = this.client.send(builder);
@@ -129,7 +129,7 @@ global virtual class PetstoreApiV1StoreApi {
   global virtual GetOrderByIdResponse getOrderByIdWithHttpInfo(
     final GetOrderByIdRequest request
   ) {
-    final PetstoreApiHttpRequestBuilder builder = new PetstoreApiHttpRequestBuilder()
+    final PetstoreApiHttpRequestBuilder builder = new PetstoreApiHttpRequestBuilder('getOrderById')
       .setEndpoint('/store/order/' + request.orderId)
       .setMethod(PetstoreApiHttpRequestBuilder.HttpMethod.GET);
     final PetstoreApiHttpResult httpResult = this.client.send(builder);
@@ -175,7 +175,7 @@ global virtual class PetstoreApiV1StoreApi {
   global virtual PlaceOrderResponse placeOrderWithHttpInfo(
     final PlaceOrderRequest request
   ) {
-    final PetstoreApiHttpRequestBuilder builder = new PetstoreApiHttpRequestBuilder()
+    final PetstoreApiHttpRequestBuilder builder = new PetstoreApiHttpRequestBuilder('placeOrder')
       .setEndpoint('/store/order')
       .setMethod(PetstoreApiHttpRequestBuilder.HttpMethod.POST);
     builder.setBody(JSON.serialize(request.petstoreApiV1Order));

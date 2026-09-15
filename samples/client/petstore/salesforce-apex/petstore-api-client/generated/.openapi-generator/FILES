@@ -1,4 +1,3 @@
-.openapi-generator-ignore
 api/latest.v1/PetstoreApiV1PetApi.cls
 api/latest.v1/PetstoreApiV1PetApi.cls-meta.xml
 api/latest.v1/PetstoreApiV1PetApiTest.cls

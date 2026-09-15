@@ -46,7 +46,7 @@ global virtual class PetstoreApiV1UserApi {
   global virtual CreateUserResponse createUserWithHttpInfo(
     final CreateUserRequest request
   ) {
-    final PetstoreApiHttpRequestBuilder builder = new PetstoreApiHttpRequestBuilder()
+    final PetstoreApiHttpRequestBuilder builder = new PetstoreApiHttpRequestBuilder('createUser')
       .setEndpoint('/user')
       .setMethod(PetstoreApiHttpRequestBuilder.HttpMethod.POST);
     builder.setBody(JSON.serialize(request.petstoreApiV1User));
@@ -91,7 +91,7 @@ global virtual class PetstoreApiV1UserApi {
   global virtual CreateUsersWithArrayInputResponse createUsersWithArrayInputWithHttpInfo(
     final CreateUsersWithArrayInputRequest request
   ) {
-    final PetstoreApiHttpRequestBuilder builder = new PetstoreApiHttpRequestBuilder()
+    final PetstoreApiHttpRequestBuilder builder = new PetstoreApiHttpRequestBuilder('createUsersWithArrayInput')
       .setEndpoint('/user/createWithArray')
       .setMethod(PetstoreApiHttpRequestBuilder.HttpMethod.POST);
     builder.setBody(JSON.serialize(request.petstoreApiV1User));
@@ -136,7 +136,7 @@ global virtual class PetstoreApiV1UserApi {
   global virtual CreateUsersWithListInputResponse createUsersWithListInputWithHttpInfo(
     final CreateUsersWithListInputRequest request
   ) {
-    final PetstoreApiHttpRequestBuilder builder = new PetstoreApiHttpRequestBuilder()
+    final PetstoreApiHttpRequestBuilder builder = new PetstoreApiHttpRequestBuilder('createUsersWithListInput')
       .setEndpoint('/user/createWithList')
       .setMethod(PetstoreApiHttpRequestBuilder.HttpMethod.POST);
     builder.setBody(JSON.serialize(request.petstoreApiV1User));
@@ -181,7 +181,7 @@ global virtual class PetstoreApiV1UserApi {
   global virtual DeleteUserResponse deleteUserWithHttpInfo(
     final DeleteUserRequest request
   ) {
-    final PetstoreApiHttpRequestBuilder builder = new PetstoreApiHttpRequestBuilder()
+    final PetstoreApiHttpRequestBuilder builder = new PetstoreApiHttpRequestBuilder('deleteUser')
       .setEndpoint('/user/' + request.username)
       .setMethod(PetstoreApiHttpRequestBuilder.HttpMethod.DEL);
     final PetstoreApiHttpResult httpResult = this.client.send(builder);
@@ -226,7 +226,7 @@ global virtual class PetstoreApiV1UserApi {
   global virtual GetUserByNameResponse getUserByNameWithHttpInfo(
     final GetUserByNameRequest request
   ) {
-    final PetstoreApiHttpRequestBuilder builder = new PetstoreApiHttpRequestBuilder()
+    final PetstoreApiHttpRequestBuilder builder = new PetstoreApiHttpRequestBuilder('getUserByName')
       .setEndpoint('/user/' + request.username)
       .setMethod(PetstoreApiHttpRequestBuilder.HttpMethod.GET);
     final PetstoreApiHttpResult httpResult = this.client.send(builder);
@@ -280,7 +280,7 @@ global virtual class PetstoreApiV1UserApi {
   global virtual LoginUserResponse loginUserWithHttpInfo(
     final LoginUserRequest request
   ) {
-    final PetstoreApiHttpRequestBuilder builder = new PetstoreApiHttpRequestBuilder()
+    final PetstoreApiHttpRequestBuilder builder = new PetstoreApiHttpRequestBuilder('loginUser')
       .setEndpoint('/user/login')
       .setMethod(PetstoreApiHttpRequestBuilder.HttpMethod.GET);
     if (request.username != null && String.isNotBlank(request.username)) {
@@ -323,7 +323,7 @@ global virtual class PetstoreApiV1UserApi {
   global virtual LogoutUserResponse logoutUserWithHttpInfo(
     final LogoutUserRequest request
   ) {
-    final PetstoreApiHttpRequestBuilder builder = new PetstoreApiHttpRequestBuilder()
+    final PetstoreApiHttpRequestBuilder builder = new PetstoreApiHttpRequestBuilder('logoutUser')
       .setEndpoint('/user/logout')
       .setMethod(PetstoreApiHttpRequestBuilder.HttpMethod.GET);
     final PetstoreApiHttpResult httpResult = this.client.send(builder);
@@ -375,7 +375,7 @@ global virtual class PetstoreApiV1UserApi {
   global virtual UpdateUserResponse updateUserWithHttpInfo(
     final UpdateUserRequest request
   ) {
-    final PetstoreApiHttpRequestBuilder builder = new PetstoreApiHttpRequestBuilder()
+    final PetstoreApiHttpRequestBuilder builder = new PetstoreApiHttpRequestBuilder('updateUser')
       .setEndpoint('/user/' + request.username)
       .setMethod(PetstoreApiHttpRequestBuilder.HttpMethod.PUT);
     builder.setBody(JSON.serialize(request.petstoreApiV1User));
