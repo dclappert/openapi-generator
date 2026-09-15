@@ -3,14 +3,14 @@ private class PetstoreApiV1UserTest {
   @IsTest
   static void testSettersAndGetters() {
     PetstoreApiV1User m = new PetstoreApiV1User()
-      .setId()
-      .setUsername()
-      .setFirstName()
-      .setLastName()
-      .setEmail()
-      .setPassword()
-      .setPhone()
-      .setUserStatus();
+      .setId(1L)
+      .setUsername('x')
+      .setFirstName('x')
+      .setLastName('x')
+      .setEmail('x')
+      .setPassword('x')
+      .setPhone('x')
+      .setUserStatus(1);
     Assert.areNotEqual(null, m.getId());
     Assert.areNotEqual(null, m.getUsername());
     Assert.areNotEqual(null, m.getFirstName());
@@ -24,16 +24,16 @@ private class PetstoreApiV1UserTest {
   @IsTest
   static void testJsonRoundTrip() {
     PetstoreApiV1User original = new PetstoreApiV1User()
-      .setId()
-      .setUsername()
-      .setFirstName()
-      .setLastName()
-      .setEmail()
-      .setPassword()
-      .setPhone()
-      .setUserStatus();
-    final String json = JSON.serialize(original);
-    PetstoreApiV1User restored = (PetstoreApiV1User) JSON.deserialize(json, PetstoreApiV1User.class);
+      .setId(1L)
+      .setUsername('x')
+      .setFirstName('x')
+      .setLastName('x')
+      .setEmail('x')
+      .setPassword('x')
+      .setPhone('x')
+      .setUserStatus(1);
+    final String jsonString = JSON.serialize(original);
+    PetstoreApiV1User restored = (PetstoreApiV1User) JSON.deserialize(jsonString, PetstoreApiV1User.class);
     Assert.areNotEqual(null, restored);
   }
 }

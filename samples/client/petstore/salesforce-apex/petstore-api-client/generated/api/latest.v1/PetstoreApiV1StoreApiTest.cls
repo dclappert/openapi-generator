@@ -16,46 +16,46 @@ private class PetstoreApiV1StoreApiTest {
 
 
   @IsTest
-  static void testSuccess() {
+  static void testDeleteOrderSuccess() {
     final String body = '';
     final PetstoreApiV1StoreApi api = buildApi(makeResponse(200, body));
-    final PetstoreApiV1StoreApi. request = new PetstoreApiV1StoreApi.()
-      .();
-    final PetstoreApiV1StoreApi. response = api.deleteOrderWithHttpInfo(request);
+    final PetstoreApiV1StoreApi.DeleteOrderRequest request = new PetstoreApiV1StoreApi.DeleteOrderRequest()
+      .setOrderId('x');
+    final PetstoreApiV1StoreApi.DeleteOrderResponse response = api.deleteOrderWithHttpInfo(request);
     Assert.areEqual(200, response.httpResult.response.getStatusCode());
   }
 
 
   @IsTest
-  static void testSuccess() {
+  static void testGetInventorySuccess() {
     final String body = JSON.serialize(new Map<String, Integer>());
     final PetstoreApiV1StoreApi api = buildApi(makeResponse(200, body));
-    final PetstoreApiV1StoreApi. request = new PetstoreApiV1StoreApi.();
-    final PetstoreApiV1StoreApi. response = api.getInventoryWithHttpInfo(request);
+    final PetstoreApiV1StoreApi.GetInventoryRequest request = new PetstoreApiV1StoreApi.GetInventoryRequest();
+    final PetstoreApiV1StoreApi.GetInventoryResponse response = api.getInventoryWithHttpInfo(request);
     Assert.areEqual(200, response.httpResult.response.getStatusCode());
     Assert.areNotEqual(null, response.data);
   }
 
 
   @IsTest
-  static void testSuccess() {
+  static void testGetOrderByIdSuccess() {
     final String body = JSON.serialize(new PetstoreApiV1Order());
     final PetstoreApiV1StoreApi api = buildApi(makeResponse(200, body));
-    final PetstoreApiV1StoreApi. request = new PetstoreApiV1StoreApi.()
-      .();
-    final PetstoreApiV1StoreApi. response = api.getOrderByIdWithHttpInfo(request);
+    final PetstoreApiV1StoreApi.GetOrderByIdRequest request = new PetstoreApiV1StoreApi.GetOrderByIdRequest()
+      .setOrderId(1L);
+    final PetstoreApiV1StoreApi.GetOrderByIdResponse response = api.getOrderByIdWithHttpInfo(request);
     Assert.areEqual(200, response.httpResult.response.getStatusCode());
     Assert.areNotEqual(null, response.data);
   }
 
 
   @IsTest
-  static void testSuccess() {
+  static void testPlaceOrderSuccess() {
     final String body = JSON.serialize(new PetstoreApiV1Order());
     final PetstoreApiV1StoreApi api = buildApi(makeResponse(200, body));
-    final PetstoreApiV1StoreApi. request = new PetstoreApiV1StoreApi.()
-      .();
-    final PetstoreApiV1StoreApi. response = api.placeOrderWithHttpInfo(request);
+    final PetstoreApiV1StoreApi.PlaceOrderRequest request = new PetstoreApiV1StoreApi.PlaceOrderRequest()
+      .setPetstoreApiV1Order(new PetstoreApiV1Order());
+    final PetstoreApiV1StoreApi.PlaceOrderResponse response = api.placeOrderWithHttpInfo(request);
     Assert.areEqual(200, response.httpResult.response.getStatusCode());
     Assert.areNotEqual(null, response.data);
   }
@@ -65,7 +65,7 @@ private class PetstoreApiV1StoreApiTest {
   static void testThrowsApiExceptionOnNon2xx() {
     final PetstoreApiV1StoreApi api = buildApi(makeResponse(500, '{"error":"boom"}'));
 
-    final PetstoreApiV1StoreApi. request = new PetstoreApiV1StoreApi.();
+    final PetstoreApiV1StoreApi.DeleteOrderRequest request = new PetstoreApiV1StoreApi.DeleteOrderRequest();
     try {
       api.deleteOrderWithHttpInfo(request);
       Assert.fail('expected PetstoreApiApiException');

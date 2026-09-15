@@ -18,8 +18,8 @@ global class PetstoreApiV1ApiResponse {
     return this.type;
   }
 
-  global PetstoreApiV1ApiResponse setType(final String _type) {
-    this.type = _type;
+  global PetstoreApiV1ApiResponse setType(final String type) {
+    this.type = type;
     return this;
   }
 

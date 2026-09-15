@@ -3,9 +3,9 @@ private class PetstoreApiV1ApiResponseTest {
   @IsTest
   static void testSettersAndGetters() {
     PetstoreApiV1ApiResponse m = new PetstoreApiV1ApiResponse()
-      .setCode()
-      .setType()
-      .setMessage();
+      .setCode(1)
+      .setType('x')
+      .setMessage('x');
     Assert.areNotEqual(null, m.getCode());
     Assert.areNotEqual(null, m.getType());
     Assert.areNotEqual(null, m.getMessage());
@@ -14,11 +14,11 @@ private class PetstoreApiV1ApiResponseTest {
   @IsTest
   static void testJsonRoundTrip() {
     PetstoreApiV1ApiResponse original = new PetstoreApiV1ApiResponse()
-      .setCode()
-      .setType()
-      .setMessage();
-    final String json = JSON.serialize(original);
-    PetstoreApiV1ApiResponse restored = (PetstoreApiV1ApiResponse) JSON.deserialize(json, PetstoreApiV1ApiResponse.class);
+      .setCode(1)
+      .setType('x')
+      .setMessage('x');
+    final String jsonString = JSON.serialize(original);
+    PetstoreApiV1ApiResponse restored = (PetstoreApiV1ApiResponse) JSON.deserialize(jsonString, PetstoreApiV1ApiResponse.class);
     Assert.areNotEqual(null, restored);
   }
 }

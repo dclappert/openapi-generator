@@ -28,10 +28,10 @@ private class PetstoreApiApiClientTest {
     res.setBody('{}');
     mock.nextResponse = res;
     final PetstoreApiApiClient client = new PetstoreApiApiClient('https://test', 'v1', mock);
-    final  builder = new ()
+    final PetstoreApiHttpRequestBuilder builder = new PetstoreApiHttpRequestBuilder()
       .setEndpoint('x')
-      .setMethod(.HttpMethod.GET);
-    final  result = client.send(builder);
+      .setMethod(PetstoreApiHttpRequestBuilder.HttpMethod.GET);
+    final PetstoreApiHttpResult result = client.send(builder);
     Assert.areEqual(200, result.response.getStatusCode());
   }
 }

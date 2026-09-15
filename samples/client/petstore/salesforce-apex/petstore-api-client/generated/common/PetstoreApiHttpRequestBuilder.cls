@@ -1,4 +1,4 @@
-global class  {
+global class PetstoreApiHttpRequestBuilder {
   // DELETE is a reserved keyword in Apex — use DEL and map to 'DELETE' in build()
   global enum HttpMethod { GET, POST, PUT, PATCH, DEL }
 
@@ -19,33 +19,33 @@ global class  {
   global String endpoint { get; private set; }
   global HttpMethod method { get; private set; }
 
-  global (final String operationId) {
+  global PetstoreApiHttpRequestBuilder(final String operationId) {
     this.operationId = operationId;
     this.headerParams = new Map<String, String>();
     this.queryParams = new Map<String, String>();
   }
   
-  global  setEndpoint(final String endpoint) {
+  global PetstoreApiHttpRequestBuilder setEndpoint(final String endpoint) {
     this.endpoint = endpoint;
     return this;
   }
 
-  global  setMethod(final HttpMethod method) {
+  global PetstoreApiHttpRequestBuilder setMethod(final HttpMethod method) {
     this.method = method;
     return this;
   }
 
-  global  setBody(final String body) {
+  global PetstoreApiHttpRequestBuilder setBody(final String body) {
     this.body = body;
     return this;
   }
 
-  global  addQueryParameter(final String key, final String value) {
+  global PetstoreApiHttpRequestBuilder addQueryParameter(final String key, final String value) {
     this.queryParams.put(key, value);
     return this;
   }
 
-  global  addHeader(final String key, final String value) {
+  global PetstoreApiHttpRequestBuilder addHeader(final String key, final String value) {
     this.headerParams.put(key, value);
     return this;
   }

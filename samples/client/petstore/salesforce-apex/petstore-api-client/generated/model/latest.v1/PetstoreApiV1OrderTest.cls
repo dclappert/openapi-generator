@@ -3,12 +3,12 @@ private class PetstoreApiV1OrderTest {
   @IsTest
   static void testSettersAndGetters() {
     PetstoreApiV1Order m = new PetstoreApiV1Order()
-      .setId()
-      .setPetId()
-      .setQuantity()
-      .setShipDate()
-      .setStatus()
-      .setComplete();
+      .setId(1L)
+      .setPetId(1L)
+      .setQuantity(1)
+      .setShipDate(Datetime.now())
+      .setStatus('x')
+      .setComplete(true);
     Assert.areNotEqual(null, m.getId());
     Assert.areNotEqual(null, m.getPetId());
     Assert.areNotEqual(null, m.getQuantity());
@@ -20,14 +20,14 @@ private class PetstoreApiV1OrderTest {
   @IsTest
   static void testJsonRoundTrip() {
     PetstoreApiV1Order original = new PetstoreApiV1Order()
-      .setId()
-      .setPetId()
-      .setQuantity()
-      .setShipDate()
-      .setStatus()
-      .setComplete();
-    final String json = JSON.serialize(original);
-    PetstoreApiV1Order restored = (PetstoreApiV1Order) JSON.deserialize(json, PetstoreApiV1Order.class);
+      .setId(1L)
+      .setPetId(1L)
+      .setQuantity(1)
+      .setShipDate(Datetime.now())
+      .setStatus('x')
+      .setComplete(true);
+    final String jsonString = JSON.serialize(original);
+    PetstoreApiV1Order restored = (PetstoreApiV1Order) JSON.deserialize(jsonString, PetstoreApiV1Order.class);
     Assert.areNotEqual(null, restored);
   }
 }

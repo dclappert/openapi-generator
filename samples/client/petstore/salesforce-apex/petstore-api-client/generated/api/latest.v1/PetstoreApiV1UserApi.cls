@@ -6,7 +6,7 @@ global virtual class PetstoreApiV1UserApi {
     this.client = client;
   }
 
-  private PetstoreApiApiException buildApiException(final String operationId, final  httpResult) {
+  private PetstoreApiApiException buildApiException(final String operationId, final PetstoreApiHttpResult httpResult) {
     final PetstoreApiApiException ex = new PetstoreApiApiException(
       operationId + ' failed: ' + httpResult.response.getStatusCode() + ' - ' + httpResult.response.getBody()
     );
@@ -14,17 +14,17 @@ global virtual class PetstoreApiV1UserApi {
     return ex;
   }
 
-  global class  {
+  global class CreateUserRequest {
     global PetstoreApiV1User petstoreApiV1User;
 
-    global  (final PetstoreApiV1User petstoreApiV1User) {
+    global CreateUserRequest setPetstoreApiV1User(final PetstoreApiV1User petstoreApiV1User) {
       this.petstoreApiV1User = petstoreApiV1User;
       return this;
     }
   }
 
-  global class  {
-    global  httpResult;
+  global class CreateUserResponse {
+    global PetstoreApiHttpResult httpResult;
   }
 
   /**
@@ -33,7 +33,7 @@ global virtual class PetstoreApiV1UserApi {
    * @return void
    */
   global virtual void createUser(
-    final  request
+    final CreateUserRequest request
   ) {
     createUserWithHttpInfo(request);
   }
@@ -41,35 +41,35 @@ global virtual class PetstoreApiV1UserApi {
   /**
    * Create user
    * @param petstoreApiV1User Created user object (required)
-   * @return 
+   * @return CreateUserResponse
    */
-  global virtual  createUserWithHttpInfo(
-    final  request
+  global virtual CreateUserResponse createUserWithHttpInfo(
+    final CreateUserRequest request
   ) {
-    final  builder = new ()
-      .setEndpoint()
-      .setMethod(.HttpMethod.);
+    final PetstoreApiHttpRequestBuilder builder = new PetstoreApiHttpRequestBuilder()
+      .setEndpoint('/user')
+      .setMethod(PetstoreApiHttpRequestBuilder.HttpMethod.POST);
     builder.setBody(JSON.serialize(request.petstoreApiV1User));
-    final  httpResult = this.client.send(builder);
+    final PetstoreApiHttpResult httpResult = this.client.send(builder);
     if (httpResult.response.getStatusCode() / 100 != 2) {
       throw buildApiException('createUser', httpResult);
     }
-    final  response = new ();
+    final CreateUserResponse response = new CreateUserResponse();
     response.httpResult = httpResult;
     return response;
   }
 
-  global class  {
+  global class CreateUsersWithArrayInputRequest {
     global List<PetstoreApiV1User> petstoreApiV1User;
 
-    global  (final List<PetstoreApiV1User> petstoreApiV1User) {
+    global CreateUsersWithArrayInputRequest setPetstoreApiV1User(final List<PetstoreApiV1User> petstoreApiV1User) {
       this.petstoreApiV1User = petstoreApiV1User;
       return this;
     }
   }
 
-  global class  {
-    global  httpResult;
+  global class CreateUsersWithArrayInputResponse {
+    global PetstoreApiHttpResult httpResult;
   }
 
   /**
@@ -78,7 +78,7 @@ global virtual class PetstoreApiV1UserApi {
    * @return void
    */
   global virtual void createUsersWithArrayInput(
-    final  request
+    final CreateUsersWithArrayInputRequest request
   ) {
     createUsersWithArrayInputWithHttpInfo(request);
   }
@@ -86,35 +86,35 @@ global virtual class PetstoreApiV1UserApi {
   /**
    * Creates list of users with given input array
    * @param petstoreApiV1User List of user object (required)
-   * @return 
+   * @return CreateUsersWithArrayInputResponse
    */
-  global virtual  createUsersWithArrayInputWithHttpInfo(
-    final  request
+  global virtual CreateUsersWithArrayInputResponse createUsersWithArrayInputWithHttpInfo(
+    final CreateUsersWithArrayInputRequest request
   ) {
-    final  builder = new ()
-      .setEndpoint()
-      .setMethod(.HttpMethod.);
+    final PetstoreApiHttpRequestBuilder builder = new PetstoreApiHttpRequestBuilder()
+      .setEndpoint('/user/createWithArray')
+      .setMethod(PetstoreApiHttpRequestBuilder.HttpMethod.POST);
     builder.setBody(JSON.serialize(request.petstoreApiV1User));
-    final  httpResult = this.client.send(builder);
+    final PetstoreApiHttpResult httpResult = this.client.send(builder);
     if (httpResult.response.getStatusCode() / 100 != 2) {
       throw buildApiException('createUsersWithArrayInput', httpResult);
     }
-    final  response = new ();
+    final CreateUsersWithArrayInputResponse response = new CreateUsersWithArrayInputResponse();
     response.httpResult = httpResult;
     return response;
   }
 
-  global class  {
+  global class CreateUsersWithListInputRequest {
     global List<PetstoreApiV1User> petstoreApiV1User;
 
-    global  (final List<PetstoreApiV1User> petstoreApiV1User) {
+    global CreateUsersWithListInputRequest setPetstoreApiV1User(final List<PetstoreApiV1User> petstoreApiV1User) {
       this.petstoreApiV1User = petstoreApiV1User;
       return this;
     }
   }
 
-  global class  {
-    global  httpResult;
+  global class CreateUsersWithListInputResponse {
+    global PetstoreApiHttpResult httpResult;
   }
 
   /**
@@ -123,7 +123,7 @@ global virtual class PetstoreApiV1UserApi {
    * @return void
    */
   global virtual void createUsersWithListInput(
-    final  request
+    final CreateUsersWithListInputRequest request
   ) {
     createUsersWithListInputWithHttpInfo(request);
   }
@@ -131,35 +131,35 @@ global virtual class PetstoreApiV1UserApi {
   /**
    * Creates list of users with given input array
    * @param petstoreApiV1User List of user object (required)
-   * @return 
+   * @return CreateUsersWithListInputResponse
    */
-  global virtual  createUsersWithListInputWithHttpInfo(
-    final  request
+  global virtual CreateUsersWithListInputResponse createUsersWithListInputWithHttpInfo(
+    final CreateUsersWithListInputRequest request
   ) {
-    final  builder = new ()
-      .setEndpoint()
-      .setMethod(.HttpMethod.);
+    final PetstoreApiHttpRequestBuilder builder = new PetstoreApiHttpRequestBuilder()
+      .setEndpoint('/user/createWithList')
+      .setMethod(PetstoreApiHttpRequestBuilder.HttpMethod.POST);
     builder.setBody(JSON.serialize(request.petstoreApiV1User));
-    final  httpResult = this.client.send(builder);
+    final PetstoreApiHttpResult httpResult = this.client.send(builder);
     if (httpResult.response.getStatusCode() / 100 != 2) {
       throw buildApiException('createUsersWithListInput', httpResult);
     }
-    final  response = new ();
+    final CreateUsersWithListInputResponse response = new CreateUsersWithListInputResponse();
     response.httpResult = httpResult;
     return response;
   }
 
-  global class  {
+  global class DeleteUserRequest {
     global String username;
 
-    global  (final String username) {
+    global DeleteUserRequest setUsername(final String username) {
       this.username = username;
       return this;
     }
   }
 
-  global class  {
-    global  httpResult;
+  global class DeleteUserResponse {
+    global PetstoreApiHttpResult httpResult;
   }
 
   /**
@@ -168,7 +168,7 @@ global virtual class PetstoreApiV1UserApi {
    * @return void
    */
   global virtual void deleteUser(
-    final  request
+    final DeleteUserRequest request
   ) {
     deleteUserWithHttpInfo(request);
   }
@@ -176,34 +176,34 @@ global virtual class PetstoreApiV1UserApi {
   /**
    * Delete user
    * @param username The name that needs to be deleted (required)
-   * @return 
+   * @return DeleteUserResponse
    */
-  global virtual  deleteUserWithHttpInfo(
-    final  request
+  global virtual DeleteUserResponse deleteUserWithHttpInfo(
+    final DeleteUserRequest request
   ) {
-    final  builder = new ()
-      .setEndpoint()
-      .setMethod(.HttpMethod.);
-    final  httpResult = this.client.send(builder);
+    final PetstoreApiHttpRequestBuilder builder = new PetstoreApiHttpRequestBuilder()
+      .setEndpoint('/user/' + request.username)
+      .setMethod(PetstoreApiHttpRequestBuilder.HttpMethod.DEL);
+    final PetstoreApiHttpResult httpResult = this.client.send(builder);
     if (httpResult.response.getStatusCode() / 100 != 2) {
       throw buildApiException('deleteUser', httpResult);
     }
-    final  response = new ();
+    final DeleteUserResponse response = new DeleteUserResponse();
     response.httpResult = httpResult;
     return response;
   }
 
-  global class  {
+  global class GetUserByNameRequest {
     global String username;
 
-    global  (final String username) {
+    global GetUserByNameRequest setUsername(final String username) {
       this.username = username;
       return this;
     }
   }
 
-  global class  {
-    global  httpResult;
+  global class GetUserByNameResponse {
+    global PetstoreApiHttpResult httpResult;
     global PetstoreApiV1User data;
   }
 
@@ -213,7 +213,7 @@ global virtual class PetstoreApiV1UserApi {
    * @return PetstoreApiV1User
    */
   global virtual PetstoreApiV1User getUserByName(
-    final  request
+    final GetUserByNameRequest request
   ) {
     return getUserByNameWithHttpInfo(request).data;
   }
@@ -221,41 +221,41 @@ global virtual class PetstoreApiV1UserApi {
   /**
    * Get user by user name
    * @param username The name that needs to be fetched. Use user1 for testing. (required)
-   * @return 
+   * @return GetUserByNameResponse
    */
-  global virtual  getUserByNameWithHttpInfo(
-    final  request
+  global virtual GetUserByNameResponse getUserByNameWithHttpInfo(
+    final GetUserByNameRequest request
   ) {
-    final  builder = new ()
-      .setEndpoint()
-      .setMethod(.HttpMethod.);
-    final  httpResult = this.client.send(builder);
+    final PetstoreApiHttpRequestBuilder builder = new PetstoreApiHttpRequestBuilder()
+      .setEndpoint('/user/' + request.username)
+      .setMethod(PetstoreApiHttpRequestBuilder.HttpMethod.GET);
+    final PetstoreApiHttpResult httpResult = this.client.send(builder);
     if (httpResult.response.getStatusCode() / 100 != 2) {
       throw buildApiException('getUserByName', httpResult);
     }
-    final  response = new ();
+    final GetUserByNameResponse response = new GetUserByNameResponse();
     response.httpResult = httpResult;
     response.data = (PetstoreApiV1User) JSON.deserialize(httpResult.response.getBody(), PetstoreApiV1User.class);
     return response;
   }
 
-  global class  {
+  global class LoginUserRequest {
     global String username;
     global String password;
 
-    global  (final String username) {
+    global LoginUserRequest setUsername(final String username) {
       this.username = username;
       return this;
     }
 
-    global  (final String password) {
+    global LoginUserRequest setPassword(final String password) {
       this.password = password;
       return this;
     }
   }
 
-  global class  {
-    global  httpResult;
+  global class LoginUserResponse {
+    global PetstoreApiHttpResult httpResult;
     global String data;
   }
 
@@ -266,7 +266,7 @@ global virtual class PetstoreApiV1UserApi {
    * @return String
    */
   global virtual String loginUser(
-    final  request
+    final LoginUserRequest request
   ) {
     return loginUserWithHttpInfo(request).data;
   }
@@ -275,35 +275,35 @@ global virtual class PetstoreApiV1UserApi {
    * Logs user into the system
    * @param username The user name for login (required)
    * @param password The password for login in clear text (required)
-   * @return 
+   * @return LoginUserResponse
    */
-  global virtual  loginUserWithHttpInfo(
-    final  request
+  global virtual LoginUserResponse loginUserWithHttpInfo(
+    final LoginUserRequest request
   ) {
-    final  builder = new ()
-      .setEndpoint()
-      .setMethod(.HttpMethod.);
+    final PetstoreApiHttpRequestBuilder builder = new PetstoreApiHttpRequestBuilder()
+      .setEndpoint('/user/login')
+      .setMethod(PetstoreApiHttpRequestBuilder.HttpMethod.GET);
     if (request.username != null && String.isNotBlank(request.username)) {
       builder.addQueryParameter('username', String.valueOf(request.username));
     }
     if (request.password != null && String.isNotBlank(request.password)) {
       builder.addQueryParameter('password', String.valueOf(request.password));
     }
-    final  httpResult = this.client.send(builder);
+    final PetstoreApiHttpResult httpResult = this.client.send(builder);
     if (httpResult.response.getStatusCode() / 100 != 2) {
       throw buildApiException('loginUser', httpResult);
     }
-    final  response = new ();
+    final LoginUserResponse response = new LoginUserResponse();
     response.httpResult = httpResult;
     response.data = (String) JSON.deserialize(httpResult.response.getBody(), String.class);
     return response;
   }
 
-  global class  {
+  global class LogoutUserRequest {
   }
 
-  global class  {
-    global  httpResult;
+  global class LogoutUserResponse {
+    global PetstoreApiHttpResult httpResult;
   }
 
   /**
@@ -311,47 +311,47 @@ global virtual class PetstoreApiV1UserApi {
    * @return void
    */
   global virtual void logoutUser(
-    final  request
+    final LogoutUserRequest request
   ) {
     logoutUserWithHttpInfo(request);
   }
 
   /**
    * Logs out current logged in user session
-   * @return 
+   * @return LogoutUserResponse
    */
-  global virtual  logoutUserWithHttpInfo(
-    final  request
+  global virtual LogoutUserResponse logoutUserWithHttpInfo(
+    final LogoutUserRequest request
   ) {
-    final  builder = new ()
-      .setEndpoint()
-      .setMethod(.HttpMethod.);
-    final  httpResult = this.client.send(builder);
+    final PetstoreApiHttpRequestBuilder builder = new PetstoreApiHttpRequestBuilder()
+      .setEndpoint('/user/logout')
+      .setMethod(PetstoreApiHttpRequestBuilder.HttpMethod.GET);
+    final PetstoreApiHttpResult httpResult = this.client.send(builder);
     if (httpResult.response.getStatusCode() / 100 != 2) {
       throw buildApiException('logoutUser', httpResult);
     }
-    final  response = new ();
+    final LogoutUserResponse response = new LogoutUserResponse();
     response.httpResult = httpResult;
     return response;
   }
 
-  global class  {
+  global class UpdateUserRequest {
     global String username;
     global PetstoreApiV1User petstoreApiV1User;
 
-    global  (final String username) {
+    global UpdateUserRequest setUsername(final String username) {
       this.username = username;
       return this;
     }
 
-    global  (final PetstoreApiV1User petstoreApiV1User) {
+    global UpdateUserRequest setPetstoreApiV1User(final PetstoreApiV1User petstoreApiV1User) {
       this.petstoreApiV1User = petstoreApiV1User;
       return this;
     }
   }
 
-  global class  {
-    global  httpResult;
+  global class UpdateUserResponse {
+    global PetstoreApiHttpResult httpResult;
   }
 
   /**
@@ -361,7 +361,7 @@ global virtual class PetstoreApiV1UserApi {
    * @return void
    */
   global virtual void updateUser(
-    final  request
+    final UpdateUserRequest request
   ) {
     updateUserWithHttpInfo(request);
   }
@@ -370,20 +370,20 @@ global virtual class PetstoreApiV1UserApi {
    * Updated user
    * @param username name that need to be deleted (required)
    * @param petstoreApiV1User Updated user object (required)
-   * @return 
+   * @return UpdateUserResponse
    */
-  global virtual  updateUserWithHttpInfo(
-    final  request
+  global virtual UpdateUserResponse updateUserWithHttpInfo(
+    final UpdateUserRequest request
   ) {
-    final  builder = new ()
-      .setEndpoint()
-      .setMethod(.HttpMethod.);
+    final PetstoreApiHttpRequestBuilder builder = new PetstoreApiHttpRequestBuilder()
+      .setEndpoint('/user/' + request.username)
+      .setMethod(PetstoreApiHttpRequestBuilder.HttpMethod.PUT);
     builder.setBody(JSON.serialize(request.petstoreApiV1User));
-    final  httpResult = this.client.send(builder);
+    final PetstoreApiHttpResult httpResult = this.client.send(builder);
     if (httpResult.response.getStatusCode() / 100 != 2) {
       throw buildApiException('updateUser', httpResult);
     }
-    final  response = new ();
+    final UpdateUserResponse response = new UpdateUserResponse();
     response.httpResult = httpResult;
     return response;
   }

@@ -6,7 +6,7 @@ global virtual class PetstoreApiV1PetApi {
     this.client = client;
   }
 
-  private PetstoreApiApiException buildApiException(final String operationId, final  httpResult) {
+  private PetstoreApiApiException buildApiException(final String operationId, final PetstoreApiHttpResult httpResult) {
     final PetstoreApiApiException ex = new PetstoreApiApiException(
       operationId + ' failed: ' + httpResult.response.getStatusCode() + ' - ' + httpResult.response.getBody()
     );
@@ -14,17 +14,17 @@ global virtual class PetstoreApiV1PetApi {
     return ex;
   }
 
-  global class  {
+  global class AddPetRequest {
     global PetstoreApiV1Pet petstoreApiV1Pet;
 
-    global  (final PetstoreApiV1Pet petstoreApiV1Pet) {
+    global AddPetRequest setPetstoreApiV1Pet(final PetstoreApiV1Pet petstoreApiV1Pet) {
       this.petstoreApiV1Pet = petstoreApiV1Pet;
       return this;
     }
   }
 
-  global class  {
-    global  httpResult;
+  global class AddPetResponse {
+    global PetstoreApiHttpResult httpResult;
     global PetstoreApiV1Pet data;
   }
 
@@ -34,7 +34,7 @@ global virtual class PetstoreApiV1PetApi {
    * @return PetstoreApiV1Pet
    */
   global virtual PetstoreApiV1Pet addPet(
-    final  request
+    final AddPetRequest request
   ) {
     return addPetWithHttpInfo(request).data;
   }
@@ -42,42 +42,42 @@ global virtual class PetstoreApiV1PetApi {
   /**
    * Add a new pet to the store
    * @param petstoreApiV1Pet Pet object that needs to be added to the store (required)
-   * @return 
+   * @return AddPetResponse
    */
-  global virtual  addPetWithHttpInfo(
-    final  request
+  global virtual AddPetResponse addPetWithHttpInfo(
+    final AddPetRequest request
   ) {
-    final  builder = new ()
-      .setEndpoint()
-      .setMethod(.HttpMethod.);
+    final PetstoreApiHttpRequestBuilder builder = new PetstoreApiHttpRequestBuilder()
+      .setEndpoint('/pet')
+      .setMethod(PetstoreApiHttpRequestBuilder.HttpMethod.POST);
     builder.setBody(JSON.serialize(request.petstoreApiV1Pet));
-    final  httpResult = this.client.send(builder);
+    final PetstoreApiHttpResult httpResult = this.client.send(builder);
     if (httpResult.response.getStatusCode() / 100 != 2) {
       throw buildApiException('addPet', httpResult);
     }
-    final  response = new ();
+    final AddPetResponse response = new AddPetResponse();
     response.httpResult = httpResult;
     response.data = (PetstoreApiV1Pet) JSON.deserialize(httpResult.response.getBody(), PetstoreApiV1Pet.class);
     return response;
   }
 
-  global class  {
+  global class DeletePetRequest {
     global Long petId;
     global String apiKey;
 
-    global  (final Long petId) {
+    global DeletePetRequest setPetId(final Long petId) {
       this.petId = petId;
       return this;
     }
 
-    global  (final String apiKey) {
+    global DeletePetRequest setApiKey(final String apiKey) {
       this.apiKey = apiKey;
       return this;
     }
   }
 
-  global class  {
-    global  httpResult;
+  global class DeletePetResponse {
+    global PetstoreApiHttpResult httpResult;
   }
 
   /**
@@ -87,7 +87,7 @@ global virtual class PetstoreApiV1PetApi {
    * @return void
    */
   global virtual void deletePet(
-    final  request
+    final DeletePetRequest request
   ) {
     deletePetWithHttpInfo(request);
   }
@@ -96,34 +96,34 @@ global virtual class PetstoreApiV1PetApi {
    * Deletes a pet
    * @param petId Pet id to delete (required)
    * @param apiKey  (optional)
-   * @return 
+   * @return DeletePetResponse
    */
-  global virtual  deletePetWithHttpInfo(
-    final  request
+  global virtual DeletePetResponse deletePetWithHttpInfo(
+    final DeletePetRequest request
   ) {
-    final  builder = new ()
-      .setEndpoint()
-      .setMethod(.HttpMethod.);
-    final  httpResult = this.client.send(builder);
+    final PetstoreApiHttpRequestBuilder builder = new PetstoreApiHttpRequestBuilder()
+      .setEndpoint('/pet/' + request.petId)
+      .setMethod(PetstoreApiHttpRequestBuilder.HttpMethod.DEL);
+    final PetstoreApiHttpResult httpResult = this.client.send(builder);
     if (httpResult.response.getStatusCode() / 100 != 2) {
       throw buildApiException('deletePet', httpResult);
     }
-    final  response = new ();
+    final DeletePetResponse response = new DeletePetResponse();
     response.httpResult = httpResult;
     return response;
   }
 
-  global class  {
+  global class FindPetsByStatusRequest {
     global List<String> status;
 
-    global  (final List<String> status) {
+    global FindPetsByStatusRequest setStatus(final List<String> status) {
       this.status = status;
       return this;
     }
   }
 
-  global class  {
-    global  httpResult;
+  global class FindPetsByStatusResponse {
+    global PetstoreApiHttpResult httpResult;
     global List<PetstoreApiV1Pet> data;
   }
 
@@ -133,7 +133,7 @@ global virtual class PetstoreApiV1PetApi {
    * @return List<PetstoreApiV1Pet>
    */
   global virtual List<PetstoreApiV1Pet> findPetsByStatus(
-    final  request
+    final FindPetsByStatusRequest request
   ) {
     return findPetsByStatusWithHttpInfo(request).data;
   }
@@ -141,14 +141,14 @@ global virtual class PetstoreApiV1PetApi {
   /**
    * Finds Pets by status
    * @param status Status values that need to be considered for filter (required)
-   * @return 
+   * @return FindPetsByStatusResponse
    */
-  global virtual  findPetsByStatusWithHttpInfo(
-    final  request
+  global virtual FindPetsByStatusResponse findPetsByStatusWithHttpInfo(
+    final FindPetsByStatusRequest request
   ) {
-    final  builder = new ()
-      .setEndpoint()
-      .setMethod(.HttpMethod.);
+    final PetstoreApiHttpRequestBuilder builder = new PetstoreApiHttpRequestBuilder()
+      .setEndpoint('/pet/findByStatus')
+      .setMethod(PetstoreApiHttpRequestBuilder.HttpMethod.GET);
     if (request.status != null && !request.status.isEmpty()) {
       final List<String> statusStrs = new List<String>();
       for (String item : request.status) {
@@ -156,27 +156,27 @@ global virtual class PetstoreApiV1PetApi {
       }
       builder.addQueryParameter('status', String.join(statusStrs, ','));
     }
-    final  httpResult = this.client.send(builder);
+    final PetstoreApiHttpResult httpResult = this.client.send(builder);
     if (httpResult.response.getStatusCode() / 100 != 2) {
       throw buildApiException('findPetsByStatus', httpResult);
     }
-    final  response = new ();
+    final FindPetsByStatusResponse response = new FindPetsByStatusResponse();
     response.httpResult = httpResult;
     response.data = (List<PetstoreApiV1Pet>) JSON.deserialize(httpResult.response.getBody(), List<PetstoreApiV1Pet>.class);
     return response;
   }
 
-  global class  {
+  global class FindPetsByTagsRequest {
     global List<String> tags;
 
-    global  (final List<String> tags) {
+    global FindPetsByTagsRequest setTags(final List<String> tags) {
       this.tags = tags;
       return this;
     }
   }
 
-  global class  {
-    global  httpResult;
+  global class FindPetsByTagsResponse {
+    global PetstoreApiHttpResult httpResult;
     global List<PetstoreApiV1Pet> data;
   }
 
@@ -186,7 +186,7 @@ global virtual class PetstoreApiV1PetApi {
    * @return List<PetstoreApiV1Pet>
    */
   global virtual List<PetstoreApiV1Pet> findPetsByTags(
-    final  request
+    final FindPetsByTagsRequest request
   ) {
     return findPetsByTagsWithHttpInfo(request).data;
   }
@@ -194,14 +194,14 @@ global virtual class PetstoreApiV1PetApi {
   /**
    * Finds Pets by tags
    * @param tags Tags to filter by (required)
-   * @return 
+   * @return FindPetsByTagsResponse
    */
-  global virtual  findPetsByTagsWithHttpInfo(
-    final  request
+  global virtual FindPetsByTagsResponse findPetsByTagsWithHttpInfo(
+    final FindPetsByTagsRequest request
   ) {
-    final  builder = new ()
-      .setEndpoint()
-      .setMethod(.HttpMethod.);
+    final PetstoreApiHttpRequestBuilder builder = new PetstoreApiHttpRequestBuilder()
+      .setEndpoint('/pet/findByTags')
+      .setMethod(PetstoreApiHttpRequestBuilder.HttpMethod.GET);
     if (request.tags != null && !request.tags.isEmpty()) {
       final List<String> tagsStrs = new List<String>();
       for (String item : request.tags) {
@@ -209,27 +209,27 @@ global virtual class PetstoreApiV1PetApi {
       }
       builder.addQueryParameter('tags', String.join(tagsStrs, ','));
     }
-    final  httpResult = this.client.send(builder);
+    final PetstoreApiHttpResult httpResult = this.client.send(builder);
     if (httpResult.response.getStatusCode() / 100 != 2) {
       throw buildApiException('findPetsByTags', httpResult);
     }
-    final  response = new ();
+    final FindPetsByTagsResponse response = new FindPetsByTagsResponse();
     response.httpResult = httpResult;
     response.data = (List<PetstoreApiV1Pet>) JSON.deserialize(httpResult.response.getBody(), List<PetstoreApiV1Pet>.class);
     return response;
   }
 
-  global class  {
+  global class GetPetByIdRequest {
     global Long petId;
 
-    global  (final Long petId) {
+    global GetPetByIdRequest setPetId(final Long petId) {
       this.petId = petId;
       return this;
     }
   }
 
-  global class  {
-    global  httpResult;
+  global class GetPetByIdResponse {
+    global PetstoreApiHttpResult httpResult;
     global PetstoreApiV1Pet data;
   }
 
@@ -239,7 +239,7 @@ global virtual class PetstoreApiV1PetApi {
    * @return PetstoreApiV1Pet
    */
   global virtual PetstoreApiV1Pet getPetById(
-    final  request
+    final GetPetByIdRequest request
   ) {
     return getPetByIdWithHttpInfo(request).data;
   }
@@ -247,35 +247,35 @@ global virtual class PetstoreApiV1PetApi {
   /**
    * Find pet by ID
    * @param petId ID of pet to return (required)
-   * @return 
+   * @return GetPetByIdResponse
    */
-  global virtual  getPetByIdWithHttpInfo(
-    final  request
+  global virtual GetPetByIdResponse getPetByIdWithHttpInfo(
+    final GetPetByIdRequest request
   ) {
-    final  builder = new ()
-      .setEndpoint()
-      .setMethod(.HttpMethod.);
-    final  httpResult = this.client.send(builder);
+    final PetstoreApiHttpRequestBuilder builder = new PetstoreApiHttpRequestBuilder()
+      .setEndpoint('/pet/' + request.petId)
+      .setMethod(PetstoreApiHttpRequestBuilder.HttpMethod.GET);
+    final PetstoreApiHttpResult httpResult = this.client.send(builder);
     if (httpResult.response.getStatusCode() / 100 != 2) {
       throw buildApiException('getPetById', httpResult);
     }
-    final  response = new ();
+    final GetPetByIdResponse response = new GetPetByIdResponse();
     response.httpResult = httpResult;
     response.data = (PetstoreApiV1Pet) JSON.deserialize(httpResult.response.getBody(), PetstoreApiV1Pet.class);
     return response;
   }
 
-  global class  {
+  global class UpdatePetRequest {
     global PetstoreApiV1Pet petstoreApiV1Pet;
 
-    global  (final PetstoreApiV1Pet petstoreApiV1Pet) {
+    global UpdatePetRequest setPetstoreApiV1Pet(final PetstoreApiV1Pet petstoreApiV1Pet) {
       this.petstoreApiV1Pet = petstoreApiV1Pet;
       return this;
     }
   }
 
-  global class  {
-    global  httpResult;
+  global class UpdatePetResponse {
+    global PetstoreApiHttpResult httpResult;
     global PetstoreApiV1Pet data;
   }
 
@@ -285,7 +285,7 @@ global virtual class PetstoreApiV1PetApi {
    * @return PetstoreApiV1Pet
    */
   global virtual PetstoreApiV1Pet updatePet(
-    final  request
+    final UpdatePetRequest request
   ) {
     return updatePetWithHttpInfo(request).data;
   }
@@ -293,48 +293,48 @@ global virtual class PetstoreApiV1PetApi {
   /**
    * Update an existing pet
    * @param petstoreApiV1Pet Pet object that needs to be added to the store (required)
-   * @return 
+   * @return UpdatePetResponse
    */
-  global virtual  updatePetWithHttpInfo(
-    final  request
+  global virtual UpdatePetResponse updatePetWithHttpInfo(
+    final UpdatePetRequest request
   ) {
-    final  builder = new ()
-      .setEndpoint()
-      .setMethod(.HttpMethod.);
+    final PetstoreApiHttpRequestBuilder builder = new PetstoreApiHttpRequestBuilder()
+      .setEndpoint('/pet')
+      .setMethod(PetstoreApiHttpRequestBuilder.HttpMethod.PUT);
     builder.setBody(JSON.serialize(request.petstoreApiV1Pet));
-    final  httpResult = this.client.send(builder);
+    final PetstoreApiHttpResult httpResult = this.client.send(builder);
     if (httpResult.response.getStatusCode() / 100 != 2) {
       throw buildApiException('updatePet', httpResult);
     }
-    final  response = new ();
+    final UpdatePetResponse response = new UpdatePetResponse();
     response.httpResult = httpResult;
     response.data = (PetstoreApiV1Pet) JSON.deserialize(httpResult.response.getBody(), PetstoreApiV1Pet.class);
     return response;
   }
 
-  global class  {
+  global class UpdatePetWithFormRequest {
     global Long petId;
     global String name;
     global String status;
 
-    global  (final Long petId) {
+    global UpdatePetWithFormRequest setPetId(final Long petId) {
       this.petId = petId;
       return this;
     }
 
-    global  (final String name) {
+    global UpdatePetWithFormRequest setName(final String name) {
       this.name = name;
       return this;
     }
 
-    global  (final String status) {
+    global UpdatePetWithFormRequest setStatus(final String status) {
       this.status = status;
       return this;
     }
   }
 
-  global class  {
-    global  httpResult;
+  global class UpdatePetWithFormResponse {
+    global PetstoreApiHttpResult httpResult;
   }
 
   /**
@@ -345,7 +345,7 @@ global virtual class PetstoreApiV1PetApi {
    * @return void
    */
   global virtual void updatePetWithForm(
-    final  request
+    final UpdatePetWithFormRequest request
   ) {
     updatePetWithFormWithHttpInfo(request);
   }
@@ -355,46 +355,46 @@ global virtual class PetstoreApiV1PetApi {
    * @param petId ID of pet that needs to be updated (required)
    * @param name Updated name of the pet (optional)
    * @param status Updated status of the pet (optional)
-   * @return 
+   * @return UpdatePetWithFormResponse
    */
-  global virtual  updatePetWithFormWithHttpInfo(
-    final  request
+  global virtual UpdatePetWithFormResponse updatePetWithFormWithHttpInfo(
+    final UpdatePetWithFormRequest request
   ) {
-    final  builder = new ()
-      .setEndpoint()
-      .setMethod(.HttpMethod.);
-    final  httpResult = this.client.send(builder);
+    final PetstoreApiHttpRequestBuilder builder = new PetstoreApiHttpRequestBuilder()
+      .setEndpoint('/pet/' + request.petId)
+      .setMethod(PetstoreApiHttpRequestBuilder.HttpMethod.POST);
+    final PetstoreApiHttpResult httpResult = this.client.send(builder);
     if (httpResult.response.getStatusCode() / 100 != 2) {
       throw buildApiException('updatePetWithForm', httpResult);
     }
-    final  response = new ();
+    final UpdatePetWithFormResponse response = new UpdatePetWithFormResponse();
     response.httpResult = httpResult;
     return response;
   }
 
-  global class  {
+  global class UploadFileRequest {
     global Long petId;
     global String additionalMetadata;
     global Blob file;
 
-    global  (final Long petId) {
+    global UploadFileRequest setPetId(final Long petId) {
       this.petId = petId;
       return this;
     }
 
-    global  (final String additionalMetadata) {
+    global UploadFileRequest setAdditionalMetadata(final String additionalMetadata) {
       this.additionalMetadata = additionalMetadata;
       return this;
     }
 
-    global  (final Blob file) {
+    global UploadFileRequest setFile(final Blob file) {
       this.file = file;
       return this;
     }
   }
 
-  global class  {
-    global  httpResult;
+  global class UploadFileResponse {
+    global PetstoreApiHttpResult httpResult;
     global PetstoreApiV1ApiResponse data;
   }
 
@@ -406,7 +406,7 @@ global virtual class PetstoreApiV1PetApi {
    * @return PetstoreApiV1ApiResponse
    */
   global virtual PetstoreApiV1ApiResponse uploadFile(
-    final  request
+    final UploadFileRequest request
   ) {
     return uploadFileWithHttpInfo(request).data;
   }
@@ -416,19 +416,19 @@ global virtual class PetstoreApiV1PetApi {
    * @param petId ID of pet to update (required)
    * @param additionalMetadata Additional data to pass to server (optional)
    * @param file file to upload (optional)
-   * @return 
+   * @return UploadFileResponse
    */
-  global virtual  uploadFileWithHttpInfo(
-    final  request
+  global virtual UploadFileResponse uploadFileWithHttpInfo(
+    final UploadFileRequest request
   ) {
-    final  builder = new ()
-      .setEndpoint()
-      .setMethod(.HttpMethod.);
-    final  httpResult = this.client.send(builder);
+    final PetstoreApiHttpRequestBuilder builder = new PetstoreApiHttpRequestBuilder()
+      .setEndpoint('/pet/' + request.petId + '/uploadImage')
+      .setMethod(PetstoreApiHttpRequestBuilder.HttpMethod.POST);
+    final PetstoreApiHttpResult httpResult = this.client.send(builder);
     if (httpResult.response.getStatusCode() / 100 != 2) {
       throw buildApiException('uploadFile', httpResult);
     }
-    final  response = new ();
+    final UploadFileResponse response = new UploadFileResponse();
     response.httpResult = httpResult;
     response.data = (PetstoreApiV1ApiResponse) JSON.deserialize(httpResult.response.getBody(), PetstoreApiV1ApiResponse.class);
     return response;

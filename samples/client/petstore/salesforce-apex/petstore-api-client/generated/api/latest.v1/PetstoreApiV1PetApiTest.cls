@@ -16,99 +16,99 @@ private class PetstoreApiV1PetApiTest {
 
 
   @IsTest
-  static void testSuccess() {
+  static void testAddPetSuccess() {
     final String body = JSON.serialize(new PetstoreApiV1Pet());
     final PetstoreApiV1PetApi api = buildApi(makeResponse(200, body));
-    final PetstoreApiV1PetApi. request = new PetstoreApiV1PetApi.()
-      .();
-    final PetstoreApiV1PetApi. response = api.addPetWithHttpInfo(request);
+    final PetstoreApiV1PetApi.AddPetRequest request = new PetstoreApiV1PetApi.AddPetRequest()
+      .setPetstoreApiV1Pet(new PetstoreApiV1Pet());
+    final PetstoreApiV1PetApi.AddPetResponse response = api.addPetWithHttpInfo(request);
     Assert.areEqual(200, response.httpResult.response.getStatusCode());
     Assert.areNotEqual(null, response.data);
   }
 
 
   @IsTest
-  static void testSuccess() {
+  static void testDeletePetSuccess() {
     final String body = '';
     final PetstoreApiV1PetApi api = buildApi(makeResponse(200, body));
-    final PetstoreApiV1PetApi. request = new PetstoreApiV1PetApi.()
-      .()
-      .();
-    final PetstoreApiV1PetApi. response = api.deletePetWithHttpInfo(request);
+    final PetstoreApiV1PetApi.DeletePetRequest request = new PetstoreApiV1PetApi.DeletePetRequest()
+      .setPetId(1L)
+      .setApiKey('x');
+    final PetstoreApiV1PetApi.DeletePetResponse response = api.deletePetWithHttpInfo(request);
     Assert.areEqual(200, response.httpResult.response.getStatusCode());
   }
 
 
   @IsTest
-  static void testSuccess() {
+  static void testFindPetsByStatusSuccess() {
     final String body = JSON.serialize(new List<PetstoreApiV1Pet>());
     final PetstoreApiV1PetApi api = buildApi(makeResponse(200, body));
-    final PetstoreApiV1PetApi. request = new PetstoreApiV1PetApi.()
-      .();
-    final PetstoreApiV1PetApi. response = api.findPetsByStatusWithHttpInfo(request);
+    final PetstoreApiV1PetApi.FindPetsByStatusRequest request = new PetstoreApiV1PetApi.FindPetsByStatusRequest()
+      .setStatus(new List<String>());
+    final PetstoreApiV1PetApi.FindPetsByStatusResponse response = api.findPetsByStatusWithHttpInfo(request);
     Assert.areEqual(200, response.httpResult.response.getStatusCode());
     Assert.areNotEqual(null, response.data);
   }
 
 
   @IsTest
-  static void testSuccess() {
+  static void testFindPetsByTagsSuccess() {
     final String body = JSON.serialize(new List<PetstoreApiV1Pet>());
     final PetstoreApiV1PetApi api = buildApi(makeResponse(200, body));
-    final PetstoreApiV1PetApi. request = new PetstoreApiV1PetApi.()
-      .();
-    final PetstoreApiV1PetApi. response = api.findPetsByTagsWithHttpInfo(request);
+    final PetstoreApiV1PetApi.FindPetsByTagsRequest request = new PetstoreApiV1PetApi.FindPetsByTagsRequest()
+      .setTags(new List<String>());
+    final PetstoreApiV1PetApi.FindPetsByTagsResponse response = api.findPetsByTagsWithHttpInfo(request);
     Assert.areEqual(200, response.httpResult.response.getStatusCode());
     Assert.areNotEqual(null, response.data);
   }
 
 
   @IsTest
-  static void testSuccess() {
+  static void testGetPetByIdSuccess() {
     final String body = JSON.serialize(new PetstoreApiV1Pet());
     final PetstoreApiV1PetApi api = buildApi(makeResponse(200, body));
-    final PetstoreApiV1PetApi. request = new PetstoreApiV1PetApi.()
-      .();
-    final PetstoreApiV1PetApi. response = api.getPetByIdWithHttpInfo(request);
+    final PetstoreApiV1PetApi.GetPetByIdRequest request = new PetstoreApiV1PetApi.GetPetByIdRequest()
+      .setPetId(1L);
+    final PetstoreApiV1PetApi.GetPetByIdResponse response = api.getPetByIdWithHttpInfo(request);
     Assert.areEqual(200, response.httpResult.response.getStatusCode());
     Assert.areNotEqual(null, response.data);
   }
 
 
   @IsTest
-  static void testSuccess() {
+  static void testUpdatePetSuccess() {
     final String body = JSON.serialize(new PetstoreApiV1Pet());
     final PetstoreApiV1PetApi api = buildApi(makeResponse(200, body));
-    final PetstoreApiV1PetApi. request = new PetstoreApiV1PetApi.()
-      .();
-    final PetstoreApiV1PetApi. response = api.updatePetWithHttpInfo(request);
+    final PetstoreApiV1PetApi.UpdatePetRequest request = new PetstoreApiV1PetApi.UpdatePetRequest()
+      .setPetstoreApiV1Pet(new PetstoreApiV1Pet());
+    final PetstoreApiV1PetApi.UpdatePetResponse response = api.updatePetWithHttpInfo(request);
     Assert.areEqual(200, response.httpResult.response.getStatusCode());
     Assert.areNotEqual(null, response.data);
   }
 
 
   @IsTest
-  static void testSuccess() {
+  static void testUpdatePetWithFormSuccess() {
     final String body = '';
     final PetstoreApiV1PetApi api = buildApi(makeResponse(200, body));
-    final PetstoreApiV1PetApi. request = new PetstoreApiV1PetApi.()
-      .()
-      .()
-      .();
-    final PetstoreApiV1PetApi. response = api.updatePetWithFormWithHttpInfo(request);
+    final PetstoreApiV1PetApi.UpdatePetWithFormRequest request = new PetstoreApiV1PetApi.UpdatePetWithFormRequest()
+      .setPetId(1L)
+      .setName('x')
+      .setStatus('x');
+    final PetstoreApiV1PetApi.UpdatePetWithFormResponse response = api.updatePetWithFormWithHttpInfo(request);
     Assert.areEqual(200, response.httpResult.response.getStatusCode());
   }
 
 
   @IsTest
-  static void testSuccess() {
+  static void testUploadFileSuccess() {
     final String body = JSON.serialize(new PetstoreApiV1ApiResponse());
     final PetstoreApiV1PetApi api = buildApi(makeResponse(200, body));
-    final PetstoreApiV1PetApi. request = new PetstoreApiV1PetApi.()
-      .()
-      .()
-      .();
-    final PetstoreApiV1PetApi. response = api.uploadFileWithHttpInfo(request);
+    final PetstoreApiV1PetApi.UploadFileRequest request = new PetstoreApiV1PetApi.UploadFileRequest()
+      .setPetId(1L)
+      .setAdditionalMetadata('x')
+      .setFile(Blob.valueOf('x'));
+    final PetstoreApiV1PetApi.UploadFileResponse response = api.uploadFileWithHttpInfo(request);
     Assert.areEqual(200, response.httpResult.response.getStatusCode());
     Assert.areNotEqual(null, response.data);
   }
@@ -118,7 +118,7 @@ private class PetstoreApiV1PetApiTest {
   static void testThrowsApiExceptionOnNon2xx() {
     final PetstoreApiV1PetApi api = buildApi(makeResponse(500, '{"error":"boom"}'));
 
-    final PetstoreApiV1PetApi. request = new PetstoreApiV1PetApi.();
+    final PetstoreApiV1PetApi.AddPetRequest request = new PetstoreApiV1PetApi.AddPetRequest();
     try {
       api.addPetWithHttpInfo(request);
       Assert.fail('expected PetstoreApiApiException');
