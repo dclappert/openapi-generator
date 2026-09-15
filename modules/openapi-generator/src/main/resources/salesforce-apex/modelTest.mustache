@@ -22,8 +22,8 @@ private class {{classname}}Test {
   static void testJsonRoundTrip() {
     {{classname}} original = new {{classname}}(){{#vars}}
       .{{setter}}({{{vendorExtensions.x-apex-operation-req-class-var-mock-value}}}){{/vars}};
-    final String json = JSON.serialize(original);
-    {{classname}} restored = ({{classname}}) JSON.deserialize(json, {{classname}}.class);
+    final String jsonString = JSON.serialize(original);
+    {{classname}} restored = ({{classname}}) JSON.deserialize(jsonString, {{classname}}.class);
     Assert.areNotEqual(null, restored);
   }
 {{/isEnum}}
