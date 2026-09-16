@@ -15,6 +15,7 @@
   {{/auraEnabled}}{{accessModifier}} {{{dataType}}} {{baseName}};
 {{/vars}}
 {{#vars}}
+
   {{accessModifier}} {{{dataType}}} {{getter}}() {
     return this.{{baseName}};
   }
@@ -23,7 +24,6 @@
     this.{{baseName}} = {{name}};{{#fluentSetters}}
     return this;{{/fluentSetters}}
   }
-
 {{/vars}}
 }
 {{/isEnum}}

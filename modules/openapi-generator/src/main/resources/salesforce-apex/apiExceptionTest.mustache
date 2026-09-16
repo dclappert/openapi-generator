@@ -3,9 +3,9 @@ private class {{{apiExceptionClassName}}}Test {
   @IsTest
   static void testConstructionAndHttpResultField() {
     final {{{apiExceptionClassName}}} ex = new {{{apiExceptionClassName}}}('boom');
-    final {{{httpClientClassName}}}.HttpResult r = new {{{httpClientClassName}}}.HttpResult();
+    final {{{httpResultClassName}}} r = new {{{httpResultClassName}}}();
     ex.httpResult = r;
-    System.assertEquals('boom', ex.getMessage());
-    System.assertEquals(r, ex.httpResult);
+    Assert.areEqual('boom', ex.getMessage());
+    Assert.areEqual(r, ex.httpResult);
   }
 }

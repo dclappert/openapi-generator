@@ -1,23 +1,10 @@
 @IsTest
 private class {{{clientClassName}}}Test {
   @IsTest
-  static void testDefaultConstructor() {
-    final {{{clientClassName}}} client = new {{{clientClassName}}}('https://test', 'v1');
-    System.assertNotEquals(null, client);
-  }
-
-  @IsTest
   static void testInjectedHttpClient() {
     final {{{httpClientMockClassName}}} mock = new {{{httpClientMockClassName}}}();
     final {{{clientClassName}}} client = new {{{clientClassName}}}('https://test', 'v1', mock);
-    System.assertNotEquals(null, client);
-  }
-
-  @IsTest
-  static void testAddHeaderReturnsSelf() {
-    final {{{clientClassName}}} client = new {{{clientClassName}}}('https://test', 'v1');
-    final {{{clientClassName}}} returned = client.addHeader('X-Test', 'value');
-    System.assertEquals(client, returned);
+    Assert.areNotEqual(null, client);
   }
 
   @IsTest
@@ -28,10 +15,10 @@ private class {{{clientClassName}}}Test {
     res.setBody('{}');
     mock.nextResponse = res;
     final {{{clientClassName}}} client = new {{{clientClassName}}}('https://test', 'v1', mock);
-    final {{{builderClassName}}} builder = new {{{builderClassName}}}()
+    final {{{httpRequestBuilderClassName}}} builder = new {{{httpRequestBuilderClassName}}}('testOperation')
       .setEndpoint('x')
-      .setMethod({{{builderClassName}}}.HttpMethod.GET);
-    final {{{httpClientClassName}}}.HttpResult result = client.send(builder);
-    System.assertEquals(200, result.response.getStatusCode());
+      .setMethod({{{httpRequestBuilderClassName}}}.HttpMethod.GET);
+    final {{{httpResultClassName}}} result = client.send(builder);
+    Assert.areEqual(200, result.response.getStatusCode());
   }
 }

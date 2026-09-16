@@ -21,7 +21,8 @@ public class SalesforceApexClientCodegenTest {
     @Test(description = "api and model file folders include version directory")
     public void fileFolderTest() {
         final SalesforceApexClientCodegen codegen = new SalesforceApexClientCodegen();
-        codegen.additionalProperties().put(SalesforceApexClientCodegen.API_VERSION_DIRECTORY, "latest.v3");
+        codegen.additionalProperties().put(SalesforceApexClientCodegen.API_VERSION, "v3");
+        codegen.additionalProperties().put(SalesforceApexClientCodegen.OUTPUT_DIRECTORY_NAME, "latest");
         codegen.processOpts();
 
         Assert.assertTrue(codegen.apiFileFolder().endsWith("api" + File.separator + "latest.v3"));
@@ -33,7 +34,8 @@ public class SalesforceApexClientCodegenTest {
         final SalesforceApexClientCodegen codegen = new SalesforceApexClientCodegen();
         final Map<String, Object> opts = new HashMap<>();
         opts.put(SalesforceApexClientCodegen.CLASS_PREFIX, "PetstoreApi");
-        opts.put(SalesforceApexClientCodegen.API_VERSION_DIRECTORY, "latest.v1");
+        opts.put(SalesforceApexClientCodegen.API_VERSION, "V1");
+        opts.put(SalesforceApexClientCodegen.OUTPUT_DIRECTORY_NAME, "latest");
         codegen.additionalProperties().putAll(opts);
         codegen.processOpts();
 
@@ -41,14 +43,16 @@ public class SalesforceApexClientCodegenTest {
         Assert.assertEquals(codegen.toModelName("Pet"), "PetstoreApiV1Pet");
     }
 
-    @Test(description = "clientClassName and builderClassName are derived from classPrefix")
+    @Test(description = "clientClassName and httpRequestBuilderClassName are derived from classPrefix")
     public void supportingFileNamesTest() {
         final SalesforceApexClientCodegen codegen = new SalesforceApexClientCodegen();
-        codegen.additionalProperties().put(SalesforceApexClientCodegen.CLASS_PREFIX, "AdsApi");
+        codegen.additionalProperties().put(SalesforceApexClientCodegen.CLASS_PREFIX, "PetstoreApi");
+        codegen.additionalProperties().put(SalesforceApexClientCodegen.API_VERSION, "V1");
         codegen.processOpts();
 
-        Assert.assertEquals(codegen.additionalProperties().get("clientClassName"), "AdsApiApiClient");
-        Assert.assertEquals(codegen.additionalProperties().get("builderClassName"), "AdsApiApiHttpRequestBuilder");
+        Assert.assertEquals(codegen.additionalProperties().get("clientClassName"), "PetstoreApiApiClient");
+        Assert.assertEquals(codegen.additionalProperties().get("httpRequestBuilderClassName"),
+                "PetstoreApiHttpRequestBuilder");
     }
 
     @Test(description = "generateClient=false omits supporting files")

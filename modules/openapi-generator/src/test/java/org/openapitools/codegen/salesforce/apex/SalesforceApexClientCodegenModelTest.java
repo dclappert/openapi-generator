@@ -19,62 +19,44 @@ public class SalesforceApexClientCodegenModelTest {
 
     @Test(description = "model class name includes classPrefix and versionSuffix")
     public void classNamePrefixAndVersionTest() {
-        final SalesforceApexClientCodegen codegen = new SalesforceApexClientCodegen();
         final Map<String, Object> opts = new HashMap<>();
-        opts.put(SalesforceApexClientCodegen.CLASS_PREFIX, "AdsApi");
-        opts.put(SalesforceApexClientCodegen.API_VERSION_DIRECTORY, "latest.v3");
+        opts.put(SalesforceApexClientCodegen.CLASS_PREFIX, "PetstoreApi");
+        opts.put(SalesforceApexClientCodegen.API_VERSION, "V1");
+        opts.put(SalesforceApexClientCodegen.OUTPUT_DIRECTORY_NAME, "latest");
+
+        final SalesforceApexClientCodegen codegen = new SalesforceApexClientCodegen();
         codegen.additionalProperties().putAll(opts);
         codegen.processOpts();
 
-        Assert.assertEquals(codegen.toModelName("Reservation"), "AdsApiV3Reservation");
-        Assert.assertEquals(codegen.toModelName("CreateReservationRequest"), "AdsApiV3CreateReservationRequest");
-    }
-
-    @Test(description = "versionSuffix is derived from apiVersionDirectory")
-    public void versionSuffixDerivationTest() {
-        final SalesforceApexClientCodegen codegen = new SalesforceApexClientCodegen();
-        final Map<String, Object> opts = new HashMap<>();
-        opts.put(SalesforceApexClientCodegen.CLASS_PREFIX, "MyApi");
-        opts.put(SalesforceApexClientCodegen.API_VERSION_DIRECTORY, "v2");
-        codegen.additionalProperties().putAll(opts);
-        codegen.processOpts();
-
-        Assert.assertEquals(codegen.toModelName("Pet"), "MyApiV2Pet");
-
-        final SalesforceApexClientCodegen codegen2 = new SalesforceApexClientCodegen();
-        final Map<String, Object> opts2 = new HashMap<>();
-        opts2.put(SalesforceApexClientCodegen.CLASS_PREFIX, "MyApi");
-        opts2.put(SalesforceApexClientCodegen.API_VERSION_DIRECTORY, "latest.v2");
-        codegen2.additionalProperties().putAll(opts2);
-        codegen2.processOpts();
-
-        Assert.assertEquals(codegen2.toModelName("Pet"), "MyApiV2Pet");
+        Assert.assertEquals(codegen.toModelName("Order"), "PetstoreApiV1Order");
+        Assert.assertEquals(codegen.toModelName("Pet"), "PetstoreApiV1Pet");
     }
 
     @Test(description = "snake_case OAS property names are preserved as baseName; camelCase used for getters/setters")
     public void snakeCaseFieldNamesTest() {
-        final Schema model = new Schema()
-                .description("a sample model")
-                .addProperty("ad_account_id", new StringSchema())
-                .addProperty("start_date", new DateTimeSchema())
-                .addRequiredItem("ad_account_id");
-
         final SalesforceApexClientCodegen codegen = new SalesforceApexClientCodegen();
-        codegen.additionalProperties().put(SalesforceApexClientCodegen.CLASS_PREFIX, "AdsApi");
-        codegen.additionalProperties().put(SalesforceApexClientCodegen.API_VERSION_DIRECTORY, "v3");
+        codegen.additionalProperties().put(SalesforceApexClientCodegen.CLASS_PREFIX, "PetstoreApi");
+        codegen.additionalProperties().put(SalesforceApexClientCodegen.API_VERSION, "V1");
+        codegen.additionalProperties().put(SalesforceApexClientCodegen.OUTPUT_DIRECTORY_NAME, "latest");
         codegen.processOpts();
 
-        final OpenAPI openAPI = TestUtils.createOpenAPIWithOneSchema("AudienceEstimateRequest", model);
-        codegen.setOpenAPI(openAPI);
-        final CodegenModel cm = codegen.fromModel("AudienceEstimateRequest", model);
+        final Schema model = new Schema()
+                .description("a sample model")
+                .addProperty("order_number", new StringSchema())
+                .addRequiredItem("order_number");
 
-        Assert.assertEquals(cm.classname, "AdsApiV3AudienceEstimateRequest");
+        final OpenAPI openAPI = TestUtils.createOpenAPIWithOneSchema("Order", model);
+        codegen.setOpenAPI(openAPI);
+
+        final CodegenModel cm = codegen.fromModel("Order", model);
+
+        Assert.assertEquals(cm.classname, "PetstoreApiV1Order");
 
         final CodegenProperty prop = cm.vars.get(0);
-        Assert.assertEquals(prop.baseName, "ad_account_id");
-        Assert.assertEquals(prop.name, "adAccountId");
-        Assert.assertEquals(prop.getter, "getAdAccountId");
-        Assert.assertEquals(prop.setter, "setAdAccountId");
+        Assert.assertEquals(prop.baseName, "order_number");
+        Assert.assertEquals(prop.name, "orderNumber");
+        Assert.assertEquals(prop.getter, "getOrderNumber");
+        Assert.assertEquals(prop.setter, "setOrderNumber");
         Assert.assertEquals(prop.dataType, "String");
     }
 
@@ -112,15 +94,16 @@ public class SalesforceApexClientCodegenModelTest {
         final Schema enumSchema = new StringSchema()._enum(java.util.Arrays.asList("ACTIVE", "INACTIVE", "SUSPENDED"));
 
         final SalesforceApexClientCodegen codegen = new SalesforceApexClientCodegen();
-        codegen.additionalProperties().put(SalesforceApexClientCodegen.CLASS_PREFIX, "AdsApi");
-        codegen.additionalProperties().put(SalesforceApexClientCodegen.API_VERSION_DIRECTORY, "v3");
+        codegen.additionalProperties().put(SalesforceApexClientCodegen.CLASS_PREFIX, "PetstoreApi");
+        codegen.additionalProperties().put(SalesforceApexClientCodegen.API_VERSION, "V1");
+        codegen.additionalProperties().put(SalesforceApexClientCodegen.OUTPUT_DIRECTORY_NAME, "latest");
         codegen.processOpts();
 
-        final OpenAPI openAPI = TestUtils.createOpenAPIWithOneSchema("AdAccountStatus", enumSchema);
+        final OpenAPI openAPI = TestUtils.createOpenAPIWithOneSchema("OrderStatus", enumSchema);
         codegen.setOpenAPI(openAPI);
-        final CodegenModel cm = codegen.fromModel("AdAccountStatus", enumSchema);
+        final CodegenModel cm = codegen.fromModel("OrderStatus", enumSchema);
 
-        Assert.assertEquals(cm.classname, "AdsApiV3AdAccountStatus");
+        Assert.assertEquals(cm.classname, "PetstoreApiV1OrderStatus");
         Assert.assertTrue(cm.isEnum);
     }
 }

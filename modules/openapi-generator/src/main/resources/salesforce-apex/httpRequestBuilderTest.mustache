@@ -1,52 +1,77 @@
 @IsTest
-private class {{{builderClassName}}}Test {
+private class {{{httpRequestBuilderClassName}}}Test {
   @IsTest
-  static void testFluentSettersReturnSelf() {
-    final {{{builderClassName}}} b = new {{{builderClassName}}}();
-    System.assertEquals(b, b.setEndpoint('x'));
-    System.assertEquals(b, b.setMethod({{{builderClassName}}}.HttpMethod.GET));
-    System.assertEquals(b, b.setBody('body'));
-    System.assertEquals(b, b.addQueryParameter('k', 'v'));
+  static void itGetsAndSetsBuilderMembers() {
+    final {{{httpRequestBuilderClassName}}} clazz = new {{{httpRequestBuilderClassName}}}('testOperation');
+
+    Test.startTest();
+    Assert.areEqual(clazz, clazz.setEndpoint('x'));
+    Assert.areEqual(clazz, clazz.setMethod({{{httpRequestBuilderClassName}}}.HttpMethod.GET));
+    Assert.areEqual(clazz, clazz.setBody('body'));
+    Assert.areEqual(clazz, clazz.addQueryParameter('k', 'v'));
+    Assert.areEqual(clazz, clazz.addHeader('k', 'v'));
+
+    Assert.areEqual('testOperation', clazz.getOperationId());
+    Assert.areEqual('x', clazz.getEndpoint());
+    Assert.areEqual({{{httpRequestBuilderClassName}}}.HttpMethod.GET, clazz.getMethod());
+    Assert.areEqual('body', clazz.getBody());
+    Assert.areEqual(new Map<String, String>{'k' => 'v'}, clazz.getQueryParams());
+    Assert.areEqual(new Map<String, String>{'k' => 'v'}, clazz.getHeaderParams());
+    Test.stopTest();
   }
 
   @IsTest
-  static void testBuildAssemblesUrl() {
-    final {{{builderClassName}}} b = new {{{builderClassName}}}()
+  static void itCreatesHttpRequestWithCorrectUrl() {
+    Test.startTest();
+    final {{{httpRequestBuilderClassName}}} b = new {{{httpRequestBuilderClassName}}}('testOperation')
       .setEndpoint('pet/1')
-      .setMethod({{{builderClassName}}}.HttpMethod.GET);
-    final HttpRequest req = b.build('https://api.test', 'v1', new Map<String, String>());
-    System.assertEquals('GET', req.getMethod());
-    System.assertEquals('https://api.test/v1/pet/1', req.getEndpoint());
+      .setMethod({{{httpRequestBuilderClassName}}}.HttpMethod.GET);
+    final HttpRequest req = b.build('https://api.test', 'v1');
+    Test.stopTest();
+
+    Assert.areEqual('GET', req.getMethod());
+    Assert.areEqual('https://api.test/v1/pet/1', req.getEndpoint());
   }
 
   @IsTest
-  static void testBuildMapsDelEnumToDeleteMethod() {
-    final {{{builderClassName}}} b = new {{{builderClassName}}}()
+  static void itMapsDelEnumToDeleteMethod() {
+    Test.startTest();
+    final {{{httpRequestBuilderClassName}}} b = new {{{httpRequestBuilderClassName}}}('testOperation')
       .setEndpoint('pet/1')
-      .setMethod({{{builderClassName}}}.HttpMethod.DEL);
-    final HttpRequest req = b.build('https://api.test', 'v1', new Map<String, String>());
-    System.assertEquals('DELETE', req.getMethod());
+      .setMethod({{{httpRequestBuilderClassName}}}.HttpMethod.DEL);
+    final HttpRequest req = b.build('https://api.test', 'v1');
+    Test.stopTest();
+
+    Assert.areEqual('DELETE', req.getMethod());
   }
 
   @IsTest
-  static void testBuildAppendsQueryParams() {
-    final {{{builderClassName}}} b = new {{{builderClassName}}}()
+  static void itAppendsQueryParamsToUrl() {
+    Test.startTest();
+    final {{{httpRequestBuilderClassName}}} b = new {{{httpRequestBuilderClassName}}}('testOperation')
       .setEndpoint('pet')
-      .setMethod({{{builderClassName}}}.HttpMethod.GET)
-      .addQueryParameter('status', 'available');
-    final HttpRequest req = b.build('https://api.test', 'v1', new Map<String, String>());
-    System.assert(req.getEndpoint().contains('status=available'));
+      .setMethod({{{httpRequestBuilderClassName}}}.HttpMethod.GET)
+      .addQueryParameter('status', 'available')
+      .addQueryParameter('type', 'dog');
+    Test.stopTest();
+
+    final HttpRequest req = b.build('https://api.test', 'v1');
+    Assert.areEqual('https://api.test/v1/pet?status=available&type=dog', req.getEndpoint());
   }
 
   @IsTest
-  static void testBuildSetsBodyAndHeaders() {
+  static void itSetsBodyAndHeadersInHttpRequest() {
+    Test.startTest();
     final Map<String, String> headers = new Map<String, String>{'X-Auth' => 'secret'};
-    final {{{builderClassName}}} b = new {{{builderClassName}}}()
+    final {{{httpRequestBuilderClassName}}} b = new {{{httpRequestBuilderClassName}}}('testOperation')
       .setEndpoint('pet')
-      .setMethod({{{builderClassName}}}.HttpMethod.POST)
-      .setBody('{"x":1}');
-    final HttpRequest req = b.build('https://api.test', 'v1', headers);
-    System.assertEquals('{"x":1}', req.getBody());
-    System.assertEquals('secret', req.getHeader('X-Auth'));
+      .setMethod({{{httpRequestBuilderClassName}}}.HttpMethod.POST)
+      .setBody('{"x":1}')
+      .addHeader('X-Auth', 'secret');
+    final HttpRequest req = b.build('https://api.test', 'v1');
+    Test.stopTest();
+
+    Assert.areEqual('{"x":1}', req.getBody());
+    Assert.areEqual('secret', req.getHeader('X-Auth'));
   }
 }
