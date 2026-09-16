@@ -5,8 +5,16 @@
   private final List<{{{interceptorClassName}}}> interceptors;
 
   {{accessModifier}} {{{clientClassName}}}(
-    final String baseUrl, 
-    final String version, 
+    final String baseUrl,
+    final String version
+  ) {
+    this(baseUrl, version, new {{{httpClientClassName}}}());
+  }
+
+  @TestVisible
+  private {{{clientClassName}}}(
+    final String baseUrl,
+    final String version,
     final {{{httpClientClassName}}} httpClient
   ) {
     this.baseUrl = baseUrl;

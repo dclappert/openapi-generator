@@ -5,8 +5,16 @@ global virtual class PetstoreApiApiClient {
   private final List<PetstoreApiInterceptor> interceptors;
 
   global PetstoreApiApiClient(
-    final String baseUrl, 
-    final String version, 
+    final String baseUrl,
+    final String version
+  ) {
+    this(baseUrl, version, new PetstoreApiHttpClient());
+  }
+
+  @TestVisible
+  private PetstoreApiApiClient(
+    final String baseUrl,
+    final String version,
     final PetstoreApiHttpClient httpClient
   ) {
     this.baseUrl = baseUrl;
