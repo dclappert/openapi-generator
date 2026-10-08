@@ -127,6 +127,7 @@ org.openapitools.codegen.languages.RustAxumServerCodegen
 org.openapitools.codegen.languages.RustClientCodegen
 org.openapitools.codegen.languages.RustServerCodegen
 org.openapitools.codegen.languages.RustServerCodegenDeprecated
+org.openapitools.codegen.languages.SalesforceApexClientCodegen
 org.openapitools.codegen.languages.ScalatraServerCodegen
 org.openapitools.codegen.languages.ScalaAkkaClientCodegen
 org.openapitools.codegen.languages.ScalaCaskServerCodegen
@@ -165,5 +166,3 @@ org.openapitools.codegen.languages.TypeScriptRxjsClientCodegen
 org.openapitools.codegen.languages.WsdlSchemaCodegen
 org.openapitools.codegen.languages.XojoClientCodegen
 org.openapitools.codegen.languages.ZapierClientCodegen
-
-org.openapitools.codegen.languages.SalesforceApexClientCodegen

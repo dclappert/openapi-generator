@@ -262,6 +262,8 @@ public class SalesforceApexClientCodegen extends DefaultCodegen {
         final String httpRequestBuilderClassName = classPrefix + "HttpRequestBuilder";
         final String httpResultClassName = classPrefix + "HttpResult";
         final String interceptorClassName = classPrefix + "Interceptor";
+
+        // Register class names in additionalProperties for use in templates
         additionalProperties.put("apiExceptionClassName", apiExceptionClassName);
         additionalProperties.put("clientClassName", clientClassName);
         additionalProperties.put("httpClientClassName", httpClientClassName);
@@ -400,13 +402,13 @@ public class SalesforceApexClientCodegen extends DefaultCodegen {
     @Override
     public String getTypeDeclaration(Schema p) {
         if (ModelUtils.isArraySchema(p)) {
-            Schema inner = ModelUtils.getSchemaItems(p);
+            final Schema<?> inner = ModelUtils.getSchemaItems(p);
             if (inner == null) {
                 return "List<Object>";
             }
             return "List<" + getTypeDeclaration(inner) + ">";
         } else if (ModelUtils.isMapSchema(p)) {
-            Schema inner = ModelUtils.getAdditionalProperties(p);
+            final Schema<?> inner = ModelUtils.getAdditionalProperties(p);
             if (inner == null) {
                 return "Map<String, Object>";
             }
@@ -422,7 +424,7 @@ public class SalesforceApexClientCodegen extends DefaultCodegen {
 
     @Override
     public String getSchemaType(Schema p) {
-        String schemaType = super.getSchemaType(p);
+        final String schemaType = super.getSchemaType(p);
         if (typeMapping.containsKey(schemaType)) {
             return typeMapping.get(schemaType);
         }
@@ -432,49 +434,13 @@ public class SalesforceApexClientCodegen extends DefaultCodegen {
     @Override
     public ModelsMap postProcessModels(ModelsMap objs) {
         for (ModelMap modelMap : objs.getModels()) {
-            CodegenModel model = modelMap.getModel();
+            final CodegenModel model = modelMap.getModel();
             for (CodegenProperty var : model.vars) {
                 var.vendorExtensions.put("x-apex-operation-req-class-var-mock-value",
                         toApexOperationReqClassVarMockValue(var));
             }
         }
         return super.postProcessModels(objs);
-    }
-
-    private static String toApexOperationReqClassVarMockValue(IJsonSchemaValidationProperties p) {
-        if (p.getIsArray() || p.getIsMap()) {
-            return "new " + p.getDataType() + "()";
-        }
-        if (p.getIsString()) {
-            return "'x'";
-        }
-        if (p.getIsInteger()) {
-            return "1";
-        }
-        if (p.getIsLong()) {
-            return "1L";
-        }
-        if (p.getIsNumber() || p.getIsFloat() || p.getIsDouble() || p.getIsDecimal()) {
-            return "1.0";
-        }
-        if (p.getIsBoolean()) {
-            return "true";
-        }
-        if (p.getIsDate()) {
-            return "Date.today()";
-        }
-        if (p.getIsDateTime()) {
-            return "Datetime.now()";
-        }
-        if (p.getIsByteArray() || p.getIsBinary()) {
-            return "Blob.valueOf('x')";
-        }
-        if (p.getIsEnum()) {
-            return p.getDataType() + ".values()[0]";
-        }
-
-        // Custom models support no-arg construction in Apex.
-        return "new " + p.getDataType() + "()";
     }
 
     @Override
@@ -488,10 +454,6 @@ public class SalesforceApexClientCodegen extends DefaultCodegen {
         for (CodegenOperation op : ops) {
             setApexHttpRequestVendorExtensions(op);
             setOperationMethodRequestDtoVendorExtensions(op);
-            if (op.returnProperty != null) {
-                op.vendorExtensions.put("x-apex-operation-method-return-type",
-                        toApexOperationReqClassVarMockValue(op.returnProperty));
-            }
         }
 
         return super.postProcessOperationsWithModels(objs, allModels);
@@ -541,6 +503,42 @@ public class SalesforceApexClientCodegen extends DefaultCodegen {
         return toVarName(name);
     }
 
+    private static String toApexOperationReqClassVarMockValue(IJsonSchemaValidationProperties p) {
+        if (p.getIsArray() || p.getIsMap()) {
+            return "new " + p.getDataType() + "()";
+        }
+        if (p.getIsString()) {
+            return "'x'";
+        }
+        if (p.getIsInteger()) {
+            return "1";
+        }
+        if (p.getIsLong()) {
+            return "1L";
+        }
+        if (p.getIsNumber() || p.getIsFloat() || p.getIsDouble() || p.getIsDecimal()) {
+            return "1.0";
+        }
+        if (p.getIsBoolean()) {
+            return "true";
+        }
+        if (p.getIsDate()) {
+            return "Date.today()";
+        }
+        if (p.getIsDateTime()) {
+            return "Datetime.now()";
+        }
+        if (p.getIsByteArray() || p.getIsBinary()) {
+            return "Blob.valueOf('x')";
+        }
+        if (p.getIsEnum()) {
+            return p.getDataType() + ".values()[0]";
+        }
+
+        // Custom models support no-arg construction in Apex.
+        return "new " + p.getDataType() + "()";
+    }
+
     private static void setApexHttpRequestVendorExtensions(final CodegenOperation op) {
         // Map DELETE to DEL to avoid Apex reserved keyword conflict
         final String apexHttpMethod = "DELETE".equalsIgnoreCase(op.httpMethod)
@@ -571,6 +569,12 @@ public class SalesforceApexClientCodegen extends DefaultCodegen {
             param.vendorExtensions.put("x-apex-operation-req-class-name", dtoClassName);
             param.vendorExtensions.put("x-apex-operation-req-class-var-mock-value",
                     toApexOperationReqClassVarMockValue(param));
+        }
+
+        // Set vendor extension for the return type of the operation method.
+        if (op.returnProperty != null) {
+            op.vendorExtensions.put("x-apex-operation-method-return-type",
+                    toApexOperationReqClassVarMockValue(op.returnProperty));
         }
     }
 
